@@ -98,35 +98,35 @@ jobs:
             fi
 
             cat > "$notes_file" <<EOF
-## ${chart_name} ${chart_version}
+          ## ${chart_name} ${chart_version}
 
-${description}
+          ${description}
 
-### Versions
+          ### Versions
 
-- Chart version: \`${chart_version}\`
-- App version: \`${app_version}\`
+          - Chart version: \`${chart_version}\`
+          - App version: \`${app_version}\`
 
-### Install
+          ### Install
 
-\`\`\`bash
-helm repo add harish2k01 ${REPO_URL}
-helm repo update
-helm install ${chart_name} harish2k01/${chart_name} --version ${chart_version}
-\`\`\`
+          \`\`\`bash
+          helm repo add harish2k01 ${REPO_URL}
+          helm repo update
+          helm install ${chart_name} harish2k01/${chart_name} --version ${chart_version}
+          \`\`\`
 
-### Upgrade
+          ### Upgrade
 
-\`\`\`bash
-helm upgrade ${chart_name} harish2k01/${chart_name} --version ${chart_version}
-\`\`\`
+          \`\`\`bash
+          helm upgrade ${chart_name} harish2k01/${chart_name} --version ${chart_version}
+          \`\`\`
 
-### Links
+          ### Links
 
-- Helm repository: ${REPO_URL}
-- Chart source: https://github.com/${{ github.repository }}/tree/main/${chart}
-- Package: ${REPO_URL}/${chart_name}-${chart_version}.tgz
-EOF
+          - Helm repository: ${REPO_URL}
+          - Chart source: https://github.com/${{ github.repository }}/tree/main/${chart}
+          - Package: ${REPO_URL}/${chart_name}-${chart_version}.tgz
+          EOF
 
             gh release create "$tag" "$package" \
               --title "${chart_name} ${chart_version}" \
