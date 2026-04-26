@@ -1,6 +1,7 @@
 name: Release Charts
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -8,49 +9,52 @@ on:
       - charts/**
       - docs/**
       - .github/workflows/release.yaml
-      - cr.yaml
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
 
 jobs:
-  release:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Ensure GitHub Pages branch exists
-        run: |
-          if ! git ls-remote --exit-code --heads origin gh-pages > /dev/null 2>&1; then
-            git switch --orphan gh-pages
-            git rm -rf . || true
-            touch .nojekyll
-            git add .nojekyll
-            git commit -m "Initialize GitHub Pages"
-            git push origin gh-pages
-            git switch main
-          fi
-          git fetch origin gh-pages:refs/remotes/origin/gh-pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Install Helm
         uses: azure/setup-helm@v4
 
-      - name: Release charts
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build Helm repository
+        run: |
+          mkdir -p _site
+          cp -R docs/. _site/
+          touch _site/.nojekyll
 
-      - name: Publish human site
-        uses: JamesIves/github-pages-deploy-action@v4
+          for chart in charts/*; do
+            if [ -d "$chart" ]; then
+              helm dependency update "$chart"
+              helm package "$chart" --destination _site
+            fi
+          done
+
+          helm repo index _site --url "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: docs
-          clean: false
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
