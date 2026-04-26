@@ -1,10 +1,11 @@
 # Helm Charts
 
-Reusable Helm charts for Kubernetes applications.
+[![Release Charts](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml)
+[![Lint Charts](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml)
 
-## Add This Repository
+Reusable Helm charts for Kubernetes and self-hosted apps, published through GitHub Pages.
 
-After GitHub Pages is enabled for this repository, users can add it with:
+## Add Repository
 
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
@@ -13,44 +14,81 @@ helm repo update
 
 ## Available Charts
 
-| Chart | Description |
-| --- | --- |
-| `bentopdf` | Deploys BentoPDF on Kubernetes |
-| `firefly-iii` | Deploys Firefly III with PostgreSQL on Kubernetes |
+| Chart | Chart Version | App Version | Description |
+| --- | --- | --- | --- |
+| [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
+| [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
 
-## Install BentoPDF
+List all published versions:
+
+```bash
+helm search repo harish2k01 --versions
+```
+
+## Install
 
 ```bash
 helm install bentopdf harish2k01/bentopdf
-```
-
-## Install Firefly III
-
-```bash
 helm install firefly-iii harish2k01/firefly-iii
 ```
 
-Install any chart with custom values:
+Install with your own values:
 
 ```bash
 helm install bentopdf harish2k01/bentopdf -f values.yaml
 helm install firefly-iii harish2k01/firefly-iii -f values.yaml
 ```
 
-## Publishing
+Install a specific chart version:
 
-This repository includes a GitHub Actions workflow that packages charts, preserves existing chart packages from the published site, generates a Helm `index.yaml`, copies the human website from `docs/`, and deploys everything through GitHub Pages.
+```bash
+helm install bentopdf harish2k01/bentopdf --version 0.1.1
+```
 
-To enable `helm repo add`:
+## Repository Site
 
-1. Push this repository to GitHub as `harish2k01/helm-charts`.
-2. Go to repository settings.
-3. Open **Pages**.
-4. Set the source to **GitHub Actions**.
-5. Push a change to `main` under `charts/**` or `docs/**`.
-
-The release workflow will publish the human site and Helm repository to:
+The human page and Helm repository are served from the same URL:
 
 ```text
 https://harish2k01.github.io/helm-charts
 ```
+
+Helm reads:
+
+```text
+https://harish2k01.github.io/helm-charts/index.yaml
+```
+
+## GitHub Releases
+
+Every new chart version also gets a GitHub Release with release notes and the packaged chart attached.
+
+Release tags use this format:
+
+```text
+<chart-name>-<chart-version>
+```
+
+Examples:
+
+```text
+bentopdf-0.1.1
+firefly-iii-0.1.0
+```
+
+## Publishing
+
+The release workflow packages charts, creates GitHub Releases for new chart versions, preserves older chart packages from the published site, regenerates `index.yaml`, copies the human website from `docs/`, and deploys everything with GitHub Pages Actions.
+
+GitHub Pages should be configured as:
+
+```text
+Source: GitHub Actions
+```
+
+To publish a new chart release:
+
+1. Update the chart under `charts/<name>`.
+2. Bump `version` in that chart's `Chart.yaml`.
+3. Commit and push to `main`.
+4. Let the `Release Charts` workflow deploy the site and Helm index.

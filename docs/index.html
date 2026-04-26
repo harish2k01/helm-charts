@@ -21,6 +21,7 @@
         --code: #111827;
         --code-muted: #a7b3c6;
         --warn: #f7b267;
+        --ok: #2f9e6d;
       }
 
       * {
@@ -131,6 +132,18 @@
         flex-wrap: wrap;
         gap: 12px;
         margin-top: 30px;
+      }
+
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .badges img {
+        display: block;
+        height: 20px;
       }
 
       .button {
@@ -253,6 +266,37 @@
         background: var(--panel);
       }
 
+      .chart-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .chart-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: #f8fafc;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .pill.ready {
+        border-color: rgba(47, 158, 109, 0.24);
+        color: #1d6f4b;
+        background: rgba(47, 158, 109, 0.08);
+      }
+
       .chart-row h3 {
         margin: 0 0 6px;
         font-size: 22px;
@@ -322,10 +366,18 @@
             <div class="eyebrow">Public Helm repository</div>
             <h1>Reusable charts for Kubernetes applications.</h1>
             <p class="lead">
-              Small, practical Helm charts with clean defaults, example values,
-              and support for common homelab and production-style deployment
-              patterns.
+              Small, practical Helm charts with clean defaults, versioned
+              releases, and support for common homelab and production-style
+              deployment patterns.
             </p>
+            <div class="badges" aria-label="Repository status">
+              <a href="https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml">
+                <img alt="Release Charts status" src="https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg">
+              </a>
+              <a href="https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml">
+                <img alt="Lint Charts status" src="https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg">
+              </a>
+            </div>
             <div class="actions">
               <a class="button primary" href="#install">Install from Helm</a>
               <a class="button" href="https://github.com/harish2k01/helm-charts">View source</a>
@@ -349,7 +401,10 @@ helm install bentopdf harish2k01/bentopdf
 helm install firefly-iii harish2k01/firefly-iii
 
 <span class="comment"># Install with custom values</span>
-helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
+helm install bentopdf harish2k01/bentopdf -f values.yaml
+
+<span class="comment"># Show all published versions</span>
+helm search repo harish2k01 --versions</pre>
           </div>
         </section>
 
@@ -369,10 +424,10 @@ helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
             </p>
           </article>
           <article class="card">
-            <h2>Ingress ready</h2>
+            <h2>Versioned releases</h2>
             <p>
-              Charts expose optional Kubernetes Ingress and Gateway API
-              HTTPRoute settings for different cluster setups.
+              New chart versions get GitHub Releases with notes and packaged
+              chart archives attached.
             </p>
           </article>
         </section>
@@ -385,31 +440,46 @@ helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
             </a>
           </div>
 
-          <article class="chart-row">
-            <div>
-              <h3>BentoPDF</h3>
-              <p>
-                Deploys BentoPDF with a ClusterIP service and optional Ingress
-                or Gateway API HTTPRoute.
-              </p>
-            </div>
-            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bentopdf">
-              Chart docs
-            </a>
-          </article>
+          <div class="chart-list">
+            <article class="chart-row">
+              <div>
+                <h3>BentoPDF</h3>
+                <p>
+                  Deploys BentoPDF with a ClusterIP service and optional Ingress
+                  or Gateway API HTTPRoute.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.1</span>
+                  <span class="pill">app 2.8.4</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bentopdf">
+                Chart docs
+              </a>
+            </article>
 
-          <article class="chart-row">
-            <div>
-              <h3>Firefly III</h3>
-              <p>
-                Deploys Firefly III with internal PostgreSQL, upload storage,
-                and the scheduled cron endpoint runner.
-              </p>
-            </div>
-            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/firefly-iii">
-              Chart docs
-            </a>
-          </article>
+            <article class="chart-row">
+              <div>
+                <h3>Firefly III</h3>
+                <p>
+                  Deploys Firefly III with internal PostgreSQL, upload storage,
+                  and the scheduled cron endpoint runner.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app version-6.6.1</span>
+                  <span class="pill">PostgreSQL</span>
+                  <span class="pill">PVC</span>
+                  <span class="pill">CronJob</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/firefly-iii">
+                Chart docs
+              </a>
+            </article>
+          </div>
         </section>
       </main>
 
