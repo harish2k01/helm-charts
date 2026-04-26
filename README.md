@@ -3,9 +3,16 @@
 [![Release Charts](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml)
 [![Lint Charts](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml)
 
-Reusable Helm charts for Kubernetes and self-hosted apps, published through GitHub Pages.
+Reusable Helm charts for Kubernetes and self-hosted apps.
 
-## Add Repository
+## Requirements
+
+- Helm 3
+- Access to a Kubernetes cluster
+- A configured `kubectl` context for the target cluster
+- Optional: an Ingress controller or Gateway API implementation if you want external HTTP access
+
+## Add This Repository
 
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
@@ -19,76 +26,84 @@ helm repo update
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
 
-List all published versions:
+To list all published chart versions:
 
 ```bash
 helm search repo harish2k01 --versions
 ```
 
-## Install
+## Install A Chart
+
+Install BentoPDF:
 
 ```bash
 helm install bentopdf harish2k01/bentopdf
+```
+
+Install Firefly III:
+
+```bash
 helm install firefly-iii harish2k01/firefly-iii
 ```
 
-Install with your own values:
+Install into a namespace:
+
+```bash
+helm install bentopdf harish2k01/bentopdf --namespace apps --create-namespace
+```
+
+## Customize A Chart
+
+Each chart includes a default `values.yaml` file and a chart README with the most commonly used settings:
+
+- [BentoPDF chart documentation](charts/bentopdf)
+- [Firefly III chart documentation](charts/firefly-iii)
+
+Create your own values file and pass it during install:
 
 ```bash
 helm install bentopdf harish2k01/bentopdf -f values.yaml
-helm install firefly-iii harish2k01/firefly-iii -f values.yaml
 ```
 
-Install a specific chart version:
+For Firefly III, replace the default placeholder secrets before using the chart for a persistent or public deployment. See the [Firefly III chart documentation](charts/firefly-iii) for the required secret keys.
+
+## Install A Specific Version
 
 ```bash
 helm install bentopdf harish2k01/bentopdf --version 0.1.1
 ```
 
-## Repository Site
+## Upgrade
 
-The human page and Helm repository are served from the same URL:
+Update your local chart index, then upgrade the release:
+
+```bash
+helm repo update
+helm upgrade bentopdf harish2k01/bentopdf -f values.yaml
+```
+
+## Uninstall
+
+```bash
+helm uninstall bentopdf
+```
+
+If you installed into a namespace, include the namespace:
+
+```bash
+helm uninstall bentopdf --namespace apps
+```
+
+## Repository URL
+
+Use this URL for both the Helm repository and the human-readable chart index:
 
 ```text
 https://harish2k01.github.io/helm-charts
 ```
 
-Helm reads:
+Helm reads the repository index from:
 
 ```text
 https://harish2k01.github.io/helm-charts/index.yaml
 ```
-
-## GitHub Releases
-
-Every new chart version also gets a GitHub Release with release notes and the packaged chart attached.
-
-Release tags use this format:
-
-```text
-<chart-name>-<chart-version>
-```
-
-Examples:
-
-```text
-bentopdf-0.1.1
-firefly-iii-0.1.0
-```
-
-## Publishing
-
-The release workflow packages charts, creates GitHub Releases for new chart versions, preserves older chart packages from the published site, regenerates `index.yaml`, copies the human website from `docs/`, and deploys everything with GitHub Pages Actions.
-
-GitHub Pages should be configured as:
-
-```text
-Source: GitHub Actions
-```
-
-To publish a new chart release:
-
-1. Update the chart under `charts/<name>`.
-2. Bump `version` in that chart's `Chart.yaml`.
-3. Commit and push to `main`.
-4. Let the `Release Charts` workflow deploy the site and Helm index.
