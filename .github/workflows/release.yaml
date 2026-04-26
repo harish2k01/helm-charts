@@ -27,6 +27,19 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Ensure GitHub Pages branch exists
+        run: |
+          if ! git ls-remote --exit-code --heads origin gh-pages > /dev/null 2>&1; then
+            git switch --orphan gh-pages
+            git rm -rf . || true
+            touch .nojekyll
+            git add .nojekyll
+            git commit -m "Initialize GitHub Pages"
+            git push origin gh-pages
+            git switch main
+          fi
+          git fetch origin gh-pages:refs/remotes/origin/gh-pages
+
       - name: Install Helm
         uses: azure/setup-helm@v4
 
