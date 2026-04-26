@@ -1,0 +1,16 @@
+apiVersion: v2
+name: bentopdf
+description: A Helm chart for deploying BentoPDF on Kubernetes
+type: application
+version: 0.1.0
+appVersion: "2.8.4"
+home: https://github.com/alam00000/BentoPDF
+sources:
+  - https://github.com/alam00000/BentoPDF
+  - https://github.com/alam00000/bentopdf
+keywords:
+  - bentopdf
+  - pdf
+  - tools
+maintainers:
+  - name: harish2k01

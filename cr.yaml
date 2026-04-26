@@ -1,0 +1,6 @@
+owner: harish2k01
+git-repo: helm-charts
+charts-dir: charts
+pages-branch: gh-pages
+package-path: .cr-release-packages
+index-path: .cr-index
