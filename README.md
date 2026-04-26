@@ -33,7 +33,7 @@ Example values are available in [`examples/`](examples/).
 
 ## Publishing
 
-This repository includes a GitHub Actions workflow that packages charts, generates a Helm `index.yaml`, copies the human website from `docs/`, and deploys everything through GitHub Pages.
+This repository includes a GitHub Actions workflow that packages charts, preserves existing chart packages from the published site, generates a Helm `index.yaml`, copies the human website from `docs/`, and deploys everything through GitHub Pages.
 
 To enable `helm repo add`:
 

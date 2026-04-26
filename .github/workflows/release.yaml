@@ -37,9 +37,20 @@ jobs:
 
       - name: Build Helm repository
         run: |
+          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
           mkdir -p _site
           cp -R docs/. _site/
           touch _site/.nojekyll
+
+          if curl -fsSL "$REPO_URL/index.yaml" -o _site/index.yaml; then
+            grep -Eo 'https?://[^[:space:]]+\.tgz' _site/index.yaml | sort -u | while read -r package_url; do
+              package_name="$(basename "$package_url")"
+              if [ ! -f "_site/$package_name" ]; then
+                curl -fsSL "$package_url" -o "_site/$package_name"
+              fi
+            done
+          fi
 
           for chart in charts/*; do
             if [ -d "$chart" ]; then
@@ -48,7 +59,13 @@ jobs:
             fi
           done
 
-          helm repo index _site --url "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          if [ -f _site/index.yaml ]; then
+            cp _site/index.yaml _site/previous-index.yaml
+            helm repo index _site --url "$REPO_URL" --merge _site/previous-index.yaml
+            rm _site/previous-index.yaml
+          else
+            helm repo index _site --url "$REPO_URL"
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
