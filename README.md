@@ -16,6 +16,7 @@ helm repo update
 | Chart | Description |
 | --- | --- |
 | `bentopdf` | Deploys BentoPDF on Kubernetes |
+| `firefly-iii` | Deploys Firefly III with PostgreSQL on Kubernetes |
 
 ## Install BentoPDF
 
@@ -23,13 +24,18 @@ helm repo update
 helm install bentopdf harish2k01/bentopdf
 ```
 
-With custom values:
+## Install Firefly III
+
+```bash
+helm install firefly-iii harish2k01/firefly-iii
+```
+
+Install any chart with custom values:
 
 ```bash
 helm install bentopdf harish2k01/bentopdf -f values.yaml
+helm install firefly-iii harish2k01/firefly-iii -f values.yaml
 ```
-
-Example values are available in [`examples/`](examples/).
 
 ## Publishing
 

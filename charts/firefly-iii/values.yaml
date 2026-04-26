@@ -1,0 +1,271 @@
+replicaCount: 1
+
+# Main Firefly III application image.
+# The chart version and app image version are intentionally separate:
+# - Chart.yaml version tracks chart/template changes.
+# - image.tag tracks the Firefly III container version.
+image:
+  repository: fireflyiii/core
+  pullPolicy: IfNotPresent
+  tag: "version-6.6.1"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Internal Kubernetes Service for Firefly III.
+# Ingress and HTTPRoute route traffic to this service.
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# Optional Kubernetes Ingress.
+# Disabled by default so the chart can be installed safely in any cluster.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute.
+# Use this instead of ingress when your cluster exposes apps through Gateway API.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# Persistent storage for Firefly III uploaded attachments.
+# Set existingClaim to reuse a PVC created outside this chart.
+persistence:
+  upload:
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    existingClaim: ""
+
+# Internal PostgreSQL database.
+# This chart currently expects postgres.enabled=true.
+# For production use, set a real DB_PASSWORD via firefly.secrets.existingSecret.
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    pullPolicy: IfNotPresent
+    tag: "16-alpine"
+  service:
+    port: 5432
+  auth:
+    database: firefly
+    username: firefly
+  persistence:
+    # Set enabled=false to use ephemeral emptyDir storage.
+    # Set existingClaim to reuse a PVC created outside this chart.
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    existingClaim: ""
+  resources: {}
+  nodeSelector: {}
+  podSecurityContext: {}
+
+# Firefly III requires its cron endpoint to be called periodically.
+# This CronJob calls /api/v1/cron/<STATIC_CRON_TOKEN> inside the cluster.
+cronjob:
+  enabled: true
+  schedule: "0 3 * * *"
+  timeZone: ""
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  restartPolicy: OnFailure
+  image:
+    repository: curlimages/curl
+    pullPolicy: IfNotPresent
+    tag: "8.19.0"
+  resources: {}
+
+firefly:
+  # Non-secret Firefly III environment variables.
+  # Override APP_URL when exposing Firefly through Ingress or HTTPRoute.
+  env:
+    # Runtime mode. Keep APP_ENV=production for normal deployments.
+    APP_ENV: production
+    APP_DEBUG: "false"
+
+    # Instance owner and default localization settings.
+    SITE_OWNER: owner@example.com
+    DEFAULT_LANGUAGE: en_US
+    DEFAULT_LOCALE: equal
+    TZ: UTC
+
+    # Reverse proxy and logging settings.
+    # TRUSTED_PROXIES="**" is convenient when Firefly sits behind an ingress,
+    # gateway, or load balancer.
+    TRUSTED_PROXIES: "**"
+    LOG_CHANNEL: stack
+    APP_LOG_LEVEL: notice
+    AUDIT_LOG_LEVEL: emergency
+    AUDIT_LOG_CHANNEL: ""
+    PAPERTRAIL_HOST: ""
+    PAPERTRAIL_PORT: ""
+
+    # Database connection values such as host, port, database, and username are
+    # rendered by this chart from the postgres section. These values cover
+    # optional socket/schema/SSL settings.
+    DB_SOCKET: ""
+    PGSQL_SSL_MODE: prefer
+    PGSQL_SSL_ROOT_CERT: "null"
+    PGSQL_SSL_CERT: "null"
+    PGSQL_SSL_KEY: "null"
+    PGSQL_SSL_CRL_FILE: "null"
+    PGSQL_SCHEMA: public
+
+    # Cache and session drivers. The defaults use local files.
+    # If you switch either driver to redis, configure the Redis values below.
+    CACHE_DRIVER: file
+    SESSION_DRIVER: file
+
+    # Redis connection settings. Only used when cache/session/queue settings
+    # point to Redis.
+    REDIS_SCHEME: tcp
+    REDIS_PATH: ""
+    REDIS_HOST: 127.0.0.1
+    REDIS_PORT: "6379"
+    REDIS_USERNAME: ""
+    REDIS_DB: "0"
+    REDIS_CACHE_DB: "1"
+
+    # Browser cookie settings. Set COOKIE_SECURE=true when serving over HTTPS.
+    COOKIE_PATH: /
+    COOKIE_DOMAIN: ""
+    COOKIE_SECURE: "false"
+    COOKIE_SAMESITE: lax
+
+    # Mail delivery settings. The public default logs mail instead of sending it.
+    # Use firefly.secrets for mail credentials.
+    MAIL_MAILER: log
+    MAIL_HOST: ""
+    MAIL_PORT: "587"
+    MAIL_FROM: firefly@example.com
+    MAIL_ENCRYPTION: "null"
+    MAIL_SENDMAIL_COMMAND: ""
+    MAIL_ALLOW_SELF_SIGNED: "false"
+    MAIL_VERIFY_PEER: "true"
+    MAIL_VERIFY_PEER_NAME: "true"
+    MAILGUN_DOMAIN: ""
+    MAILGUN_ENDPOINT: api.mailgun.net
+
+    # Optional error reporting behavior and default map viewport.
+    SEND_ERROR_MESSAGE: "false"
+    MAP_DEFAULT_LAT: "51.983333"
+    MAP_DEFAULT_LONG: "5.916667"
+    MAP_DEFAULT_ZOOM: "6"
+
+    # Authentication integration settings. Defaults use Firefly's built-in web
+    # authentication.
+    AUTHENTICATION_GUARD: web
+    AUTHENTICATION_GUARD_HEADER: REMOTE_USER
+    AUTHENTICATION_GUARD_EMAIL: ""
+    PASSPORT_PUBLIC_KEY: ""
+    CUSTOM_LOGOUT_URL: ""
+    DISABLE_FRAME_HEADER: "false"
+    DISABLE_CSP_HEADER: "false"
+
+    # Optional analytics/tracker integration.
+    TRACKER_SITE_ID: ""
+    TRACKER_URL: ""
+
+    # Docker entrypoint and application defaults.
+    DKR_CHECK_SQLITE: "true"
+    APP_NAME: FireflyIII
+    BROADCAST_DRIVER: log
+    QUEUE_DRIVER: sync
+    CACHE_PREFIX: firefly
+    PUSHER_KEY: ""
+    PUSHER_ID: ""
+    DEMO_USERNAME: ""
+    DEMO_PASSWORD: ""
+    FIREFLY_III_LAYOUT: v1
+
+    # Public URL used by Firefly III when generating links and redirects.
+    # Set this to your external HTTPS URL when using Ingress or HTTPRoute.
+    APP_URL: http://localhost
+
+  secrets:
+    # Recommended for real deployments:
+    # create a Kubernetes Secret yourself and set existingSecret to its name.
+    #
+    # Required keys:
+    # - APP_KEY: exactly 32 characters
+    # - DB_PASSWORD: PostgreSQL password
+    # - STATIC_CRON_TOKEN: exactly 32 characters
+    #
+    # Optional keys may be included for mail, Redis, API integrations, and
+    # passport/private-key use cases.
+    existingSecret: ""
+
+    # Bump this value when an externally managed Secret changes and you want
+    # Helm/GitOps tooling to roll the Firefly Deployment.
+    rolloutToken: "1"
+
+    # Inline placeholders are suitable only for local testing/evaluation.
+    # Do not use these defaults for a public or long-lived deployment.
+    inline:
+      APP_KEY: 0123456789abcdefghijklmnopqrstuv
+      DB_PASSWORD: CHANGE_ME_DB_PASSWORD
+      STATIC_CRON_TOKEN: 1234567890abcdefghijklmnopqrstuv
+      MAIL_USERNAME: "null"
+      MAIL_PASSWORD: "null"
+      REDIS_PASSWORD: ""
+      MAILGUN_SECRET: ""
+      MANDRILL_SECRET: ""
+      SPARKPOST_SECRET: ""
+      MAILERSEND_API_KEY: ""
+      PASSPORT_PRIVATE_KEY: ""
+      IPINFO_TOKEN: ""
+      PUSHER_SECRET: ""
+
+  # Pod settings for the Firefly III application container.
+  resources: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30

@@ -345,6 +345,9 @@ helm repo update
 <span class="comment"># Install BentoPDF</span>
 helm install bentopdf harish2k01/bentopdf
 
+<span class="comment"># Install Firefly III</span>
+helm install firefly-iii harish2k01/firefly-iii
+
 <span class="comment"># Install with custom values</span>
 helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
           </div>
@@ -377,8 +380,8 @@ helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
         <section class="charts" id="charts">
           <div class="section-head">
             <h2>Available charts</h2>
-            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/examples">
-              Example values
+            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts">
+              Browse charts
             </a>
           </div>
 
@@ -391,6 +394,19 @@ helm install bentopdf harish2k01/bentopdf -f values.yaml</pre>
               </p>
             </div>
             <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bentopdf">
+              Chart docs
+            </a>
+          </article>
+
+          <article class="chart-row">
+            <div>
+              <h3>Firefly III</h3>
+              <p>
+                Deploys Firefly III with internal PostgreSQL, upload storage,
+                and the scheduled cron endpoint runner.
+              </p>
+            </div>
+            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/firefly-iii">
               Chart docs
             </a>
           </article>

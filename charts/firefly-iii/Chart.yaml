@@ -1,0 +1,16 @@
+apiVersion: v2
+name: firefly-iii
+description: A Helm chart for deploying Firefly III with PostgreSQL
+type: application
+version: 0.1.0
+appVersion: "version-6.6.1"
+home: https://www.firefly-iii.org/
+sources:
+  - https://github.com/firefly-iii/firefly-iii
+keywords:
+  - firefly-iii
+  - finance
+  - budgeting
+  - personal-finance
+maintainers:
+  - name: harish2k01
