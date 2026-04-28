@@ -1,0 +1,18 @@
+{{- if and .Values.speedtestTracker.persistence.enabled (not .Values.speedtestTracker.persistence.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "speedtest-tracker.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "speedtest-tracker.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.speedtestTracker.persistence.accessModes | nindent 4 }}
+  {{- if .Values.speedtestTracker.persistence.storageClassName }}
+  storageClassName: {{ .Values.speedtestTracker.persistence.storageClassName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.speedtestTracker.persistence.size }}
+{{- end }}
