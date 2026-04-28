@@ -1,0 +1,218 @@
+{{- $builtinMariaDB := .Values.database.mariadb.enabled }}
+{{- $builtinMySQL := .Values.database.mysql.enabled }}
+{{- $builtinPostgreSQL := .Values.database.postgresql.enabled }}
+{{- $externalDatabaseEnabled := .Values.database.external.enabled }}
+{{- $builtinDatabaseEnabled := or $builtinMariaDB $builtinMySQL $builtinPostgreSQL }}
+{{- $enabledDatabaseCount := 0 }}
+{{- if $builtinMariaDB }}
+{{- $enabledDatabaseCount = add $enabledDatabaseCount 1 }}
+{{- end }}
+{{- if $builtinMySQL }}
+{{- $enabledDatabaseCount = add $enabledDatabaseCount 1 }}
+{{- end }}
+{{- if $builtinPostgreSQL }}
+{{- $enabledDatabaseCount = add $enabledDatabaseCount 1 }}
+{{- end }}
+{{- if $externalDatabaseEnabled }}
+{{- $enabledDatabaseCount = add $enabledDatabaseCount 1 }}
+{{- end }}
+{{- if gt $enabledDatabaseCount 1 }}
+{{- fail "Enable only one database section: database.mariadb, database.mysql, database.postgresql, or database.external" }}
+{{- end }}
+{{- if and $externalDatabaseEnabled (not (has .Values.database.external.type (list "mariadb" "mysql" "pgsql"))) }}
+{{- fail "database.external.type must be one of: mariadb, mysql, pgsql" }}
+{{- end }}
+{{- $dbConnection := .Values.database.external.type }}
+{{- $chartManagedDatabase := or $externalDatabaseEnabled $builtinDatabaseEnabled }}
+{{- $hasInlineSecrets := false }}
+{{- range $key, $value := .Values.speedtestTracker.secrets.inline }}
+{{- if $value }}
+{{- $hasInlineSecrets = true }}
+{{- end }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "speedtest-tracker.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "speedtest-tracker.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "speedtest-tracker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/speedtest-tracker-secrets: {{ toJson .Values.speedtestTracker.secrets.inline | sha256sum }}
+        checksum/speedtest-tracker-database: {{ toJson .Values.database | sha256sum }}
+        speedtest-tracker/rollout-token: {{ .Values.speedtestTracker.secrets.rolloutToken | quote }}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "speedtest-tracker.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $builtinDatabaseEnabled }}
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.35
+          command:
+            - 'sh'
+            - '-c'
+            {{- if $builtinMariaDB }}
+            - 'until nc -z {{ include "speedtest-tracker.fullname" . }}-db {{ .Values.database.mariadb.service.port }}; do echo waiting for MariaDB; sleep 2; done;'
+            {{- else if $builtinMySQL }}
+            - 'until nc -z {{ include "speedtest-tracker.fullname" . }}-db {{ .Values.database.mysql.service.port }}; do echo waiting for MySQL; sleep 2; done;'
+            {{- else if $builtinPostgreSQL }}
+            - 'until nc -z {{ include "speedtest-tracker.fullname" . }}-db {{ .Values.database.postgresql.service.port }}; do echo waiting for PostgreSQL; sleep 2; done;'
+            {{- end }}
+      {{- end }}
+      containers:
+        - name: speedtest-tracker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if or .Values.speedtestTracker.secrets.existingSecret $hasInlineSecrets }}
+          envFrom:
+            - secretRef:
+                name: {{ default (include "speedtest-tracker.fullname" .) .Values.speedtestTracker.secrets.existingSecret }}
+          {{- end }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.speedtestTracker.env }}
+            {{- if not (and $chartManagedDatabase (has $key (list "DB_CONNECTION" "DB_HOST" "DB_PORT" "DB_DATABASE" "DB_USERNAME" "DB_PASSWORD"))) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            
+            {{- if $builtinDatabaseEnabled }}
+            {{- if $builtinMariaDB }}
+            # MariaDB Configuration
+            - name: DB_CONNECTION
+              value: "mariadb"
+            - name: DB_HOST
+              value: {{ include "speedtest-tracker.fullname" . }}-db
+            - name: DB_PORT
+              value: {{ .Values.database.mariadb.service.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.database.mariadb.auth.database | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.mariadb.auth.username | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "speedtest-tracker.fullname" .)) .Values.database.mariadb.auth.existingSecret }}
+                  key: {{ .Values.database.mariadb.auth.passwordKey }}
+            {{- else if $builtinMySQL }}
+            # MySQL Configuration
+            - name: DB_CONNECTION
+              value: "mysql"
+            - name: DB_HOST
+              value: {{ include "speedtest-tracker.fullname" . }}-db
+            - name: DB_PORT
+              value: {{ .Values.database.mysql.service.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.database.mysql.auth.database | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.mysql.auth.username | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "speedtest-tracker.fullname" .)) .Values.database.mysql.auth.existingSecret }}
+                  key: {{ .Values.database.mysql.auth.passwordKey }}
+            {{- else if $builtinPostgreSQL }}
+            # PostgreSQL Configuration
+            - name: DB_CONNECTION
+              value: "pgsql"
+            - name: DB_HOST
+              value: {{ include "speedtest-tracker.fullname" . }}-db
+            - name: DB_PORT
+              value: {{ .Values.database.postgresql.service.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.database.postgresql.auth.database | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.postgresql.auth.username | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "speedtest-tracker.fullname" .)) .Values.database.postgresql.auth.existingSecret }}
+                  key: {{ .Values.database.postgresql.auth.passwordKey }}
+            {{- end }}
+            {{- else if $externalDatabaseEnabled }}
+            # External Database Configuration
+            - name: DB_CONNECTION
+              value: {{ $dbConnection | quote }}
+            - name: DB_HOST
+              value: {{ .Values.database.external.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.database.external.port | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.database.external.database | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.external.username | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db-external" (include "speedtest-tracker.fullname" .)) .Values.database.external.existingSecret }}
+                  key: {{ .Values.database.external.passwordKey }}
+            {{- end }}
+          {{- if .Values.speedtestTracker.persistence.enabled }}
+          volumeMounts:
+            - name: config
+              mountPath: {{ .Values.speedtestTracker.persistence.mountPath }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.speedtestTracker.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if .Values.speedtestTracker.persistence.enabled }}
+      volumes:
+        - name: config
+          {{- if .Values.speedtestTracker.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.speedtestTracker.persistence.existingClaim }}
+          {{- else }}
+          persistentVolumeClaim:
+            claimName: {{ include "speedtest-tracker.fullname" . }}
+          {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

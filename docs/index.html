@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Harish Helm Charts</title>
+    <title>Harish's Helm Charts</title>
     <meta
       name="description"
       content="Reusable Helm charts for Kubernetes applications, published as a Helm repository."
@@ -350,7 +350,7 @@
       <header>
         <div class="brand">
           <div class="mark" aria-hidden="true">H</div>
-          <span>Harish Helm Charts</span>
+          <span>Harish's Helm Charts</span>
         </div>
         <nav aria-label="Primary navigation">
           <a href="#install">Install</a>
@@ -399,6 +399,9 @@ helm install bentopdf harish2k01/bentopdf
 
 <span class="comment"># Install Firefly III</span>
 helm install firefly-iii harish2k01/firefly-iii
+
+<span class="comment"># Install Speedtest Tracker</span>
+helm install speedtest-tracker harish2k01/speedtest-tracker
 
 <span class="comment"># Install with custom values</span>
 helm install bentopdf harish2k01/bentopdf -f values.yaml
@@ -476,6 +479,27 @@ helm search repo harish2k01 --versions</pre>
                 </div>
               </div>
               <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/firefly-iii">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Speedtest Tracker</h3>
+                <p>
+                  Deploys Speedtest Tracker with configurable cron schedule,
+                  persistent storage for results, and optional Ingress or Gateway
+                  API HTTPRoute.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app latest</span>
+                  <span class="pill">PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/speedtest-tracker">
                 Chart docs
               </a>
             </article>

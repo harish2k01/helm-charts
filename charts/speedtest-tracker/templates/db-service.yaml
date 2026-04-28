@@ -1,0 +1,35 @@
+{{- $builtinMariaDB := .Values.database.mariadb.enabled }}
+{{- $builtinMySQL := .Values.database.mysql.enabled }}
+{{- $builtinPostgreSQL := .Values.database.postgresql.enabled }}
+{{- if or $builtinMariaDB $builtinMySQL $builtinPostgreSQL }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "speedtest-tracker.fullname" . }}-db
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "speedtest-tracker.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  clusterIP: None
+  selector:
+    {{- include "speedtest-tracker.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  ports:
+    {{- if $builtinMariaDB }}
+    - port: {{ .Values.database.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+    {{- else if $builtinMySQL }}
+    - port: {{ .Values.database.mysql.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+    {{- else if $builtinPostgreSQL }}
+    - port: {{ .Values.database.postgresql.service.port }}
+      targetPort: postgresql
+      protocol: TCP
+      name: postgresql
+    {{- end }}
+{{- end }}

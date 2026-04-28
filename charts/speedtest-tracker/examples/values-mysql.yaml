@@ -1,0 +1,74 @@
+# Example: Speedtest Tracker with MySQL 8
+# Best for: Most applications, wide compatibility
+# Usage: helm install speedtest-tracker -f examples/values-mysql.yaml harish2k01/speedtest-tracker
+#
+# Required secrets:
+# kubectl create secret generic speedtest-tracker-secrets \
+#   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+# kubectl create secret generic speedtest-tracker-db \
+#   --from-literal=db-password='your_mysql_password'
+
+database:
+  mysql:
+    enabled: true
+    image:
+      repository: mysql
+      tag: "8"
+      pullPolicy: IfNotPresent
+    service:
+      port: 3306
+    auth:
+      database: speedtest_tracker
+      username: speedtest_tracker
+      existingSecret: speedtest-tracker-db
+      passwordKey: db-password
+    persistence:
+      enabled: true
+      storageClassName: "fast-ssd"  # Adjust to your storage class
+      accessModes:
+        - ReadWriteOnce
+      size: 20Gi
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+    healthcheck:
+      enabled: true
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+speedtestTracker:
+  secrets:
+    existingSecret: speedtest-tracker-secrets
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: "standard"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  env:
+    DISPLAY_TIMEZONE: "UTC"
+    SPEEDTEST_SCHEDULE: "0 */6 * * *"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: speedtest.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: speedtest-tls
+      hosts:
+        - speedtest.example.com
+

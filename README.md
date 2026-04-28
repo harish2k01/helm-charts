@@ -25,6 +25,7 @@ helm repo update
 | --- | --- | --- | --- |
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
+| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.0` | `latest` | Deploys Speedtest Tracker on Kubernetes |
 
 To list all published chart versions:
 
@@ -44,6 +45,12 @@ Install Firefly III:
 
 ```bash
 helm install firefly-iii harish2k01/firefly-iii
+```
+
+Install Speedtest Tracker:
+
+```bash
+helm install speedtest-tracker harish2k01/speedtest-tracker
 ```
 
 Install into a namespace:

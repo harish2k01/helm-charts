@@ -1,0 +1,25 @@
+# Example: Speedtest Tracker with SQLite (Default - No Database Setup)
+# Best for: Development, testing, small homelab
+# Usage: helm install speedtest-tracker -f examples/values-sqlite.yaml harish2k01/speedtest-tracker
+#
+# Required secret:
+# kubectl create secret generic speedtest-tracker-secrets \
+#   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+
+# No database configuration needed for SQLite, use defaults
+
+speedtestTracker:
+  secrets:
+    existingSecret: speedtest-tracker-secrets
+  persistence:
+    enabled: true
+    size: 1Gi
+  env:
+    DISPLAY_TIMEZONE: "UTC"
+    SPEEDTEST_SCHEDULE: "0 */6 * * *"
+
+ingress:
+  enabled: false
+
+httpRoute:
+  enabled: false

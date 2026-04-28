@@ -1,0 +1,80 @@
+# Example: Speedtest Tracker with External Database
+# Best for: Production HA/DR, managed database services (RDS, Cloud SQL), multi-app environments
+# Usage: helm install speedtest-tracker -f examples/values-external-db.yaml harish2k01/speedtest-tracker
+#
+# Required secrets:
+# kubectl create secret generic speedtest-tracker-secrets \
+#   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+# kubectl create secret generic speedtest-tracker-db-external \
+#   --from-literal=db-password='your_external_db_password'
+
+database:
+  external:
+    enabled: true
+    type: "mysql"  # mariadb, mysql, or pgsql
+    host: "mysql.example.com"
+    port: "3306"
+    database: "speedtest_tracker"
+    username: "speedtest_user"
+    existingSecret: speedtest-tracker-db-external
+    passwordKey: db-password
+
+speedtestTracker:
+  secrets:
+    existingSecret: speedtest-tracker-secrets
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: "standard"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  env:
+    DISPLAY_TIMEZONE: "UTC"
+    SPEEDTEST_SCHEDULE: "0 */6 * * *"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: speedtest.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+
+# Common external database configuration examples:
+
+# AWS RDS MySQL:
+# database:
+#   external:
+#     enabled: true
+#     type: "mysql"
+#     host: "my-database.xx.us-east-1.rds.amazonaws.com"
+#     port: "3306"
+#     username: "admin"
+#     existingSecret: speedtest-tracker-db-external
+
+# Google Cloud SQL PostgreSQL:
+# database:
+#   external:
+#     enabled: true
+#     type: "pgsql"
+#     host: "10.0.0.2"  # CloudSQL Proxy
+#     port: "5432"
+#     username: "postgres"
+#     existingSecret: speedtest-tracker-db-external
+
+# Azure Database for MySQL:
+# database:
+#   external:
+#     enabled: true
+#     type: "mysql"
+#     host: "myserver.mysql.database.azure.com"
+#     port: "3306"
+#     username: "admin@myserver"
+#     existingSecret: speedtest-tracker-db-external
