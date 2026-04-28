@@ -81,7 +81,7 @@ database:
     image:
       repository: mysql
       pullPolicy: IfNotPresent
-      tag: "8"
+      tag: "9"
     service:
       port: 3306
     auth:
