@@ -25,7 +25,7 @@ helm repo update
 | --- | --- | --- | --- |
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
-| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.0` | `latest` | Deploys Speedtest Tracker on Kubernetes |
+| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.0` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
 
 To list all published chart versions:
 
@@ -63,16 +63,11 @@ helm install bentopdf harish2k01/bentopdf --namespace apps --create-namespace
 
 Each chart includes a default `values.yaml` file and a chart README with the most commonly used settings:
 
-- [BentoPDF chart documentation](charts/bentopdf)
-- [Firefly III chart documentation](charts/firefly-iii)
-
 Create your own values file and pass it during install:
 
 ```bash
 helm install bentopdf harish2k01/bentopdf -f values.yaml
 ```
-
-For Firefly III, replace the default placeholder secrets before using the chart for a persistent or public deployment. See the [Firefly III chart documentation](charts/firefly-iii) for the required secret keys.
 
 ## Install A Specific Version
 
