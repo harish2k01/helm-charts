@@ -78,70 +78,107 @@ jobs:
           fi
 
       - name: Create GitHub releases
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const { execFileSync } = require('child_process');
 
-          for chart in charts/*; do
-            if [ ! -d "$chart" ]; then
-              continue
-            fi
+            const repoUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
+            const chartsDir = 'charts';
+            const chartDirs = fs.readdirSync(chartsDir, { withFileTypes: true })
+              .filter((entry) => entry.isDirectory())
+              .map((entry) => path.join(chartsDir, entry.name));
 
-            chart_metadata="$(helm show chart "$chart")"
-            chart_name="$(printf '%s\n' "$chart_metadata" | awk -F': ' '$1 == "name" { print $2; exit }')"
-            chart_version="$(printf '%s\n' "$chart_metadata" | awk -F': ' '$1 == "version" { print $2; exit }')"
-            app_version="$(printf '%s\n' "$chart_metadata" | awk -F': ' '$1 == "appVersion" { print $2; exit }' | tr -d '"')"
-            description="$(printf '%s\n' "$chart_metadata" | awk -F': ' '$1 == "description" { print $2; exit }')"
-            tag="${chart_name}-${chart_version}"
-            package="_site/${chart_name}-${chart_version}.tgz"
-            notes_file="$(mktemp)"
+            function getMetadataValue(metadata, key) {
+              const prefix = `${key}:`;
+              const line = metadata.split(/\r?\n/).find((item) => item.startsWith(prefix));
+              return line ? line.slice(prefix.length).trim().replace(/^["']|["']$/g, '') : '';
+            }
 
-            if [ ! -f "$package" ]; then
-              echo "Package $package was not found; skipping release $tag."
-              continue
-            fi
+            for (const chart of chartDirs) {
+              const metadata = execFileSync('helm', ['show', 'chart', chart], { encoding: 'utf8' });
+              const chartName = getMetadataValue(metadata, 'name');
+              const chartVersion = getMetadataValue(metadata, 'version');
+              const appVersion = getMetadataValue(metadata, 'appVersion');
+              const description = getMetadataValue(metadata, 'description');
+              const tag = `${chartName}-${chartVersion}`;
+              const packagePath = path.join('_site', `${chartName}-${chartVersion}.tgz`);
 
-            if gh release view "$tag" > /dev/null 2>&1; then
-              echo "Release $tag already exists; skipping."
-              continue
-            fi
+              if (!fs.existsSync(packagePath)) {
+                core.info(`Package ${packagePath} was not found; skipping release ${tag}.`);
+                continue;
+              }
 
-            cat > "$notes_file" <<EOF
-          ## ${chart_name} ${chart_version}
+              try {
+                await github.rest.repos.getReleaseByTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag,
+                });
+                core.info(`Release ${tag} already exists; skipping.`);
+                continue;
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+              }
 
-          ${description}
+              const notes = [
+                `## ${chartName} ${chartVersion}`,
+                '',
+                description,
+                '',
+                '### Versions',
+                '',
+                `- Chart version: \`${chartVersion}\``,
+                `- App version: \`${appVersion}\``,
+                '',
+                '### Install',
+                '',
+                '```bash',
+                `helm repo add harish2k01 ${repoUrl}`,
+                'helm repo update',
+                `helm install ${chartName} harish2k01/${chartName} --version ${chartVersion}`,
+                '```',
+                '',
+                '### Upgrade',
+                '',
+                '```bash',
+                `helm upgrade ${chartName} harish2k01/${chartName} --version ${chartVersion}`,
+                '```',
+                '',
+                '### Links',
+                '',
+                `- Helm repository: ${repoUrl}`,
+                `- Chart source: https://github.com/${context.repo.owner}/${context.repo.repo}/tree/main/${chart}`,
+                `- Package: ${repoUrl}/${chartName}-${chartVersion}.tgz`,
+                '',
+              ].join('\n');
 
-          ### Versions
+              const release = await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: tag,
+                name: `${chartName} ${chartVersion}`,
+                body: notes,
+              });
 
-          - Chart version: \`${chart_version}\`
-          - App version: \`${app_version}\`
-
-          ### Install
-
-          \`\`\`bash
-          helm repo add harish2k01 ${REPO_URL}
-          helm repo update
-          helm install ${chart_name} harish2k01/${chart_name} --version ${chart_version}
-          \`\`\`
-
-          ### Upgrade
-
-          \`\`\`bash
-          helm upgrade ${chart_name} harish2k01/${chart_name} --version ${chart_version}
-          \`\`\`
-
-          ### Links
-
-          - Helm repository: ${REPO_URL}
-          - Chart source: https://github.com/${{ github.repository }}/tree/main/${chart}
-          - Package: ${REPO_URL}/${chart_name}-${chart_version}.tgz
-          EOF
-
-            gh release create "$tag" "$package" \
-              --title "${chart_name} ${chart_version}" \
-              --notes-file "$notes_file"
-          done
+              const packageData = fs.readFileSync(packagePath);
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id,
+                name: path.basename(packagePath),
+                data: packageData,
+                headers: {
+                  'content-type': 'application/gzip',
+                  'content-length': packageData.length,
+                },
+              });
+            }
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
