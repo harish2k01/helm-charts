@@ -1,0 +1,116 @@
+{{- if .Values.database.mariadb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "uptime-kuma.fullname" . }}-db
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "uptime-kuma.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  serviceName: {{ include "uptime-kuma.fullname" . }}-db
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "uptime-kuma.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        {{- include "uptime-kuma.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: database
+    spec:
+      {{- with .Values.database.mariadb.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: mariadb
+          image: "{{ .Values.database.mariadb.image.repository }}:{{ .Values.database.mariadb.image.tag }}"
+          imagePullPolicy: {{ .Values.database.mariadb.image.pullPolicy }}
+          ports:
+            - name: mysql
+              containerPort: {{ .Values.database.mariadb.service.port }}
+              protocol: TCP
+          env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.mariadb.auth.database | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.mariadb.auth.username | quote }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "uptime-kuma.fullname" .)) .Values.database.mariadb.auth.existingSecret }}
+                  key: {{ .Values.database.mariadb.auth.passwordKey }}
+            {{- if .Values.database.mariadb.auth.rootPassword }}
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "uptime-kuma.fullname" .)) .Values.database.mariadb.auth.existingSecret }}
+                  key: {{ default "db-root-password" .Values.database.mariadb.auth.rootPasswordKey }}
+            {{- else }}
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "true"
+            {{- end }}
+          {{- if .Values.database.mariadb.healthcheck.enabled }}
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - healthcheck.sh --connect --innodb_initialized
+            initialDelaySeconds: 60
+            periodSeconds: {{ .Values.database.mariadb.healthcheck.interval | replace "s" "" | int }}
+            timeoutSeconds: {{ .Values.database.mariadb.healthcheck.timeout | replace "s" "" | int }}
+            failureThreshold: {{ .Values.database.mariadb.healthcheck.retries }}
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - healthcheck.sh --connect --innodb_initialized
+            initialDelaySeconds: 10
+            periodSeconds: {{ .Values.database.mariadb.healthcheck.interval | replace "s" "" | int }}
+            timeoutSeconds: {{ .Values.database.mariadb.healthcheck.timeout | replace "s" "" | int }}
+            failureThreshold: {{ .Values.database.mariadb.healthcheck.retries }}
+          {{- end }}
+          {{- with .Values.database.mariadb.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+      {{- with .Values.database.mariadb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      
+      {{- if .Values.database.mariadb.persistence.existingClaim }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.database.mariadb.persistence.existingClaim }}
+      {{- else if not .Values.database.mariadb.persistence.enabled }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+
+  {{- if and .Values.database.mariadb.persistence.enabled (not .Values.database.mariadb.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "uptime-kuma.labels" . | nindent 10 }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.database.mariadb.persistence.accessModes | nindent 10 }}
+        {{- if .Values.database.mariadb.persistence.storageClassName }}
+        storageClassName: {{ .Values.database.mariadb.persistence.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.database.mariadb.persistence.size }}
+  {{- end }}
+{{- end }}

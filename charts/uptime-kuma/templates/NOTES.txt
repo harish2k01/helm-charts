@@ -1,0 +1,30 @@
+Thank you for installing {{ .Chart.Name }}!
+
+{{- if .Values.ingress.enabled }}
+
+Uptime Kuma is available at:
+{{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
+{{- end }}
+
+{{- else if eq .Values.service.type "NodePort" }}
+
+Get the application URL by running:
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "uptime-kuma.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+{{- else if eq .Values.service.type "LoadBalancer" }}
+
+It may take a few minutes for the LoadBalancer IP to be available.
+Watch the status with:
+  kubectl get svc --namespace {{ .Release.Namespace }} -w {{ include "uptime-kuma.fullname" . }}
+
+{{- else }}
+
+Access Uptime Kuma by running:
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "uptime-kuma.fullname" . }} 3001:{{ .Values.service.port }}
+
+Then visit: http://localhost:3001
+
+{{- end }}

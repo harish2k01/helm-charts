@@ -1,0 +1,140 @@
+{{- $builtinMariaDB := .Values.database.mariadb.enabled }}
+{{- $externalDatabaseEnabled := .Values.database.external.enabled }}
+{{- $chartManagedDatabase := or $externalDatabaseEnabled $builtinMariaDB }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "uptime-kuma.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "uptime-kuma.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "uptime-kuma.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "uptime-kuma.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $builtinMariaDB }}
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.35
+          command:
+            - 'sh'
+            - '-c'
+            - 'until nc -z {{ include "uptime-kuma.fullname" . }}-db {{ .Values.database.mariadb.service.port }}; do echo waiting for MariaDB; sleep 2; done;'
+      {{- end }}
+      containers:
+        - name: uptime-kuma
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 3001
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.env $chartManagedDatabase }}
+          env:
+            {{- if .Values.env }}
+            {{- range $key, $value := .Values.env }}
+            {{- if not (and $chartManagedDatabase (has $key (list "UPTIME_KUMA_DB_TYPE" "UPTIME_KUMA_DB_HOSTNAME" "UPTIME_KUMA_DB_PORT" "UPTIME_KUMA_DB_NAME" "UPTIME_KUMA_DB_USERNAME" "UPTIME_KUMA_DB_PASSWORD"))) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            
+            {{- if $builtinMariaDB }}
+            # Internal MariaDB Configuration
+            - name: UPTIME_KUMA_DB_TYPE
+              value: "mariadb"
+            - name: UPTIME_KUMA_DB_HOSTNAME
+              value: {{ include "uptime-kuma.fullname" . }}-db
+            - name: UPTIME_KUMA_DB_PORT
+              value: {{ .Values.database.mariadb.service.port | quote }}
+            - name: UPTIME_KUMA_DB_NAME
+              value: {{ .Values.database.mariadb.auth.database | quote }}
+            - name: UPTIME_KUMA_DB_USERNAME
+              value: {{ .Values.database.mariadb.auth.username | quote }}
+            - name: UPTIME_KUMA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db" (include "uptime-kuma.fullname" .)) .Values.database.mariadb.auth.existingSecret }}
+                  key: {{ .Values.database.mariadb.auth.passwordKey }}
+            {{- else if $externalDatabaseEnabled }}
+            # External MariaDB Configuration
+            - name: UPTIME_KUMA_DB_TYPE
+              value: {{ .Values.database.external.type | quote }}
+            - name: UPTIME_KUMA_DB_HOSTNAME
+              value: {{ .Values.database.external.host | quote }}
+            - name: UPTIME_KUMA_DB_PORT
+              value: {{ .Values.database.external.port | quote }}
+            - name: UPTIME_KUMA_DB_NAME
+              value: {{ .Values.database.external.database | quote }}
+            - name: UPTIME_KUMA_DB_USERNAME
+              value: {{ .Values.database.external.username | quote }}
+            - name: UPTIME_KUMA_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (printf "%s-db-external" (include "uptime-kuma.fullname" .)) .Values.database.external.existingSecret }}
+                  key: {{ .Values.database.external.passwordKey }}
+            {{- end }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: data
+              mountPath: /app/data
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ if .Values.persistence.existingClaim }}{{ .Values.persistence.existingClaim }}{{ else }}{{ include "uptime-kuma.fullname" . }}{{ end }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
