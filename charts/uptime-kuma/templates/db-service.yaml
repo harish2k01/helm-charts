@@ -1,0 +1,20 @@
+{{- if .Values.database.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "uptime-kuma.fullname" . }}-db
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "uptime-kuma.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+spec:
+  clusterIP: None
+  selector:
+    {{- include "uptime-kuma.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: database
+  ports:
+    - port: {{ .Values.database.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+{{- end }}
