@@ -9,8 +9,11 @@ data:
       listen:
         port: 8080
 
+    database:
+      location: /opt/scrutiny/config/scrutiny.db
+
     devices:
-      - host: {{ .Values.scrutiny.truenas.host }}
-        port: {{ .Values.scrutiny.truenas.port }}
-        user: {{ .Values.scrutiny.truenas.user }}
+      - host: 10.10.10.104
+        port: 22
+        user: truenas_admin
         identity_file: /opt/scrutiny/ssh/id_ed25519
