@@ -44,8 +44,16 @@ spec:
           {{- end }}
 
           volumeMounts:
+            # ✅ FIX 1: mount config as single file
             - name: config
+              mountPath: /opt/scrutiny/config/scrutiny.yaml
+              subPath: config.yaml
+              readOnly: true
+
+            # ✅ FIX 2: writable directory for DB
+            - name: data
               mountPath: /opt/scrutiny/config
+
             - name: ssh-key
               mountPath: /opt/scrutiny/ssh
               readOnly: true
@@ -58,9 +66,14 @@ spec:
             readOnlyRootFilesystem: false
 
       volumes:
+        # ConfigMap stays the same
         - name: config
           configMap:
             name: {{ include "scrutiny.fullname" . }}-config
+
+        # ✅ NEW: writable volume
+        - name: data
+          emptyDir: {}
 
         - name: ssh-key
           secret:
