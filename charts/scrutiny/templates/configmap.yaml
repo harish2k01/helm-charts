@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scrutiny.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  config.yaml: |
+    web:
+      listen:
+        port: 8080
+
+    devices:
+      - host: {{ .Values.scrutiny.truenas.host }}
+        port: {{ .Values.scrutiny.truenas.port }}
+        user: {{ .Values.scrutiny.truenas.user }}
+        identity_file: /opt/scrutiny/ssh/id_ed25519
