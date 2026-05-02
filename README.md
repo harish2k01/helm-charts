@@ -25,7 +25,7 @@ helm repo update
 | --- | --- | --- | --- |
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
-| [`scrutiny`](charts/scrutiny) | `0.1.0` | `v0.9.2-web` | Deploys Scrutiny Web on Kubernetes |
+| [`scrutiny`](charts/scrutiny) | `0.1.1` | `v0.9.2-web` | Deploys Scrutiny Web on Kubernetes |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.0` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.0` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
 
