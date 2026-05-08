@@ -1,26 +1,16 @@
 apiVersion: v2
 name: scrutiny
-description: Scrutiny - Hard drive S.M.A.R.T monitoring via SSH (TrueNAS compatible)
+description: Scrutiny web/API hub for remote S.M.A.R.T collectors
 type: application
-
-# Chart version (increment when you change templates/values)
-version: 0.1.0
-
-# App version (Scrutiny version you’re targeting)
-appVersion: "v0.9.2-web"
-
-# Optional but good practice
+version: 0.2.0
+appVersion: v0.9.2-web
+home: https://github.com/AnalogJ/scrutiny
+sources:
+  - https://github.com/AnalogJ/scrutiny
 keywords:
   - scrutiny
   - smart
   - monitoring
   - disks
-  - truenas
-
-home: https://github.com/AnalogJ/scrutiny
-
-sources:
-  - https://github.com/AnalogJ/scrutiny
-
 maintainers:
   - name: harish2k01

@@ -15,53 +15,85 @@ spec:
       labels:
         {{- include "scrutiny.selectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+        - name: seed-config
+          image: "{{ .Values.initContainer.image.repository }}:{{ .Values.initContainer.image.tag }}"
+          imagePullPolicy: {{ .Values.initContainer.image.pullPolicy }}
+          command:
+            - sh
+            - -c
+            - |
+              if [ ! -f /opt/scrutiny/config/scrutiny.yaml ]; then
+                cp /config-template/scrutiny.yaml /opt/scrutiny/config/scrutiny.yaml
+              fi
+          volumeMounts:
+            - name: config-template
+              mountPath: /config-template
+              readOnly: true
+            - name: scrutiny-config
+              mountPath: /opt/scrutiny/config
+          securityContext:
+            allowPrivilegeEscalation: false
       containers:
-        - name: scrutiny
+        - name: scrutiny-web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: 8080
-
-          env:
-            - name: SSH_SKIP_HOST_KEY_CHECK
-              value: "true"
-
+          volumeMounts:
+            - name: scrutiny-config
+              mountPath: /opt/scrutiny/config
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 10
-
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
           {{- end }}
-
-          volumeMounts:
-            - name: config
-              mountPath: /opt/scrutiny/config
-            - name: ssh-key
-              mountPath: /opt/scrutiny/ssh
-              readOnly: true
-
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false
+
+        - name: influxdb
+          image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
+          imagePullPolicy: {{ .Values.influxdb.image.pullPolicy }}
+          ports:
+            - name: influxdb
+              containerPort: 8086
+          volumeMounts:
+            - name: influxdb-data
+              mountPath: /var/lib/influxdb2
+          resources:
+            {{- toYaml .Values.influxdb.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
 
       volumes:
-        - name: config
+        - name: config-template
           configMap:
             name: {{ include "scrutiny.fullname" . }}-config
-
-        - name: ssh-key
-          secret:
-            secretName: {{ .Values.ssh.existingSecret }}
+        - name: scrutiny-config
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "scrutiny.fullname" . }}-scrutiny
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: influxdb-data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "scrutiny.fullname" . }}-influxdb
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
