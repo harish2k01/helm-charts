@@ -1,39 +1,7 @@
-Scrutiny has been deployed successfully.
+Scrutiny web is available through the scrutiny service on port {{ .Values.service.port }}.
 
-Access the UI:
+Remote collectors should post to the web/API endpoint, for example:
+  scrutiny-collector-metrics run --api-endpoint "https://{{ first .Values.httpRoute.hostnames }}"
 
-{{- if .Values.ingress.enabled }}
-  http://{{ .Values.ingress.host }}
-{{- else if .Values.httpRoute.enabled }}
-  Host: {{ index .Values.httpRoute.hostnames 0 }}
-  (Ensure DNS points to your Gateway)
-{{- else }}
-  Run the following command to port-forward:
-
-  kubectl port-forward svc/{{ include "scrutiny.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }} -n {{ .Release.Namespace }}
-
-  Then open:
-  http://localhost:{{ .Values.service.port }}
-{{- end }}
-
----
-
-SSH Setup Reminder:
-- Secret: {{ .Values.ssh.existingSecret }}
-- Must contain key: id_ed25519
-
----
-
-TrueNAS Requirement:
-Ensure the following is set:
-
-  truenas_admin ALL=(ALL) NOPASSWD: /usr/sbin/smartctl
-
----
-
-Verify HTTPRoute (if enabled):
-
-  kubectl describe httproute {{ include "scrutiny.fullname" . }} -n {{ .Release.Namespace }}
-
-Look for:
-  Accepted: True
+For the official collector container, set:
+  COLLECTOR_API_ENDPOINT=https://{{ first .Values.httpRoute.hostnames }}

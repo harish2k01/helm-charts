@@ -6,11 +6,15 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "scrutiny.labels" . | nindent 4 }}
+  {{- with .Values.httpRoute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   parentRefs:
-{{ toYaml .Values.httpRoute.parentRefs | indent 4 }}
+    {{- toYaml .Values.httpRoute.parentRefs | nindent 4 }}
   hostnames:
-{{ toYaml .Values.httpRoute.hostnames | indent 4 }}
+    {{- toYaml .Values.httpRoute.hostnames | nindent 4 }}
   rules:
     - matches:
         - path:

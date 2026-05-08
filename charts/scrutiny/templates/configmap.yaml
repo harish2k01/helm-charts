@@ -3,17 +3,31 @@ kind: ConfigMap
 metadata:
   name: {{ include "scrutiny.fullname" . }}-config
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "scrutiny.labels" . | nindent 4 }}
 data:
-  config.yaml: |
+  scrutiny.yaml: |
+    version: 1
     web:
       listen:
+        host: 0.0.0.0
         port: 8080
-
-    database:
-      location: /opt/scrutiny/config/scrutiny.db
-
-    devices:
-      - host: 10.10.10.104
-        port: 22
-        user: truenas_admin
-        identity_file: /opt/scrutiny/ssh/id_ed25519
+        basepath: {{ .Values.scrutiny.web.basepath | quote }}
+      database:
+        location: {{ .Values.scrutiny.web.database.location | quote }}
+      src:
+        frontend:
+          path: /opt/scrutiny/web
+      influxdb:
+        scheme: {{ .Values.scrutiny.web.influxdb.scheme | quote }}
+        host: {{ .Values.scrutiny.web.influxdb.host | quote }}
+        port: {{ .Values.scrutiny.web.influxdb.port }}
+        retention_policy: {{ .Values.scrutiny.web.influxdb.retentionPolicy }}
+    log:
+      file: {{ .Values.scrutiny.log.file | quote }}
+      level: {{ .Values.scrutiny.log.level | quote }}
+{{- with .Values.scrutiny.notify.urls }}
+    notify:
+      urls:
+{{ toYaml . | indent 8 }}
+{{- end }}
