@@ -1,5 +1,13 @@
 Speedtest Tracker is deployed in namespace {{ .Release.Namespace }}.
 
+{{- if and (not .Values.speedtestTracker.secrets.existingSecret) (not .Values.speedtestTracker.secrets.inline.APP_KEY) }}
+
+WARNING: APP_KEY is required by Speedtest Tracker.
+Create a Secret with APP_KEY or set speedtestTracker.secrets.inline.APP_KEY before using this release.
+Generate a key with:
+  echo -n 'base64:'; openssl rand -base64 32
+{{- end }}
+
 {{- if .Values.httpRoute.enabled }}
 HTTPRoute hostnames:
 {{- range .Values.httpRoute.hostnames }}

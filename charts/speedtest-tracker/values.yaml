@@ -163,7 +163,8 @@ speedtestTracker:
   # existingSecret to its name. This allows you to manage secrets outside Helm.
   #
   # Required keys in the Secret:
-  # - APP_KEY: must be 32+ characters and base64 encoded
+  # - APP_KEY: must include the base64: prefix. Generate one with:
+  #   echo -n 'base64:'; openssl rand -base64 32
   #
   # Optional keys:
   # - ADMIN_PASSWORD: for initial admin password
@@ -171,7 +172,7 @@ speedtestTracker:
   # - MAIL_PASSWORD: SMTP password
   #
   # Create a secret with: kubectl create secret generic speedtest-tracker-secrets \
-  #   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY' \
+  #   --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY' \
   #   --from-literal=ADMIN_PASSWORD='your_admin_password' \
   #   --from-literal=MAIL_USERNAME='smtp_user' \
   #   --from-literal=MAIL_PASSWORD='smtp_password'
@@ -203,6 +204,7 @@ speedtestTracker:
     # === APPLICATION SETTINGS ===
     PUID: "1000"
     PGID: "1000"
+    TZ: "Etc/UTC"
     APP_NAME: "Speedtest Tracker"
     APP_ENV: "production"  # production, testing, local, development
     APP_DEBUG: "false"  # Enable debug mode for detailed error messages
@@ -229,6 +231,7 @@ speedtestTracker:
     # DB_DATABASE: "speedtest_tracker"  # Database name
     # DB_USERNAME: "speedtest_tracker"  # Database username
     # DB_SOCKET: ""  # Unix socket path (optional)
+    # DB_SEARCH_PATH: ""  # PostgreSQL schema search path (optional)
     
     # === SPEEDTEST SCHEDULING ===
     # Cron expression for when speedtests should run
