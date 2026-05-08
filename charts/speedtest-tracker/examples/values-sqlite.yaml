@@ -4,7 +4,7 @@
 #
 # Required secret:
 # kubectl create secret generic speedtest-tracker-secrets \
-#   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+#   --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 
 # No database configuration needed for SQLite, use defaults
 

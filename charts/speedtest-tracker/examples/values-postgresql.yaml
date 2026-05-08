@@ -4,7 +4,7 @@
 #
 # Required secrets:
 # kubectl create secret generic speedtest-tracker-secrets \
-#   --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+#   --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 # kubectl create secret generic speedtest-tracker-db \
 #   --from-literal=db-password='your_postgres_password'
 
@@ -71,4 +71,3 @@ ingress:
     - secretName: speedtest-tls
       hosts:
         - speedtest.example.com
-

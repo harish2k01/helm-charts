@@ -47,7 +47,7 @@ Best for development, testing, and small single-instance deployments.
 **Installation:**
 ```bash
 kubectl create secret generic speedtest-tracker-secrets \
-  --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+  --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 
 helm install speedtest-tracker harish2k01/speedtest-tracker \
   --set speedtestTracker.secrets.existingSecret=speedtest-tracker-secrets

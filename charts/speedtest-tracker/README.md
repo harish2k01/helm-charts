@@ -16,7 +16,7 @@ SQLite is the default and requires no additional configuration:
 
 ```bash
 kubectl create secret generic speedtest-tracker-secrets \
-  --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+  --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 
 helm install speedtest-tracker harish2k01/speedtest-tracker \
   --set speedtestTracker.secrets.existingSecret=speedtest-tracker-secrets
@@ -172,12 +172,12 @@ When using built-in databases, the following variables are automatically configu
 
 | Variable | Auto-Configured | Description |
 | --- | --- | --- |
-| `DB_CONNECTION` | ✅ Yes | Set from the enabled database section |
-| `DB_HOST` | ✅ Yes | Set to database service name |
-| `DB_PORT` | ✅ Yes | Set to database service port |
-| `DB_DATABASE` | ✅ Yes | Set from database config |
-| `DB_USERNAME` | ✅ Yes | Set from database config |
-| `DB_PASSWORD` | ✅ Yes | Injected from Secret |
+| `DB_CONNECTION` | Yes | Set from the enabled database section |
+| `DB_HOST` | Yes | Set to database service name |
+| `DB_PORT` | Yes | Set to database service port |
+| `DB_DATABASE` | Yes | Set from database config |
+| `DB_USERNAME` | Yes | Set from database config |
+| `DB_PASSWORD` | Yes | Injected from Secret |
 
 When using external databases, enable `database.external`:
 
@@ -238,7 +238,7 @@ speedtestTracker:
 
 ```bash
 kubectl create secret generic speedtest-tracker-secrets \
-  --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+  --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
@@ -265,7 +265,7 @@ ingress:
 
 ```bash
 kubectl create secret generic speedtest-tracker-secrets \
-  --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY'
+  --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY'
 
 helm install speedtest-tracker harish2k01/speedtest-tracker \
   -f values.yaml \
@@ -293,7 +293,7 @@ Create a secret outside of Helm:
 
 ```bash
 kubectl create secret generic speedtest-tracker-secrets \
-  --from-literal=APP_KEY='base64:YOUR_32_CHAR_KEY' \
+  --from-literal=APP_KEY='base64:YOUR_GENERATED_KEY' \
   --from-literal=ADMIN_PASSWORD='your_admin_password' \
   --from-literal=MAIL_USERNAME='smtp_user' \
   --from-literal=MAIL_PASSWORD='smtp_password'
@@ -319,7 +319,7 @@ Pass secrets directly to Helm:
 
 ```bash
 helm install speedtest-tracker harish2k01/speedtest-tracker \
-  --set speedtestTracker.secrets.inline.APP_KEY='base64:YOUR_32_CHAR_KEY' \
+  --set speedtestTracker.secrets.inline.APP_KEY='base64:YOUR_GENERATED_KEY' \
   --set speedtestTracker.secrets.inline.ADMIN_PASSWORD='myadminpass'
 ```
 
@@ -330,7 +330,7 @@ speedtestTracker:
   secrets:
     existingSecret: ""
     inline:
-      APP_KEY: "base64:YOUR_32_CHAR_KEY"
+      APP_KEY: "base64:YOUR_GENERATED_KEY"
       ADMIN_PASSWORD: "myadminpass"
       MAIL_USERNAME: "smtp_user"
       MAIL_PASSWORD: "smtp_password"
@@ -343,9 +343,10 @@ speedtestTracker:
 | Variable | Default | Description | Required |
 | --- | --- | --- | --- |
 | `APP_NAME` | `Speedtest Tracker` | Application display name | No |
+| `TZ` | `Etc/UTC` | Container timezone used by the LinuxServer image | Yes |
 | `APP_ENV` | `production` | Environment mode: production, development, testing | No |
 | `APP_DEBUG` | `false` | Enable debug mode for detailed error logging | No |
-| `APP_URL` | `http://localhost` | Public URL for the application (auto-set by ingress/httpRoute if enabled) | No |
+| `APP_URL` | `http://localhost` | Public URL for the application; set this to your ingress/HTTPRoute URL for production | Yes |
 | `APP_LOCALE` | `en` | Application locale/language code | No |
 | `APP_FALLBACK_LOCALE` | `en` | Fallback locale if primary is unavailable | No |
 
@@ -520,7 +521,7 @@ speedtestTracker:
 | `speedtestTracker.persistence.storageClassName` | string | - | Storage class for PVC |
 | `speedtestTracker.persistence.existingClaim` | string | - | Use existing PVC instead of creating new |
 | `speedtestTracker.secrets.existingSecret` | string | - | Name of existing Secret for credentials |
-| `speedtestTracker.secrets.inline.APP_KEY` | string | - | Application encryption key (base64 encoded) |
+| `speedtestTracker.secrets.inline.APP_KEY` | string | - | Application encryption key with the `base64:` prefix |
 | `speedtestTracker.secrets.inline.ADMIN_PASSWORD` | string | - | Initial admin password |
 | `speedtestTracker.secrets.inline.MAIL_USERNAME` | string | - | SMTP username |
 | `speedtestTracker.secrets.inline.MAIL_PASSWORD` | string | - | SMTP password |
@@ -537,7 +538,7 @@ speedtestTracker:
 speedtestTracker:
   secrets:
     inline:
-      APP_KEY: "base64:your_32_character_encryption_key"
+      APP_KEY: "base64:your_generated_key"
   env:
     SPEEDTEST_SCHEDULE: "0 0 * * *"  # Daily at midnight
 ```
@@ -597,7 +598,7 @@ httpRoute:
 speedtestTracker:
   secrets:
     inline:
-      APP_KEY: "base64:your_32_character_encryption_key"
+      APP_KEY: "base64:your_generated_key"
   env:
     DISPLAY_TIMEZONE: "America/Chicago"
     SPEEDTEST_SCHEDULE: "0 */6 * * *"  # Every 6 hours
@@ -614,8 +615,8 @@ Generate a valid APP_KEY with:
 # Using Laravel (if you have the source)
 php artisan key:generate
 
-# Or generate a random 32-character base64 string
-echo "base64:$(openssl rand -base64 24)"
+# Or generate a key with OpenSSL
+echo -n 'base64:'; openssl rand -base64 32
 ```
 
 ### Database Connections
@@ -633,4 +634,3 @@ Common patterns:
 - `0 */6 * * *` - Every 6 hours
 - `0 3 * * 0` - Weekly on Sunday at 3 AM
 - `0 9,17 * * 1-5` - Weekdays at 9 AM and 5 PM
-
