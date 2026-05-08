@@ -3,25 +3,56 @@ image:
   tag: v0.9.2-web
   pullPolicy: IfNotPresent
 
+influxdb:
+  image:
+    repository: influxdb
+    tag: "2.8"
+    pullPolicy: IfNotPresent
+  resources: {}
+
+initContainer:
+  image:
+    repository: busybox
+    tag: "1.36"
+    pullPolicy: IfNotPresent
+
 service:
   port: 8080
 
 scrutiny:
-  truenas:
-    host: 192.168.1.10
-    user: truenas_admin
-    port: 22
+  web:
+    basepath: ""
+    database:
+      location: /opt/scrutiny/config/scrutiny.db
+    influxdb:
+      scheme: http
+      host: 127.0.0.1
+      port: 8086
+      retentionPolicy: true
+  log:
+    file: ""
+    level: INFO
+  notify:
+    urls: []
 
-ssh:
-  existingSecret: scrutiny-ssh-key
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  storageClassName: ""
+  scrutiny:
+    size: 1Gi
+  influxdb:
+    size: 10Gi
 
 ingress:
   enabled: false
   className: traefik
+  annotations: {}
   host: scrutiny.local
 
 httpRoute:
   enabled: false
+  annotations: {}
   parentRefs:
     - name: traefik
       namespace: kube-system

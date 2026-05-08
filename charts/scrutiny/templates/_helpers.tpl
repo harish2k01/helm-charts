@@ -1,12 +1,12 @@
 {{/*
-Expand the name of the chart
+Expand the name of the chart.
 */}}
 {{- define "scrutiny.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a fully qualified app name
+Create a fully qualified app name.
 */}}
 {{- define "scrutiny.fullname" -}}
 {{- if .Values.fullnameOverride }}
@@ -19,17 +19,18 @@ Create a fully qualified app name
 {{- end }}
 
 {{/*
-Common labels
+Common labels.
 */}}
 {{- define "scrutiny.labels" -}}
+helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 app.kubernetes.io/name: {{ include "scrutiny.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels
+Selector labels.
 */}}
 {{- define "scrutiny.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "scrutiny.name" . }}
