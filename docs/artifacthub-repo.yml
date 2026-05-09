@@ -1,0 +1,7 @@
+# Uncomment and set this to the repository ID shown in Artifact Hub to enable
+# the Verified publisher badge after the next successful repository scan.
+# repositoryID: 00000000-0000-0000-0000-000000000000
+
+owners:
+  - name: Harish
+    email: t.harish2478@gmail.com

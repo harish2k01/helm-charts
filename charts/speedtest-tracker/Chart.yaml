@@ -2,6 +2,7 @@ apiVersion: v2
 name: speedtest-tracker
 description: A Helm chart for deploying Speedtest Tracker on Kubernetes
 type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/speedtest-tracker.png
 version: 0.1.1
 appVersion: "1.14.0"
 home: https://github.com/alexjustesen/speedtest-tracker
@@ -12,5 +13,16 @@ keywords:
   - tracker
   - network
   - monitoring
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: speedtest-tracker
+      image: lscr.io/linuxserver/speedtest-tracker:1.14.0
+    - name: mariadb
+      image: mariadb:11
+    - name: mysql
+      image: mysql:8
+    - name: postgresql
+      image: postgres:18
 maintainers:
   - name: harish2k01

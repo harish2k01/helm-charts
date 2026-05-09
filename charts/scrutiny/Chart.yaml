@@ -2,6 +2,7 @@ apiVersion: v2
 name: scrutiny
 description: Scrutiny web/API hub for remote S.M.A.R.T collectors
 type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/scrutiny.png
 version: 0.2.0
 appVersion: v0.9.2-web
 home: https://github.com/AnalogJ/scrutiny
@@ -12,5 +13,14 @@ keywords:
   - smart
   - monitoring
   - disks
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: scrutiny
+      image: ghcr.io/analogj/scrutiny:v0.9.2-web
+    - name: influxdb
+      image: influxdb:2.8
+    - name: busybox
+      image: busybox:1.36
 maintainers:
   - name: harish2k01
