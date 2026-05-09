@@ -2,6 +2,7 @@ apiVersion: v2
 name: uptime-kuma
 description: A Helm chart for Uptime Kuma - a self-hosted monitoring tool
 type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/uptime-kuma.png
 version: 0.1.0
 appVersion: "2.2.1-slim"
 keywords:
@@ -11,5 +12,12 @@ keywords:
 home: https://github.com/louislam/uptime-kuma
 sources:
   - https://github.com/louislam/uptime-kuma
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: uptime-kuma
+      image: louislam/uptime-kuma:2.2.1-slim
+    - name: mariadb
+      image: mariadb:11
 maintainers:
   - name: harish2k01

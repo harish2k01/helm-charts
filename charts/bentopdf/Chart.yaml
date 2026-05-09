@@ -1,6 +1,7 @@
 apiVersion: v2
 name: bentopdf
 description: A Helm chart for deploying BentoPDF on Kubernetes
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/bentopdf.png
 type: application
 version: 0.1.1
 appVersion: "2.8.4"
@@ -12,5 +13,10 @@ keywords:
   - bentopdf
   - pdf
   - tools
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: bentopdf
+      image: ghcr.io/alam00000/bentopdf-simple:2.8.4
 maintainers:
   - name: harish2k01
