@@ -1,0 +1,69 @@
+replicaCount: 1
+
+# Container image for the upstream Tor SOCKS proxy. The Docker Compose service
+# used latest, so the chart mirrors that default. Pin image.tag in production if
+# you want fully repeatable rollouts.
+image:
+  repository: peterdavehello/tor-socks-proxy
+  tag: "latest"
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Optional environment variables passed to the Tor proxy container.
+env: {}
+
+# Optional envFrom entries, for example configMapRef or secretRef blocks.
+envFrom: []
+
+# Internal SOCKS service. Keep this as ClusterIP unless you explicitly want the
+# proxy reachable outside the cluster.
+service:
+  type: ClusterIP
+  port: 9150
+  targetPort: 9150
+  portName: socks
+  annotations: {}
+  extraPorts: []
+
+# Extra container ports can be used for advanced image configurations such as a
+# Tor control port.
+extraContainerPorts: []
+
+# Optional command/args overrides for advanced image customization.
+command: []
+args: []
+
+# Advanced volume hooks for custom mounts. The default proxy deployment is
+# stateless and does not require persistent storage.
+extraVolumes: []
+extraVolumeMounts: []
+
+resources: {}
+
+livenessProbe:
+  tcpSocket:
+    port: socks
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  tcpSocket:
+    port: socks
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

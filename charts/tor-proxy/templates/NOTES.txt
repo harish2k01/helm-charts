@@ -1,0 +1,7 @@
+Tor SOCKS proxy is deployed in namespace {{ .Release.Namespace }}.
+
+In-cluster SOCKS endpoint:
+  {{ include "tor-proxy.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+Clients in the same namespace can usually use:
+  socks5h://{{ include "tor-proxy.fullname" . }}:{{ .Values.service.port }}
