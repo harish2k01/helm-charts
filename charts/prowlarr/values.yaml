@@ -1,0 +1,109 @@
+replicaCount: 1
+
+# Container image. The default tag is pinned instead of using latest so chart
+# installs are repeatable.
+image:
+  repository: lscr.io/linuxserver/prowlarr
+  tag: "2.3.5"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# LinuxServer.io images use PUID/PGID to choose the user that owns app files.
+# Match these to the permissions on your config volume.
+env:
+  PUID: "3000"
+  PGID: "3000"
+  TZ: Asia/Kolkata
+
+# Main HTTP service for the Prowlarr web UI/API.
+service:
+  type: ClusterIP
+  port: 9696
+  targetPort: 9696
+  portName: http
+  extraPorts: []
+
+extraContainerPorts: []
+
+# Persistent application configuration. This stores Prowlarr's database and
+# settings; indexer/downloaded media does not live here.
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClassName: ""
+
+# Generic media mount support. Prowlarr normally does not need media storage,
+# so this is disabled by default.
+media:
+  enabled: false
+  existingClaim: ""
+  mountPath: /vault
+  readOnly: false
+  mounts: []
+
+# Prowlarr usually does not need host devices, but the generic chart supports
+# them for advanced use cases.
+hostDevices:
+  enabled: false
+  devices: []
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing the web UI/API.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the web UI/API.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 45
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

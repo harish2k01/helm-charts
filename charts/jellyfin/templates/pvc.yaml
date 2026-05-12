@@ -1,0 +1,19 @@
+{{- if and .Values.persistence.config.enabled (not .Values.persistence.config.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "media-app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "media-app.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.persistence.config.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size }}
+  {{- with .Values.persistence.config.storageClassName }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}
+

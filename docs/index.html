@@ -403,6 +403,11 @@ helm install bentopdf harish2k01/bentopdf
 <span class="comment"># Install Firefly III</span>
 helm install firefly-iii harish2k01/firefly-iii
 
+<span class="comment"># Install media charts</span>
+helm install jellyfin harish2k01/jellyfin
+helm install qbittorrent harish2k01/qbittorrent
+helm install radarr4k harish2k01/radarr -f radarr4k-values.yaml
+
 <span class="comment"># Install with custom values</span>
 helm install bentopdf harish2k01/bentopdf -f values.yaml
 
@@ -446,6 +451,26 @@ helm search repo harish2k01 --versions</pre>
           <div class="chart-list">
             <article class="chart-row">
               <div>
+                <h3>Bazarr</h3>
+                <p>
+                  Deploys Bazarr subtitle automation with persistent config,
+                  optional shared media storage, and optional external access.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 1.5.6</span>
+                  <span class="pill">PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bazarr">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
                 <h3>BentoPDF</h3>
                 <p>
                   Deploys BentoPDF with a ClusterIP service and optional Ingress
@@ -485,6 +510,105 @@ helm search repo harish2k01 --versions</pre>
 
             <article class="chart-row">
               <div>
+                <h3>FlareSolverr</h3>
+                <p>
+                  Deploys FlareSolverr as an internal challenge-solving service
+                  for Prowlarr and other automation tools.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app v3.4.6</span>
+                  <span class="pill">ClusterIP</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/flaresolverr">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Jellyfin</h3>
+                <p>
+                  Deploys Jellyfin media server with persistent config, optional
+                  read-only media library mounts, and optional device mounts.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 10.11.8</span>
+                  <span class="pill">Media PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/jellyfin">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Prowlarr</h3>
+                <p>
+                  Deploys Prowlarr indexer management with persistent config and
+                  optional external access.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 2.3.5</span>
+                  <span class="pill">PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/prowlarr">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>qBittorrent</h3>
+                <p>
+                  Deploys qBittorrent with persistent config, a Web UI service,
+                  and optional shared media storage for downloads.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 5.2.0</span>
+                  <span class="pill">Media PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/qbittorrent">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Radarr</h3>
+                <p>
+                  Deploys Radarr movie automation with reusable releases for
+                  multiple libraries such as HD and 4K.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 6.1.1</span>
+                  <span class="pill">Media PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/radarr">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
                 <h3>Scrutiny</h3>
                 <p>
                   Deploys Scrutiny Web to monitor the SMART data from the disks.
@@ -498,6 +622,46 @@ helm search repo harish2k01 --versions</pre>
                 </div>
               </div>
               <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/scrutiny">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Seerr</h3>
+                <p>
+                  Deploys Seerr media request management with persistent config
+                  and optional external access.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app v3.2.0</span>
+                  <span class="pill">PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/seerr">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Sonarr</h3>
+                <p>
+                  Deploys Sonarr TV automation with reusable releases for
+                  multiple libraries such as standard shows and anime.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app 4.0.17</span>
+                  <span class="pill">Media PVC</span>
+                  <span class="pill">Ingress</span>
+                  <span class="pill">HTTPRoute</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/sonarr">
                 Chart docs
               </a>
             </article>

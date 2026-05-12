@@ -1,0 +1,22 @@
+apiVersion: v2
+name: jellyfin
+description: Deploys Jellyfin media server on Kubernetes
+type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/jellyfin.png
+version: 0.1.0
+appVersion: "10.11.8"
+home: https://jellyfin.org
+sources:
+  - https://github.com/jellyfin/jellyfin
+  - https://docs.linuxserver.io/images/docker-jellyfin/
+keywords:
+  - jellyfin
+  - media
+  - streaming
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: jellyfin
+      image: lscr.io/linuxserver/jellyfin:10.11.8
+maintainers:
+  - name: harish2k01

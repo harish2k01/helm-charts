@@ -1,0 +1,109 @@
+replicaCount: 1
+
+# Container image. The default tag is pinned instead of using latest so chart
+# installs are repeatable.
+image:
+  repository: ghcr.io/flaresolverr/flaresolverr
+  tag: "v3.4.6"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Non-secret FlareSolverr environment variables.
+env:
+  LOG_LEVEL: info
+  LOG_HTML: "false"
+  CAPTCHA_SOLVER: none
+  TZ: Asia/Kolkata
+
+# Main HTTP service. FlareSolverr is commonly kept internal and referenced by
+# Prowlarr as http://flaresolverr.<namespace>.svc.cluster.local:8191.
+service:
+  type: ClusterIP
+  port: 8191
+  targetPort: 8191
+  portName: http
+  extraPorts: []
+
+extraContainerPorts: []
+
+# Optional config PVC. FlareSolverr is stateless for most deployments, so this
+# is disabled by default.
+persistence:
+  config:
+    enabled: false
+    mountPath: /config
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    storageClassName: ""
+
+# Generic media mount support. FlareSolverr does not need media storage.
+media:
+  enabled: false
+  existingClaim: ""
+  mountPath: /vault
+  readOnly: false
+  mounts: []
+
+# FlareSolverr usually does not need host devices, but the generic chart
+# supports them for advanced use cases.
+hostDevices:
+  enabled: false
+  devices: []
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress. Usually leave disabled for internal-only use.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute. Usually leave disabled for internal-only use.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 45
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

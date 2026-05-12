@@ -1,0 +1,22 @@
+apiVersion: v2
+name: radarr
+description: Deploys Radarr movie automation on Kubernetes
+type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/radarr.png
+version: 0.1.0
+appVersion: "6.1.1"
+home: https://radarr.video
+sources:
+  - https://github.com/Radarr/Radarr
+  - https://docs.linuxserver.io/images/docker-radarr/
+keywords:
+  - radarr
+  - movies
+  - media
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: radarr
+      image: lscr.io/linuxserver/radarr:6.1.1
+maintainers:
+  - name: harish2k01
