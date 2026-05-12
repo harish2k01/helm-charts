@@ -1,0 +1,22 @@
+apiVersion: v2
+name: seerr
+description: Deploys Seerr media request manager on Kubernetes
+type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/jellyseerr.png
+version: 0.1.0
+appVersion: "v3.2.0"
+home: https://docs.seerr.dev
+sources:
+  - https://github.com/seerr-team/seerr
+keywords:
+  - seerr
+  - jellyseerr
+  - requests
+  - media
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: seerr
+      image: ghcr.io/seerr-team/seerr:v3.2.0
+maintainers:
+  - name: harish2k01

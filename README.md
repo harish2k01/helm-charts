@@ -24,11 +24,53 @@ helm repo update
 
 | Chart | Chart Version | App Version | Description |
 | --- | --- | --- | --- |
+| [`bazarr`](charts/bazarr) | `0.1.0` | `1.5.6` | Deploys Bazarr subtitle automation on Kubernetes |
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
+| [`flaresolverr`](charts/flaresolverr) | `0.1.0` | `v3.4.6` | Deploys FlareSolverr on Kubernetes |
+| [`jellyfin`](charts/jellyfin) | `0.1.0` | `10.11.8` | Deploys Jellyfin media server on Kubernetes |
+| [`prowlarr`](charts/prowlarr) | `0.1.0` | `2.3.5` | Deploys Prowlarr indexer manager on Kubernetes |
+| [`qbittorrent`](charts/qbittorrent) | `0.1.0` | `5.2.0` | Deploys qBittorrent on Kubernetes |
+| [`radarr`](charts/radarr) | `0.1.0` | `6.1.1` | Deploys Radarr movie automation on Kubernetes |
 | [`scrutiny`](charts/scrutiny) | `0.2.0` | `v0.9.2-web` | Deploys Scrutiny web/API with InfluxDB for remote collectors |
+| [`seerr`](charts/seerr) | `0.1.0` | `v3.2.0` | Deploys Seerr media request manager on Kubernetes |
+| [`sonarr`](charts/sonarr) | `0.1.0` | `4.0.17` | Deploys Sonarr TV automation on Kubernetes |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.1` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.0` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
+
+## Media Automation Charts
+
+The media charts are designed to be installed independently. Apps such as Radarr, Sonarr, and Bazarr can be installed more than once by reusing the same chart with different release names and values files:
+
+```bash
+helm install radarr harish2k01/radarr
+helm install radarr4k harish2k01/radarr -f radarr4k-values.yaml
+helm install sonarr-anime harish2k01/sonarr -f sonarr-anime-values.yaml
+```
+
+For qBittorrent and the media automation apps, mount the same existing PVC at the same path to preserve hardlinks and atomic moves:
+
+```yaml
+media:
+  enabled: true
+  existingClaim: media-vault-pvc
+  mountPath: /vault
+  readOnly: false
+```
+
+Jellyfin can mount selected folders from the same PVC as read-only libraries:
+
+```yaml
+media:
+  enabled: true
+  existingClaim: media-vault-pvc
+  readOnly: true
+  mounts:
+    - mountPath: /movies
+      subPath: Movies
+    - mountPath: /tv
+      subPath: Shows
+```
 
 To list all published chart versions:
 

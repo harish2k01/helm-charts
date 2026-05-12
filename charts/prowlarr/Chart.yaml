@@ -1,0 +1,22 @@
+apiVersion: v2
+name: prowlarr
+description: Deploys Prowlarr indexer manager on Kubernetes
+type: application
+icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/prowlarr.png
+version: 0.1.0
+appVersion: "2.3.5"
+home: https://prowlarr.com
+sources:
+  - https://github.com/Prowlarr/Prowlarr
+  - https://docs.linuxserver.io/images/docker-prowlarr/
+keywords:
+  - prowlarr
+  - indexer
+  - media
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: prowlarr
+      image: lscr.io/linuxserver/prowlarr:2.3.5
+maintainers:
+  - name: harish2k01

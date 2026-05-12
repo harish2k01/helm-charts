@@ -1,0 +1,112 @@
+replicaCount: 1
+
+# Container image. The default tag is pinned instead of using latest so chart
+# installs are repeatable.
+image:
+  repository: lscr.io/linuxserver/jellyfin
+  tag: "10.11.8"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# LinuxServer.io images use PUID/PGID to choose the user that owns app files.
+# Match these to the permissions on your config and media volumes.
+env:
+  PUID: "3000"
+  PGID: "3000"
+  TZ: Asia/Kolkata
+
+# Main HTTP service for the Jellyfin web UI.
+service:
+  type: ClusterIP
+  port: 8096
+  targetPort: 8096
+  portName: http
+  extraPorts: []
+
+extraContainerPorts: []
+
+# Persistent application configuration. This should be separate from media
+# storage because Jellyfin writes databases, metadata, and user settings here.
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+    storageClassName: ""
+
+# Optional existing media PVC. For Jellyfin, this is commonly mounted read-only.
+# Use media.mounts with subPath entries to expose selected library folders from
+# a larger shared PVC, such as Movies, Shows, or Music.
+media:
+  enabled: false
+  existingClaim: ""
+  mountPath: /vault
+  readOnly: true
+  mounts: []
+
+# Optional host device mounts, for example /dev/dri for hardware acceleration.
+# Pods using host devices should be scheduled only on nodes that expose them.
+hostDevices:
+  enabled: false
+  devices: []
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing the web UI.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the web UI.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+# Default HTTP health checks. Adjust delays if your media library scan makes
+# startup slower than usual.
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

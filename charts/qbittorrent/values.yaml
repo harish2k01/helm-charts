@@ -1,0 +1,121 @@
+replicaCount: 1
+
+# Container image. The default tag is pinned instead of using latest so chart
+# installs are repeatable.
+image:
+  repository: lscr.io/linuxserver/qbittorrent
+  tag: "5.2.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# LinuxServer.io images use PUID/PGID to choose the user that owns app files.
+# WEBUI_PORT controls the qBittorrent web interface inside the container.
+env:
+  PUID: "3000"
+  PGID: "3000"
+  TZ: Asia/Kolkata
+  WEBUI_PORT: "8080"
+  TORRENTING_PORT: "6881"
+
+# Main HTTP service for the qBittorrent web UI. BitTorrent TCP/UDP ports are
+# not exposed by default; add them to service.extraPorts only if you want
+# inbound peer connectivity through Kubernetes.
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+  portName: http
+  extraPorts: []
+
+# Container ports are declared for visibility, but Service exposure is controlled
+# separately by service.extraPorts.
+extraContainerPorts:
+  - name: bittorrent-tcp
+    containerPort: 6881
+    protocol: TCP
+  - name: bittorrent-udp
+    containerPort: 6881
+    protocol: UDP
+
+# Persistent application configuration. This stores qBittorrent settings and
+# state, not the downloaded media.
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClassName: ""
+
+# Optional existing media/downloads PVC. To preserve hardlinks with Radarr,
+# Sonarr, and Bazarr, mount the same PVC at the same path in every related app.
+media:
+  enabled: false
+  existingClaim: ""
+  mountPath: /vault
+  readOnly: false
+  mounts: []
+
+# qBittorrent usually does not need host devices, but the generic chart supports
+# them for advanced use cases.
+hostDevices:
+  enabled: false
+  devices: []
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing the web UI.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the web UI.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 45
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
