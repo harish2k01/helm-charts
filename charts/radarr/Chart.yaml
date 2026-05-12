@@ -2,7 +2,7 @@ apiVersion: v2
 name: radarr
 description: Deploys Radarr movie automation on Kubernetes
 type: application
-icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/radarr.png
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/radarr.png
 version: 0.1.0
 appVersion: "6.1.1"
 home: https://radarr.video

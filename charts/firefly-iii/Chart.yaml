@@ -2,7 +2,7 @@ apiVersion: v2
 name: firefly-iii
 description: A Helm chart for deploying Firefly III with PostgreSQL
 type: application
-icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/firefly-iii.png
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/firefly-iii.png
 version: 0.1.0
 appVersion: "version-6.6.1"
 home: https://www.firefly-iii.org/

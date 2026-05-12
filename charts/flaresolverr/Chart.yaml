@@ -2,7 +2,7 @@ apiVersion: v2
 name: flaresolverr
 description: Deploys FlareSolverr on Kubernetes
 type: application
-icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/flaresolverr.png
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/flaresolverr.png
 version: 0.1.0
 appVersion: "v3.4.6"
 home: https://github.com/FlareSolverr/FlareSolverr
