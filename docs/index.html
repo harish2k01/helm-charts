@@ -400,16 +400,13 @@ helm repo update
 <span class="comment"># Install BentoPDF</span>
 helm install bentopdf harish2k01/bentopdf
 
-<span class="comment"># Install Firefly III</span>
-helm install firefly-iii harish2k01/firefly-iii
+<span class="comment"># Install with custom values</span>
+helm install bentopdf harish2k01/bentopdf -f values.yaml
 
 <span class="comment"># Install media charts</span>
 helm install jellyfin harish2k01/jellyfin
 helm install qbittorrent harish2k01/qbittorrent
 helm install radarr4k harish2k01/radarr -f radarr4k-values.yaml
-
-<span class="comment"># Install with custom values</span>
-helm install bentopdf harish2k01/bentopdf -f values.yaml
 
 <span class="comment"># Show all published versions</span>
 helm search repo harish2k01 --versions</pre>
@@ -683,6 +680,25 @@ helm search repo harish2k01 --versions</pre>
                 </div>
               </div>
               <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/speedtest-tracker">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Tor Proxy</h3>
+                <p>
+                  Deploys an internal Tor SOCKS proxy for workloads that need
+                  outbound traffic routed through Tor.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app latest</span>
+                  <span class="pill">SOCKS</span>
+                  <span class="pill">ClusterIP</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/tor-proxy">
                 Chart docs
               </a>
             </article>

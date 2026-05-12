@@ -36,6 +36,7 @@ helm repo update
 | [`seerr`](charts/seerr) | `0.1.0` | `v3.2.0` | Deploys Seerr media request manager on Kubernetes |
 | [`sonarr`](charts/sonarr) | `0.1.0` | `4.0.17` | Deploys Sonarr TV automation on Kubernetes |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.1` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
+| [`tor-proxy`](charts/tor-proxy) | `0.1.0` | `latest` | Deploys a Tor SOCKS proxy on Kubernetes |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.0` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
 
 ## Media Automation Charts
@@ -90,6 +91,12 @@ Install Firefly III:
 
 ```bash
 helm install firefly-iii harish2k01/firefly-iii
+```
+
+Install Tor proxy:
+
+```bash
+helm install tor-proxy harish2k01/tor-proxy
 ```
 
 Install into a namespace:
