@@ -2,7 +2,7 @@ apiVersion: v2
 name: qbittorrent
 description: Deploys qBittorrent on Kubernetes
 type: application
-icon: https://cdn.jsdelivr.net/gh/selfhst/icons@main/png/qbittorrent.png
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png
 version: 0.1.0
 appVersion: "5.2.0"
 home: https://www.qbittorrent.org
