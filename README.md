@@ -36,7 +36,7 @@ helm repo update
 | [`seerr`](charts/seerr) | `0.1.0` | `v3.2.0` | Deploys Seerr media request manager on Kubernetes |
 | [`sonarr`](charts/sonarr) | `0.1.0` | `4.0.17` | Deploys Sonarr TV automation on Kubernetes |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.1` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
-| [`tailscale`](charts/tailscale) | `0.1.0` | `v1.96.5` | Deploys Tailscale as a Kubernetes subnet router and exit node |
+| [`tailscale`](charts/tailscale) | `0.1.1` | `v1.96.5` | Deploys Tailscale as a Kubernetes subnet router and exit node |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.0` | `latest` | Deploys a Tor SOCKS proxy on Kubernetes |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.0` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
 
