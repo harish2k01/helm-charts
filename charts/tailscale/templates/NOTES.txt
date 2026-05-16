@@ -1,0 +1,10 @@
+Tailscale has been deployed as {{ include "tailscale.fullname" . }}.
+
+Before the pod can join your tailnet, provide a Secret containing an auth key:
+
+  kubectl create secret generic {{ include "tailscale.authSecretName" . }} \
+    --namespace {{ .Release.Namespace }} \
+    --from-literal={{ .Values.authKey.existingSecretKey }}='<tskey-auth-...>'
+
+After the pod authenticates, approve advertised subnet routes and the exit node
+in the Tailscale admin console.

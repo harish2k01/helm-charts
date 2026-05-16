@@ -408,6 +408,9 @@ helm install jellyfin harish2k01/jellyfin
 helm install qbittorrent harish2k01/qbittorrent
 helm install radarr4k harish2k01/radarr -f radarr4k-values.yaml
 
+<span class="comment"># Install a Tailscale subnet router and exit node</span>
+helm install tailscale harish2k01/tailscale -f values.yaml
+
 <span class="comment"># Show all published versions</span>
 helm search repo harish2k01 --versions</pre>
           </div>
@@ -699,6 +702,26 @@ helm search repo harish2k01 --versions</pre>
                 </div>
               </div>
               <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/tor-proxy">
+                Chart docs
+              </a>
+            </article>
+
+            <article class="chart-row">
+              <div>
+                <h3>Tailscale</h3>
+                <p>
+                  Deploys Tailscale as a Kubernetes subnet router and exit node
+                  without the Tailscale operator.
+                </p>
+                <div class="chart-meta">
+                  <span class="pill ready">chart 0.1.0</span>
+                  <span class="pill">app v1.96.5</span>
+                  <span class="pill">Subnet router</span>
+                  <span class="pill">Exit node</span>
+                  <span class="pill">SealedSecret auth</span>
+                </div>
+              </div>
+              <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts/tailscale">
                 Chart docs
               </a>
             </article>
