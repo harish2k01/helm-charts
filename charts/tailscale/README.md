@@ -87,3 +87,4 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+| `topologySpreadConstraints` | list | `[]` | Pod topology spread constraints for separating replicas across zones or nodes |
