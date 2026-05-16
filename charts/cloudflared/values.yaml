@@ -1,0 +1,77 @@
+replicaCount: 1
+
+image:
+  repository: cloudflare/cloudflared
+  tag: "2026.3.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+selectorLabels:
+  pod: cloudflared
+
+podSecurityContext:
+  sysctls:
+    # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
+    - name: net.ipv4.ping_group_range
+      value: "65532 65532"
+
+securityContext: {}
+
+cloudflared:
+  logLevel: info
+  noAutoupdate: true
+  metrics:
+    enabled: true
+    address: 0.0.0.0:2000
+    port: 2000
+  extraArgs: []
+  extraEnv: {}
+  envFrom: []
+
+token:
+  # Secret name read by the cloudflared container. Set create=false when this
+  # Secret is created by Sealed Secrets, External Secrets, or manually.
+  secretName: cloudflare-tunnel-token
+  secretKey: token
+  create: false
+  value: ""
+  sealedSecret:
+    enabled: false
+    encryptedData: {}
+    annotations: {}
+    labels: {}
+
+service:
+  enabled: false
+  type: ClusterIP
+  port: 2000
+  targetPort: metrics
+  portName: metrics
+  annotations: {}
+
+extraContainerPorts: []
+extraVolumes: []
+extraVolumeMounts: []
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /ready
+    port: metrics
+  failureThreshold: 1
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []

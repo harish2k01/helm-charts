@@ -1,0 +1,9 @@
+Cloudflared has been deployed.
+
+Token Secret:
+  {{ include "cloudflared.tokenSecretName" . }}
+
+{{- if .Values.service.enabled }}
+Metrics service:
+  {{ include "cloudflared.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+{{- end }}
