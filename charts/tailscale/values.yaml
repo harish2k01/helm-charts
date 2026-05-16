@@ -1,0 +1,128 @@
+# Multiple replicas are supported as independent Tailscale routers. Each
+# StatefulSet pod gets its own persisted state and tailnet hostname.
+replicaCount: 1
+
+# Official Tailscale container image. The tag is pinned to a versioned release
+# so Renovate can detect and raise PRs for new Tailscale releases.
+image:
+  repository: tailscale/tailscale
+  tag: "v1.96.5"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+# Tailscale exit-node/subnet-router mode needs kernel networking, /dev/net/tun,
+# and packet-forwarding privileges inside the pod network namespace.
+podSecurityContext: {}
+securityContext:
+  privileged: true
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_RAW
+
+# Enables an init container that sets the same forwarding sysctls used by a
+# normal bare-metal/LXC Tailscale exit-node installation.
+sysctl:
+  enabled: true
+  image:
+    repository: busybox
+    tag: "1.37"
+    pullPolicy: IfNotPresent
+  securityContext:
+    privileged: true
+  ipv4Forwarding: true
+  ipv6Forwarding: true
+
+# Authentication key used on first boot. Prefer an existing Secret managed
+# outside this chart. The key can be reusable or ephemeral, but persistent state
+# is recommended so the pod keeps the same tailnet identity across restarts.
+authKey:
+  existingSecret: ""
+  existingSecretKey: TS_AUTHKEY
+  create: false
+  value: ""
+
+# Tailscale container configuration. These values become TS_* environment
+# variables supported by the official image.
+tailscale:
+  hostname: tailscale-router
+  hostnameFromPodName: true
+  hostnamePrefix: ""
+  stateDir: /var/lib/tailscale
+  kubeSecret: ""
+  userspace: false
+  acceptDns: false
+  authOnce: true
+  enableHealthCheck: true
+  enableMetrics: true
+  localAddrPort: "[::]:9002"
+  advertiseExitNode: true
+  routes:
+    - 192.168.0.0/24
+  extraArgs: []
+  tailscaledExtraArgs: []
+  extraEnv: {}
+  envFrom: []
+
+# Persistent state prevents a new machine from appearing in the Tailscale admin
+# console after every pod restart. With the default StatefulSet storage, each
+# replica gets a separate PVC named state-<release>-<ordinal>.
+persistence:
+  enabled: true
+  mountPath: /var/lib/tailscale
+  existingClaim: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClassName: ""
+
+# Service exposing only the optional local health and metrics endpoint. This is
+# not required for routing traffic through Tailscale.
+service:
+  enabled: true
+  type: ClusterIP
+  port: 9002
+  targetPort: 9002
+  portName: http
+  annotations: {}
+  extraPorts: []
+
+# Mount /dev/net/tun from the host so Tailscale can create its tun interface.
+tunDevice:
+  enabled: true
+  hostPath: /dev/net/tun
+  mountPath: /dev/net/tun
+
+extraContainerPorts: []
+extraVolumes: []
+extraVolumeMounts: []
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -1,0 +1,197 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "tailscale.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tailscale.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "tailscale.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "tailscale.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tailscale.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.sysctl.enabled }}
+      initContainers:
+        - name: enable-forwarding
+          image: "{{ .Values.sysctl.image.repository }}:{{ .Values.sysctl.image.tag }}"
+          imagePullPolicy: {{ .Values.sysctl.image.pullPolicy }}
+          {{- with .Values.sysctl.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          command:
+            - sh
+            - -ec
+            - |
+              {{- if .Values.sysctl.ipv4Forwarding }}
+              sysctl -w net.ipv4.ip_forward=1
+              {{- end }}
+              {{- if .Values.sysctl.ipv6Forwarding }}
+              sysctl -w net.ipv6.conf.all.forwarding=1
+              {{- end }}
+      {{- end }}
+      containers:
+        - name: tailscale
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            {{- if or .Values.service.enabled .Values.tailscale.enableHealthCheck .Values.tailscale.enableMetrics }}
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            {{- end }}
+            {{- with .Values.extraContainerPorts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            {{- if .Values.tailscale.hostnameFromPodName }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- end }}
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "tailscale.authSecretName" . }}
+                  key: {{ .Values.authKey.existingSecretKey }}
+                  optional: false
+            - name: TS_HOSTNAME
+              {{- if .Values.tailscale.hostnameFromPodName }}
+              value: {{ printf "%s$(POD_NAME)" .Values.tailscale.hostnamePrefix | quote }}
+              {{- else }}
+              value: {{ .Values.tailscale.hostname | quote }}
+              {{- end }}
+            - name: TS_STATE_DIR
+              value: {{ .Values.tailscale.stateDir | quote }}
+            - name: TS_KUBE_SECRET
+              value: {{ .Values.tailscale.kubeSecret | quote }}
+            - name: TS_USERSPACE
+              value: {{ .Values.tailscale.userspace | quote }}
+            - name: TS_ACCEPT_DNS
+              value: {{ .Values.tailscale.acceptDns | quote }}
+            - name: TS_AUTH_ONCE
+              value: {{ .Values.tailscale.authOnce | quote }}
+            - name: TS_ENABLE_HEALTH_CHECK
+              value: {{ .Values.tailscale.enableHealthCheck | quote }}
+            - name: TS_ENABLE_METRICS
+              value: {{ .Values.tailscale.enableMetrics | quote }}
+            - name: TS_LOCAL_ADDR_PORT
+              value: {{ .Values.tailscale.localAddrPort | quote }}
+            {{- with .Values.tailscale.routes }}
+            - name: TS_ROUTES
+              value: {{ join "," . | quote }}
+            {{- end }}
+            {{- $extraArgs := include "tailscale.extraArgs" . }}
+            {{- if $extraArgs }}
+            - name: TS_EXTRA_ARGS
+              value: {{ $extraArgs | quote }}
+            {{- end }}
+            {{- with .Values.tailscale.tailscaledExtraArgs }}
+            - name: TS_TAILSCALED_EXTRA_ARGS
+              value: {{ join " " . | quote }}
+            {{- end }}
+            {{- range $name, $value := .Values.tailscale.extraEnv }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.tailscale.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.persistence.enabled .Values.tunDevice.enabled .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: state
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
+            {{- if .Values.tunDevice.enabled }}
+            - name: tun
+              mountPath: {{ .Values.tunDevice.mountPath }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+      {{- if or .Values.persistence.enabled .Values.tunDevice.enabled .Values.extraVolumes }}
+      volumes:
+        {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
+        - name: state
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim }}
+        {{- end }}
+        {{- if .Values.tunDevice.enabled }}
+        - name: tun
+          hostPath:
+            path: {{ .Values.tunDevice.hostPath }}
+            type: CharDevice
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: state
+        labels:
+          {{- include "tailscale.labels" . | nindent 10 }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+        {{- with .Values.persistence.storageClassName }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+  {{- end }}

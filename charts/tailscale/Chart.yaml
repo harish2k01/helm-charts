@@ -1,0 +1,24 @@
+apiVersion: v2
+name: tailscale
+description: Deploys Tailscale as a Kubernetes subnet router and exit node
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/tailscale.png
+version: 0.1.0
+appVersion: "v1.96.5"
+home: https://tailscale.com
+sources:
+  - https://github.com/tailscale/tailscale
+  - https://tailscale.com/docs/features/containers/docker
+keywords:
+  - tailscale
+  - vpn
+  - wireguard
+  - subnet-router
+  - exit-node
+annotations:
+  artifacthub.io/license: BSD-3-Clause
+  artifacthub.io/images: |
+    - name: tailscale
+      image: tailscale/tailscale:v1.96.5
+maintainers:
+  - name: harish2k01
