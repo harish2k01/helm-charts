@@ -3,7 +3,7 @@ name: speedtest-tracker
 description: A Helm chart for deploying Speedtest Tracker on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/speedtest-tracker.png
-version: 0.1.2
+version: 0.1.3
 appVersion: "1.14.0"
 home: https://github.com/alexjustesen/speedtest-tracker
 sources:

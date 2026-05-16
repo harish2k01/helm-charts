@@ -1,76 +1,367 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "cloudflared values",
+  "description": "Configurable Helm values for the cloudflared chart.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
     "replicaCount": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
+      "default": 1
     },
     "image": {
-      "type": "object"
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "cloudflare/cloudflared"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+          "default": "2026.3.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
     },
     "imagePullSecrets": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
     },
     "podAnnotations": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "podLabels": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "selectorLabels": {
-      "type": "object"
+      "type": "object",
+      "description": "Labels used by selectors to match pods. Changing these after installation may require recreating workloads.",
+      "additionalProperties": true,
+      "properties": {
+        "pod": {
+          "type": "string",
+          "description": "Selector label value used to identify cloudflared pods.",
+          "default": "cloudflared"
+        }
+      }
     },
     "podSecurityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {
+        "sysctls": {
+          "type": "array",
+          "description": "List of sysctls entries.",
+          "default": [
+            {
+              "name": "net.ipv4.ping_group_range",
+              "value": "65532 65532"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "description": "Pod sysctl entry applied by the pod security context.",
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name assigned to this Kubernetes object, port, reference, or setting.",
+                "default": "net.ipv4.ping_group_range"
+              },
+              "value": {
+                "type": "string",
+                "description": "Concrete value for this setting.",
+                "default": "65532 65532"
+              }
+            }
+          }
+        }
+      }
     },
     "securityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "cloudflared": {
-      "type": "object"
+      "type": "object",
+      "description": "Cloudflared tunnel connector runtime settings.",
+      "additionalProperties": true,
+      "properties": {
+        "logLevel": {
+          "type": "string",
+          "description": "Cloudflared log verbosity passed with --loglevel.",
+          "default": "info"
+        },
+        "noAutoupdate": {
+          "type": "boolean",
+          "description": "Add --no-autoupdate so the container version is controlled by the image tag and Helm values.",
+          "default": true
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Cloudflared metrics and readiness endpoint settings.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable the metrics endpoint and related readiness configuration.",
+              "default": true
+            },
+            "address": {
+              "type": "string",
+              "description": "Address passed to cloudflared --metrics, including bind IP and port.",
+              "default": "0.0.0.0:2000"
+            },
+            "port": {
+              "type": "integer",
+              "description": "Named metrics container port exposed for probes and optional Service traffic.",
+              "default": 2000
+            }
+          }
+        },
+        "extraArgs": {
+          "type": "array",
+          "description": "Additional cloudflared CLI arguments inserted before the final run command.",
+          "default": [],
+          "items": {}
+        },
+        "extraEnv": {
+          "type": "object",
+          "description": "Additional environment variables passed to the cloudflared container.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "envFrom": {
+          "type": "array",
+          "description": "List of envFrom entries.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "token": {
-      "type": "object"
+      "type": "object",
+      "description": "Cloudflare tunnel token Secret configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "description": "Kubernetes Secret name containing the Cloudflare tunnel token.",
+          "default": "cloudflare-tunnel-token"
+        },
+        "secretKey": {
+          "type": "string",
+          "description": "Secret key that stores the Cloudflare tunnel token value.",
+          "default": "token"
+        },
+        "create": {
+          "type": "boolean",
+          "description": "Create a normal Kubernetes Secret from token.value. Prefer external secret management for production GitOps.",
+          "default": false
+        },
+        "value": {
+          "type": "string",
+          "description": "Plain tunnel token used only when token.create is true. Avoid committing real token values.",
+          "default": ""
+        },
+        "sealedSecret": {
+          "type": "object",
+          "description": "Bitnami SealedSecret configuration for GitOps-safe encrypted tunnel tokens.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Create a SealedSecret instead of relying on a pre-existing Secret.",
+              "default": false
+            },
+            "encryptedData": {
+              "type": "object",
+              "description": "Encrypted SealedSecret data map, usually containing the configured token.secretKey.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "annotations": {
+              "type": "object",
+              "description": "Additional annotations applied to the SealedSecret resource.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "labels": {
+              "type": "object",
+              "description": "Additional labels applied to the SealedSecret resource.",
+              "additionalProperties": true,
+              "properties": {}
+            }
+          }
+        }
+      }
     },
     "service": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create the Kubernetes Service for this endpoint.",
+          "default": false
+        },
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 2000
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": "metrics"
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port and matching container port where applicable.",
+          "default": "metrics"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service resource.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
     },
     "extraContainerPorts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional container ports to add to the main application container.",
+      "default": [],
+      "items": {}
     },
     "extraVolumes": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
     },
     "extraVolumeMounts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional volume mounts appended to the main application container.",
+      "default": [],
+      "items": {}
     },
     "resources": {
-      "type": "object"
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "livenessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes liveness probe used to restart the container when it becomes unhealthy.",
+      "additionalProperties": true,
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "description": "HTTP GET probe configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "HTTP path match configuration.",
+              "default": "/ready"
+            },
+            "port": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Port number or named port used by this setting.",
+              "default": "metrics"
+            }
+          }
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+          "default": 1
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Seconds to wait after container start before the probe first runs.",
+          "default": 10
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often, in seconds, Kubernetes runs the probe.",
+          "default": 10
+        }
+      }
     },
     "readinessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes readiness probe used to decide when the pod can receive traffic.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "nodeSelector": {
-      "type": "object"
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "tolerations": {
-      "type": "array"
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
     },
     "affinity": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "topologySpreadConstraints": {
-      "type": "array"
+      "type": "array",
+      "description": "Topology spread constraints used to distribute pods across zones, nodes, or other topology domains.",
+      "default": [],
+      "items": {}
     }
   }
 }

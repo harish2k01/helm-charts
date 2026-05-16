@@ -1,76 +1,262 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "tor-proxy values",
+  "description": "Configurable Helm values for the tor-proxy chart.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
     "replicaCount": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
+      "default": 1
     },
     "image": {
-      "type": "object"
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "peterdavehello/tor-socks-proxy"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+          "default": "latest"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "Always"
+        }
+      }
     },
     "imagePullSecrets": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
     },
     "podAnnotations": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "podLabels": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "podSecurityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "securityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "env": {
-      "type": "object"
+      "type": "object",
+      "description": "Non-secret environment variables passed to the application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "envFrom": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional envFrom sources, such as ConfigMaps or Secrets, added to the application container.",
+      "default": [],
+      "items": {}
     },
     "service": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 9150
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": 9150
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port and matching container port where applicable.",
+          "default": "socks"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports to expose beside the primary application port.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "extraContainerPorts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional container ports to add to the main application container.",
+      "default": [],
+      "items": {}
     },
     "command": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional command override for the main container entrypoint.",
+      "default": [],
+      "items": {}
     },
     "args": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional argument override for the main container command.",
+      "default": [],
+      "items": {}
     },
     "extraVolumes": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
     },
     "extraVolumeMounts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional volume mounts appended to the main application container.",
+      "default": [],
+      "items": {}
     },
     "resources": {
-      "type": "object"
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "livenessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes liveness probe used to restart the container when it becomes unhealthy.",
+      "additionalProperties": true,
+      "properties": {
+        "tcpSocket": {
+          "type": "object",
+          "description": "TCP socket probe configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "string",
+              "description": "Port number or named port used by this setting.",
+              "default": "socks"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Seconds to wait after container start before the probe first runs.",
+          "default": 30
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often, in seconds, Kubernetes runs the probe.",
+          "default": 30
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Seconds after which the probe attempt times out.",
+          "default": 5
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+          "default": 3
+        }
+      }
     },
     "readinessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes readiness probe used to decide when the pod can receive traffic.",
+      "additionalProperties": true,
+      "properties": {
+        "tcpSocket": {
+          "type": "object",
+          "description": "TCP socket probe configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "string",
+              "description": "Port number or named port used by this setting.",
+              "default": "socks"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Seconds to wait after container start before the probe first runs.",
+          "default": 10
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often, in seconds, Kubernetes runs the probe.",
+          "default": 10
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Seconds after which the probe attempt times out.",
+          "default": 5
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+          "default": 3
+        }
+      }
     },
     "nodeSelector": {
-      "type": "object"
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "tolerations": {
-      "type": "array"
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
     },
     "affinity": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
     }
   }
 }

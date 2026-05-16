@@ -3,7 +3,7 @@ name: tailscale
 description: Deploys Tailscale as a Kubernetes subnet router and exit node
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/tailscale.png
-version: 0.1.1
+version: 0.1.2
 appVersion: "v1.96.5"
 home: https://tailscale.com
 sources:

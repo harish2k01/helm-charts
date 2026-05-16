@@ -24,22 +24,22 @@ helm repo update
 
 | Chart | Chart Version | App Version | Description |
 | --- | --- | --- | --- |
-| [`bazarr`](charts/bazarr) | `0.1.0` | `1.5.6` | Deploys Bazarr subtitle automation on Kubernetes |
-| [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
-| [`cloudflared`](charts/cloudflared) | `0.1.0` | `2026.3.0` | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes |
-| [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
-| [`flaresolverr`](charts/flaresolverr) | `0.1.0` | `v3.4.6` | Deploys FlareSolverr on Kubernetes |
-| [`jellyfin`](charts/jellyfin) | `0.1.0` | `10.11.8` | Deploys Jellyfin media server on Kubernetes |
-| [`prowlarr`](charts/prowlarr) | `0.1.0` | `2.3.5` | Deploys Prowlarr indexer manager on Kubernetes |
-| [`qbittorrent`](charts/qbittorrent) | `0.1.0` | `5.2.0` | Deploys qBittorrent on Kubernetes |
-| [`radarr`](charts/radarr) | `0.1.0` | `6.1.1` | Deploys Radarr movie automation on Kubernetes |
-| [`scrutiny`](charts/scrutiny) | `0.2.0` | `v0.9.2-web` | Deploys Scrutiny web/API with InfluxDB for remote collectors |
-| [`seerr`](charts/seerr) | `0.1.0` | `v3.2.0` | Deploys Seerr media request manager on Kubernetes |
-| [`sonarr`](charts/sonarr) | `0.1.0` | `4.0.17` | Deploys Sonarr TV automation on Kubernetes |
-| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.1` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
-| [`tailscale`](charts/tailscale) | `0.1.1` | `v1.96.5` | Deploys Tailscale as a Kubernetes subnet router and exit node |
-| [`tor-proxy`](charts/tor-proxy) | `0.1.0` | `latest` | Deploys a Tor SOCKS proxy on Kubernetes |
-| [`uptime-kuma`](charts/uptime-kuma) | `0.1.0` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
+| [`bazarr`](charts/bazarr) | `0.1.2` | `1.5.6` | Deploys Bazarr subtitle automation on Kubernetes |
+| [`bentopdf`](charts/bentopdf) | `0.1.3` | `2.8.4` | Deploys BentoPDF on Kubernetes |
+| [`cloudflared`](charts/cloudflared) | `0.1.1` | `2026.3.0` | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes |
+| [`firefly-iii`](charts/firefly-iii) | `0.1.2` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
+| [`flaresolverr`](charts/flaresolverr) | `0.1.2` | `v3.4.6` | Deploys FlareSolverr on Kubernetes |
+| [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Deploys Jellyfin media server on Kubernetes |
+| [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Deploys Prowlarr indexer manager on Kubernetes |
+| [`qbittorrent`](charts/qbittorrent) | `0.1.2` | `5.2.0` | Deploys qBittorrent on Kubernetes |
+| [`radarr`](charts/radarr) | `0.1.2` | `6.1.1` | Deploys Radarr movie automation on Kubernetes |
+| [`scrutiny`](charts/scrutiny) | `0.2.2` | `v0.9.2-web` | Deploys Scrutiny web/API with InfluxDB for remote collectors |
+| [`seerr`](charts/seerr) | `0.1.2` | `v3.2.0` | Deploys Seerr media request manager on Kubernetes |
+| [`sonarr`](charts/sonarr) | `0.1.2` | `4.0.17` | Deploys Sonarr TV automation on Kubernetes |
+| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.3` | `1.14.0` | Deploys Speedtest Tracker on Kubernetes |
+| [`tailscale`](charts/tailscale) | `0.1.2` | `v1.96.5` | Deploys Tailscale as a Kubernetes subnet router and exit node |
+| [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Deploys a Tor SOCKS proxy on Kubernetes |
+| [`uptime-kuma`](charts/uptime-kuma) | `0.1.2` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
 
 ## Media Automation Charts
 
@@ -126,7 +126,7 @@ helm install bentopdf harish2k01/bentopdf -f values.yaml
 ## Install A Specific Version
 
 ```bash
-helm install bentopdf harish2k01/bentopdf --version 0.1.1
+helm install bentopdf harish2k01/bentopdf --version 0.1.3
 ```
 
 ## Upgrade

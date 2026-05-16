@@ -1,43 +1,1058 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "firefly-iii values",
+  "description": "Configurable Helm values for the firefly-iii chart.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
     "replicaCount": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
+      "default": 1
     },
     "image": {
-      "type": "object"
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "fireflyiii/core"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+          "default": "version-6.6.1"
+        }
+      }
     },
     "imagePullSecrets": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
     },
     "service": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 80
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": 8080
+        }
+      }
     },
     "ingress": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for exposing the application through an ingress controller.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules routed to the chart Service.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts and referenced certificate secrets.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "httpRoute": {
-      "type": "object"
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for exposing the application through a Gateway.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a Gateway API HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules, including path matches and filters.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {
+            "type": "object",
+            "description": "Gateway API HTTPRoute rule with matches, filters, and backend references.",
+            "additionalProperties": true,
+            "properties": {
+              "matches": {
+                "type": "array",
+                "description": "HTTP match conditions for a route rule.",
+                "default": [
+                  {
+                    "path": {
+                      "type": "PathPrefix",
+                      "value": "/"
+                    }
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "description": "HTTP match condition used by an HTTPRoute rule.",
+                  "additionalProperties": true,
+                  "properties": {
+                    "path": {
+                      "type": "object",
+                      "description": "HTTP path match configuration.",
+                      "additionalProperties": true,
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Type value used by this Kubernetes or application setting.",
+                          "default": "PathPrefix"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Concrete value for this setting.",
+                          "default": "/"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "persistence": {
-      "type": "object"
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "upload": {
+          "type": "object",
+          "description": "Persistent volume settings for uploaded files and attachments.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable this feature or generated resource.",
+              "default": true
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PersistentVolumeClaim access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string",
+                "description": "PersistentVolumeClaim access mode value.",
+                "default": "ReadWriteOnce"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PersistentVolumeClaim storage request size.",
+              "default": "1Gi"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
+              "default": ""
+            }
+          }
+        }
+      }
     },
     "postgres": {
-      "type": "object"
+      "type": "object",
+      "description": "Bundled PostgreSQL database used by Firefly III.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to deploy the bundled PostgreSQL database.",
+          "default": true
+        },
+        "image": {
+          "type": "object",
+          "description": "Image setting for image.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "Container image repository.",
+              "default": "postgres"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Kubernetes image pull policy.",
+              "default": "IfNotPresent"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Container image tag.",
+              "default": "16-alpine"
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "description": "Configuration block for service.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "integer",
+              "description": "Port number or named port used by this setting.",
+              "default": 5432
+            }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "description": "Database and username settings for the bundled PostgreSQL instance.",
+          "additionalProperties": true,
+          "properties": {
+            "database": {
+              "type": "string",
+              "description": "Database name.",
+              "default": "firefly"
+            },
+            "username": {
+              "type": "string",
+              "description": "Database username.",
+              "default": "firefly"
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "description": "Persistent storage for PostgreSQL data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable this feature or generated resource.",
+              "default": true
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PersistentVolumeClaim access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string",
+                "description": "PersistentVolumeClaim access mode value.",
+                "default": "ReadWriteOnce"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PersistentVolumeClaim storage request size.",
+              "default": "1Gi"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
+              "default": ""
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector constraints.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
     },
     "cronjob": {
-      "type": "object"
+      "type": "object",
+      "description": "CronJob configuration for periodic application maintenance tasks.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create the maintenance CronJob.",
+          "default": true
+        },
+        "schedule": {
+          "type": "string",
+          "description": "Cron schedule used by the maintenance CronJob.",
+          "default": "0 3 * * *"
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "Optional Kubernetes CronJob timeZone value.",
+          "default": ""
+        },
+        "successfulJobsHistoryLimit": {
+          "type": "integer",
+          "description": "Number of successful CronJob runs to retain.",
+          "default": 3
+        },
+        "failedJobsHistoryLimit": {
+          "type": "integer",
+          "description": "Number of failed CronJob runs to retain.",
+          "default": 1
+        },
+        "restartPolicy": {
+          "type": "string",
+          "description": "Restart policy for CronJob pods.",
+          "default": "OnFailure"
+        },
+        "image": {
+          "type": "object",
+          "description": "Image setting for image.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "Container image repository.",
+              "default": "curlimages/curl"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Kubernetes image pull policy.",
+              "default": "IfNotPresent"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Container image tag.",
+              "default": "8.19.0"
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
     },
     "firefly": {
-      "type": "object"
+      "type": "object",
+      "description": "Firefly III application configuration, including env vars, secret handling, probes, scheduling, and pod settings.",
+      "additionalProperties": true,
+      "properties": {
+        "env": {
+          "type": "object",
+          "description": "Non-secret Firefly III environment variables rendered into the application pod.",
+          "additionalProperties": true,
+          "properties": {
+            "APP_ENV": {
+              "type": "string",
+              "description": "Application runtime environment.",
+              "default": "production"
+            },
+            "APP_DEBUG": {
+              "type": "string",
+              "description": "Enable verbose application debugging output.",
+              "default": "false"
+            },
+            "SITE_OWNER": {
+              "type": "string",
+              "description": "Environment variable SITE_OWNER passed to the application container.",
+              "default": "owner@example.com"
+            },
+            "DEFAULT_LANGUAGE": {
+              "type": "string",
+              "description": "Environment variable DEFAULT_LANGUAGE passed to the application container.",
+              "default": "en_US"
+            },
+            "DEFAULT_LOCALE": {
+              "type": "string",
+              "description": "Environment variable DEFAULT_LOCALE passed to the application container.",
+              "default": "equal"
+            },
+            "TZ": {
+              "type": "string",
+              "description": "Timezone used by the application container.",
+              "default": "UTC"
+            },
+            "TRUSTED_PROXIES": {
+              "type": "string",
+              "description": "Environment variable TRUSTED_PROXIES passed to the application container.",
+              "default": "**"
+            },
+            "LOG_CHANNEL": {
+              "type": "string",
+              "description": "Environment variable LOG_CHANNEL passed to the application container.",
+              "default": "stack"
+            },
+            "APP_LOG_LEVEL": {
+              "type": "string",
+              "description": "Environment variable APP_LOG_LEVEL passed to the application container.",
+              "default": "notice"
+            },
+            "AUDIT_LOG_LEVEL": {
+              "type": "string",
+              "description": "Environment variable AUDIT_LOG_LEVEL passed to the application container.",
+              "default": "emergency"
+            },
+            "AUDIT_LOG_CHANNEL": {
+              "type": "string",
+              "description": "Environment variable AUDIT_LOG_CHANNEL passed to the application container.",
+              "default": ""
+            },
+            "PAPERTRAIL_HOST": {
+              "type": "string",
+              "description": "Environment variable PAPERTRAIL_HOST passed to the application container.",
+              "default": ""
+            },
+            "PAPERTRAIL_PORT": {
+              "type": "string",
+              "description": "Environment variable PAPERTRAIL_PORT passed to the application container.",
+              "default": ""
+            },
+            "DB_SOCKET": {
+              "type": "string",
+              "description": "Environment variable DB_SOCKET passed to the application container.",
+              "default": ""
+            },
+            "PGSQL_SSL_MODE": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SSL_MODE passed to the application container.",
+              "default": "prefer"
+            },
+            "PGSQL_SSL_ROOT_CERT": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SSL_ROOT_CERT passed to the application container.",
+              "default": "null"
+            },
+            "PGSQL_SSL_CERT": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SSL_CERT passed to the application container.",
+              "default": "null"
+            },
+            "PGSQL_SSL_KEY": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SSL_KEY passed to the application container.",
+              "default": "null"
+            },
+            "PGSQL_SSL_CRL_FILE": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SSL_CRL_FILE passed to the application container.",
+              "default": "null"
+            },
+            "PGSQL_SCHEMA": {
+              "type": "string",
+              "description": "Environment variable PGSQL_SCHEMA passed to the application container.",
+              "default": "public"
+            },
+            "CACHE_DRIVER": {
+              "type": "string",
+              "description": "Environment variable CACHE_DRIVER passed to the application container.",
+              "default": "file"
+            },
+            "SESSION_DRIVER": {
+              "type": "string",
+              "description": "Environment variable SESSION_DRIVER passed to the application container.",
+              "default": "file"
+            },
+            "REDIS_SCHEME": {
+              "type": "string",
+              "description": "Environment variable REDIS_SCHEME passed to the application container.",
+              "default": "tcp"
+            },
+            "REDIS_PATH": {
+              "type": "string",
+              "description": "Environment variable REDIS_PATH passed to the application container.",
+              "default": ""
+            },
+            "REDIS_HOST": {
+              "type": "string",
+              "description": "Environment variable REDIS_HOST passed to the application container.",
+              "default": "127.0.0.1"
+            },
+            "REDIS_PORT": {
+              "type": "string",
+              "description": "Environment variable REDIS_PORT passed to the application container.",
+              "default": "6379"
+            },
+            "REDIS_USERNAME": {
+              "type": "string",
+              "description": "Environment variable REDIS_USERNAME passed to the application container.",
+              "default": ""
+            },
+            "REDIS_DB": {
+              "type": "string",
+              "description": "Environment variable REDIS_DB passed to the application container.",
+              "default": "0"
+            },
+            "REDIS_CACHE_DB": {
+              "type": "string",
+              "description": "Environment variable REDIS_CACHE_DB passed to the application container.",
+              "default": "1"
+            },
+            "COOKIE_PATH": {
+              "type": "string",
+              "description": "Environment variable COOKIE_PATH passed to the application container.",
+              "default": "/"
+            },
+            "COOKIE_DOMAIN": {
+              "type": "string",
+              "description": "Environment variable COOKIE_DOMAIN passed to the application container.",
+              "default": ""
+            },
+            "COOKIE_SECURE": {
+              "type": "string",
+              "description": "Environment variable COOKIE_SECURE passed to the application container.",
+              "default": "false"
+            },
+            "COOKIE_SAMESITE": {
+              "type": "string",
+              "description": "Environment variable COOKIE_SAMESITE passed to the application container.",
+              "default": "lax"
+            },
+            "MAIL_MAILER": {
+              "type": "string",
+              "description": "Mail transport driver.",
+              "default": "log"
+            },
+            "MAIL_HOST": {
+              "type": "string",
+              "description": "SMTP server hostname.",
+              "default": ""
+            },
+            "MAIL_PORT": {
+              "type": "string",
+              "description": "SMTP server port.",
+              "default": "587"
+            },
+            "MAIL_FROM": {
+              "type": "string",
+              "description": "Default sender email address.",
+              "default": "firefly@example.com"
+            },
+            "MAIL_ENCRYPTION": {
+              "type": "string",
+              "description": "Environment variable MAIL_ENCRYPTION passed to the application container.",
+              "default": "null"
+            },
+            "MAIL_SENDMAIL_COMMAND": {
+              "type": "string",
+              "description": "Environment variable MAIL_SENDMAIL_COMMAND passed to the application container.",
+              "default": ""
+            },
+            "MAIL_ALLOW_SELF_SIGNED": {
+              "type": "string",
+              "description": "Environment variable MAIL_ALLOW_SELF_SIGNED passed to the application container.",
+              "default": "false"
+            },
+            "MAIL_VERIFY_PEER": {
+              "type": "string",
+              "description": "Environment variable MAIL_VERIFY_PEER passed to the application container.",
+              "default": "true"
+            },
+            "MAIL_VERIFY_PEER_NAME": {
+              "type": "string",
+              "description": "Environment variable MAIL_VERIFY_PEER_NAME passed to the application container.",
+              "default": "true"
+            },
+            "MAILGUN_DOMAIN": {
+              "type": "string",
+              "description": "Environment variable MAILGUN_DOMAIN passed to the application container.",
+              "default": ""
+            },
+            "MAILGUN_ENDPOINT": {
+              "type": "string",
+              "description": "Environment variable MAILGUN_ENDPOINT passed to the application container.",
+              "default": "api.mailgun.net"
+            },
+            "SEND_ERROR_MESSAGE": {
+              "type": "string",
+              "description": "Environment variable SEND_ERROR_MESSAGE passed to the application container.",
+              "default": "false"
+            },
+            "MAP_DEFAULT_LAT": {
+              "type": "string",
+              "description": "Environment variable MAP_DEFAULT_LAT passed to the application container.",
+              "default": "51.983333"
+            },
+            "MAP_DEFAULT_LONG": {
+              "type": "string",
+              "description": "Environment variable MAP_DEFAULT_LONG passed to the application container.",
+              "default": "5.916667"
+            },
+            "MAP_DEFAULT_ZOOM": {
+              "type": "string",
+              "description": "Environment variable MAP_DEFAULT_ZOOM passed to the application container.",
+              "default": "6"
+            },
+            "AUTHENTICATION_GUARD": {
+              "type": "string",
+              "description": "Environment variable AUTHENTICATION_GUARD passed to the application container.",
+              "default": "web"
+            },
+            "AUTHENTICATION_GUARD_HEADER": {
+              "type": "string",
+              "description": "Environment variable AUTHENTICATION_GUARD_HEADER passed to the application container.",
+              "default": "REMOTE_USER"
+            },
+            "AUTHENTICATION_GUARD_EMAIL": {
+              "type": "string",
+              "description": "Environment variable AUTHENTICATION_GUARD_EMAIL passed to the application container.",
+              "default": ""
+            },
+            "PASSPORT_PUBLIC_KEY": {
+              "type": "string",
+              "description": "Environment variable PASSPORT_PUBLIC_KEY passed to the application container.",
+              "default": ""
+            },
+            "CUSTOM_LOGOUT_URL": {
+              "type": "string",
+              "description": "Environment variable CUSTOM_LOGOUT_URL passed to the application container.",
+              "default": ""
+            },
+            "DISABLE_FRAME_HEADER": {
+              "type": "string",
+              "description": "Environment variable DISABLE_FRAME_HEADER passed to the application container.",
+              "default": "false"
+            },
+            "DISABLE_CSP_HEADER": {
+              "type": "string",
+              "description": "Environment variable DISABLE_CSP_HEADER passed to the application container.",
+              "default": "false"
+            },
+            "TRACKER_SITE_ID": {
+              "type": "string",
+              "description": "Environment variable TRACKER_SITE_ID passed to the application container.",
+              "default": ""
+            },
+            "TRACKER_URL": {
+              "type": "string",
+              "description": "Environment variable TRACKER_URL passed to the application container.",
+              "default": ""
+            },
+            "DKR_CHECK_SQLITE": {
+              "type": "string",
+              "description": "Environment variable DKR_CHECK_SQLITE passed to the application container.",
+              "default": "true"
+            },
+            "APP_NAME": {
+              "type": "string",
+              "description": "Display name used by the application.",
+              "default": "FireflyIII"
+            },
+            "BROADCAST_DRIVER": {
+              "type": "string",
+              "description": "Environment variable BROADCAST_DRIVER passed to the application container.",
+              "default": "log"
+            },
+            "QUEUE_DRIVER": {
+              "type": "string",
+              "description": "Environment variable QUEUE_DRIVER passed to the application container.",
+              "default": "sync"
+            },
+            "CACHE_PREFIX": {
+              "type": "string",
+              "description": "Environment variable CACHE_PREFIX passed to the application container.",
+              "default": "firefly"
+            },
+            "PUSHER_KEY": {
+              "type": "string",
+              "description": "Environment variable PUSHER_KEY passed to the application container.",
+              "default": ""
+            },
+            "PUSHER_ID": {
+              "type": "string",
+              "description": "Environment variable PUSHER_ID passed to the application container.",
+              "default": ""
+            },
+            "DEMO_USERNAME": {
+              "type": "string",
+              "description": "Environment variable DEMO_USERNAME passed to the application container.",
+              "default": ""
+            },
+            "DEMO_PASSWORD": {
+              "type": "string",
+              "description": "Environment variable DEMO_PASSWORD passed to the application container.",
+              "default": ""
+            },
+            "FIREFLY_III_LAYOUT": {
+              "type": "string",
+              "description": "Environment variable FIREFLY_III_LAYOUT passed to the application container.",
+              "default": "v1"
+            },
+            "APP_URL": {
+              "type": "string",
+              "description": "Public URL used when the application generates links and redirects.",
+              "default": "http://localhost"
+            }
+          }
+        },
+        "secrets": {
+          "type": "object",
+          "description": "Secret management for required Firefly III values such as APP_KEY, DB_PASSWORD, and STATIC_CRON_TOKEN.",
+          "additionalProperties": true,
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "description": "Existing Secret containing Firefly III secret values. Recommended for production deployments.",
+              "default": ""
+            },
+            "rolloutToken": {
+              "type": "string",
+              "description": "Arbitrary value used to trigger Firefly III pod rollouts when an externally managed Secret changes.",
+              "default": "1"
+            },
+            "inline": {
+              "type": "object",
+              "description": "Inline Firefly III secret values for local testing. Prefer existingSecret for production.",
+              "additionalProperties": true,
+              "properties": {
+                "APP_KEY": {
+                  "type": "string",
+                  "description": "Laravel application encryption key. Generate a unique value for each deployment.",
+                  "default": "0123456789abcdefghijklmnopqrstuv"
+                },
+                "DB_PASSWORD": {
+                  "type": "string",
+                  "description": "Database password.",
+                  "default": "CHANGE_ME_DB_PASSWORD"
+                },
+                "STATIC_CRON_TOKEN": {
+                  "type": "string",
+                  "description": "Inline secret value for STATIC_CRON_TOKEN. Prefer an existing Kubernetes Secret for production.",
+                  "default": "1234567890abcdefghijklmnopqrstuv"
+                },
+                "MAIL_USERNAME": {
+                  "type": "string",
+                  "description": "SMTP or mail provider username.",
+                  "default": "null"
+                },
+                "MAIL_PASSWORD": {
+                  "type": "string",
+                  "description": "SMTP or mail provider password.",
+                  "default": "null"
+                },
+                "REDIS_PASSWORD": {
+                  "type": "string",
+                  "description": "Inline secret value for REDIS_PASSWORD. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "MAILGUN_SECRET": {
+                  "type": "string",
+                  "description": "Inline secret value for MAILGUN_SECRET. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "MANDRILL_SECRET": {
+                  "type": "string",
+                  "description": "Inline secret value for MANDRILL_SECRET. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "SPARKPOST_SECRET": {
+                  "type": "string",
+                  "description": "Inline secret value for SPARKPOST_SECRET. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "MAILERSEND_API_KEY": {
+                  "type": "string",
+                  "description": "Inline secret value for MAILERSEND_API_KEY. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "PASSPORT_PRIVATE_KEY": {
+                  "type": "string",
+                  "description": "Inline secret value for PASSPORT_PRIVATE_KEY. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "IPINFO_TOKEN": {
+                  "type": "string",
+                  "description": "Inline secret value for IPINFO_TOKEN. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                },
+                "PUSHER_SECRET": {
+                  "type": "string",
+                  "description": "Inline secret value for PUSHER_SECRET. Prefer an existing Kubernetes Secret for production.",
+                  "default": ""
+                }
+              }
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podAnnotations": {
+          "type": "object",
+          "description": "Configuration block for podAnnotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Configuration block for securityContext.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Node selector constraints.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "List of tolerations entries.",
+          "default": [],
+          "items": {}
+        },
+        "affinity": {
+          "type": "object",
+          "description": "Configuration block for affinity.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "livenessProbe": {
+          "type": "object",
+          "description": "Configuration block for livenessProbe.",
+          "additionalProperties": true,
+          "properties": {
+            "httpGet": {
+              "type": "object",
+              "description": "HTTP GET probe configuration.",
+              "additionalProperties": true,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "HTTP path match configuration.",
+                  "default": "/health"
+                },
+                "port": {
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
+                  "description": "Port number or named port used by this setting.",
+                  "default": "http"
+                }
+              }
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "description": "Seconds to wait after container start before the probe first runs.",
+              "default": 60
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "description": "How often, in seconds, Kubernetes runs the probe.",
+              "default": 30
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "description": "Seconds after which the probe attempt times out.",
+              "default": 5
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+              "default": 3
+            }
+          }
+        },
+        "readinessProbe": {
+          "type": "object",
+          "description": "Configuration block for readinessProbe.",
+          "additionalProperties": true,
+          "properties": {
+            "httpGet": {
+              "type": "object",
+              "description": "HTTP GET probe configuration.",
+              "additionalProperties": true,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "HTTP path match configuration.",
+                  "default": "/health"
+                },
+                "port": {
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
+                  "description": "Port number or named port used by this setting.",
+                  "default": "http"
+                }
+              }
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "description": "Seconds to wait after container start before the probe first runs.",
+              "default": 30
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "description": "How often, in seconds, Kubernetes runs the probe.",
+              "default": 10
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "description": "Seconds after which the probe attempt times out.",
+              "default": 5
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+              "default": 3
+            }
+          }
+        },
+        "startupProbe": {
+          "type": "object",
+          "description": "Configuration block for startupProbe.",
+          "additionalProperties": true,
+          "properties": {
+            "httpGet": {
+              "type": "object",
+              "description": "HTTP GET probe configuration.",
+              "additionalProperties": true,
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "HTTP path match configuration.",
+                  "default": "/health"
+                },
+                "port": {
+                  "type": [
+                    "integer",
+                    "string"
+                  ],
+                  "description": "Port number or named port used by this setting.",
+                  "default": "http"
+                }
+              }
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "description": "Seconds to wait after container start before the probe first runs.",
+              "default": 10
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "description": "How often, in seconds, Kubernetes runs the probe.",
+              "default": 10
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "description": "Seconds after which the probe attempt times out.",
+              "default": 5
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+              "default": 30
+            }
+          }
+        }
+      }
     }
   }
 }
