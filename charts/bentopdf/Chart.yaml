@@ -3,7 +3,7 @@ name: bentopdf
 description: A Helm chart for deploying BentoPDF on Kubernetes
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/bentopdf.png
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "2.8.4"
 home: https://github.com/alam00000/BentoPDF
 sources:

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer"
+    },
+    "image": {
+      "type": "object"
+    },
+    "imagePullSecrets": {
+      "type": "array"
+    },
+    "nameOverride": {
+      "type": "string"
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
+    "service": {
+      "type": "object"
+    },
+    "ingress": {
+      "type": "object"
+    },
+    "httpRoute": {
+      "type": "object"
+    },
+    "persistence": {
+      "type": "object"
+    },
+    "postgres": {
+      "type": "object"
+    },
+    "cronjob": {
+      "type": "object"
+    },
+    "firefly": {
+      "type": "object"
+    }
+  }
+}
