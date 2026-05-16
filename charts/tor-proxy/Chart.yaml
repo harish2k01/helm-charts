@@ -3,7 +3,7 @@ name: tor-proxy
 description: Deploys a Tor SOCKS proxy on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/tor.png
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest"
 home: https://github.com/peterdavehello/tor-socks-proxy
 sources:

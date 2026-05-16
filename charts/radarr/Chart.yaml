@@ -3,7 +3,7 @@ name: radarr
 description: Deploys Radarr movie automation on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/radarr.png
-version: 0.1.0
+version: 0.1.1
 appVersion: "6.1.1"
 home: https://radarr.video
 sources:
