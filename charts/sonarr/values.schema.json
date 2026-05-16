@@ -1,82 +1,496 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sonarr values",
+  "description": "Configurable Helm values for the sonarr chart.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
     "replicaCount": {
-      "type": "integer"
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
+      "default": 1
     },
     "image": {
-      "type": "object"
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "lscr.io/linuxserver/sonarr"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+          "default": "4.0.17"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
     },
     "imagePullSecrets": {
-      "type": "array"
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
     },
     "podAnnotations": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "podLabels": {
-      "type": "object"
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "podSecurityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "securityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "env": {
-      "type": "object"
+      "type": "object",
+      "description": "Non-secret environment variables passed to the application container.",
+      "additionalProperties": true,
+      "properties": {
+        "PUID": {
+          "type": "string",
+          "description": "Linux user ID used by LinuxServer.io containers for file ownership.",
+          "default": "3000"
+        },
+        "PGID": {
+          "type": "string",
+          "description": "Linux group ID used by LinuxServer.io containers for file ownership.",
+          "default": "3000"
+        },
+        "TZ": {
+          "type": "string",
+          "description": "Timezone used by the application container.",
+          "default": "Asia/Kolkata"
+        }
+      }
     },
     "service": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 8989
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": 8989
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port and matching container port where applicable.",
+          "default": "http"
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports to expose beside the primary application port.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "extraContainerPorts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional container ports to add to the main application container.",
+      "default": [],
+      "items": {}
     },
     "persistence": {
-      "type": "object"
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "config": {
+          "type": "object",
+          "description": "Persistent volume settings for application configuration and state.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable this feature or generated resource.",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container filesystem path where this volume is mounted.",
+              "default": "/config"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PersistentVolumeClaim access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string",
+                "description": "PersistentVolumeClaim access mode value.",
+                "default": "ReadWriteOnce"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PersistentVolumeClaim storage request size.",
+              "default": "5Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
     },
     "media": {
-      "type": "object"
+      "type": "object",
+      "description": "Optional media library volume mounts shared with related applications.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to mount an existing media PersistentVolumeClaim.",
+          "default": false
+        },
+        "existingClaim": {
+          "type": "string",
+          "description": "Existing media PersistentVolumeClaim to mount.",
+          "default": ""
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Path inside the container where the media volume is mounted.",
+          "default": "/vault"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Mount the media volume read-only when the application only needs to inspect files.",
+          "default": false
+        },
+        "mounts": {
+          "type": "array",
+          "description": "Additional media mounts for multiple libraries or custom paths.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "hostDevices": {
-      "type": "object"
+      "type": "object",
+      "description": "Optional host device mounts for workloads that need direct hardware access.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to add host device mounts to the pod.",
+          "default": false
+        },
+        "devices": {
+          "type": "array",
+          "description": "List of host devices to expose to the container.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "extraVolumes": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
     },
     "extraVolumeMounts": {
-      "type": "array"
+      "type": "array",
+      "description": "Additional volume mounts appended to the main application container.",
+      "default": [],
+      "items": {}
     },
     "ingress": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for exposing the application through an ingress controller.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules routed to the chart Service.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts and referenced certificate secrets.",
+          "default": [],
+          "items": {}
+        }
+      }
     },
     "httpRoute": {
-      "type": "object"
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for exposing the application through a Gateway.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a Gateway API HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules, including path matches and filters.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {
+            "type": "object",
+            "description": "Gateway API HTTPRoute rule with matches, filters, and backend references.",
+            "additionalProperties": true,
+            "properties": {
+              "matches": {
+                "type": "array",
+                "description": "HTTP match conditions for a route rule.",
+                "default": [
+                  {
+                    "path": {
+                      "type": "PathPrefix",
+                      "value": "/"
+                    }
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "description": "HTTP match condition used by an HTTPRoute rule.",
+                  "additionalProperties": true,
+                  "properties": {
+                    "path": {
+                      "type": "object",
+                      "description": "HTTP path match configuration.",
+                      "additionalProperties": true,
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Type value used by this Kubernetes or application setting.",
+                          "default": "PathPrefix"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Concrete value for this setting.",
+                          "default": "/"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "resources": {
-      "type": "object"
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "livenessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes liveness probe used to restart the container when it becomes unhealthy.",
+      "additionalProperties": true,
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "description": "HTTP GET probe configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "HTTP path match configuration.",
+              "default": "/"
+            },
+            "port": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Port number or named port used by this setting.",
+              "default": "http"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Seconds to wait after container start before the probe first runs.",
+          "default": 45
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often, in seconds, Kubernetes runs the probe.",
+          "default": 30
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Seconds after which the probe attempt times out.",
+          "default": 5
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+          "default": 3
+        }
+      }
     },
     "readinessProbe": {
-      "type": "object"
+      "type": "object",
+      "description": "Kubernetes readiness probe used to decide when the pod can receive traffic.",
+      "additionalProperties": true,
+      "properties": {
+        "httpGet": {
+          "type": "object",
+          "description": "HTTP GET probe configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "HTTP path match configuration.",
+              "default": "/"
+            },
+            "port": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Port number or named port used by this setting.",
+              "default": "http"
+            }
+          }
+        },
+        "initialDelaySeconds": {
+          "type": "integer",
+          "description": "Seconds to wait after container start before the probe first runs.",
+          "default": 20
+        },
+        "periodSeconds": {
+          "type": "integer",
+          "description": "How often, in seconds, Kubernetes runs the probe.",
+          "default": 10
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "description": "Seconds after which the probe attempt times out.",
+          "default": 5
+        },
+        "failureThreshold": {
+          "type": "integer",
+          "description": "Number of failed probe attempts before Kubernetes marks the container unhealthy or unready.",
+          "default": 3
+        }
+      }
     },
     "nodeSelector": {
-      "type": "object"
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
     },
     "tolerations": {
-      "type": "array"
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
     },
     "affinity": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
     }
   }
 }

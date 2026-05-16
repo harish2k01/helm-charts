@@ -3,7 +3,7 @@ name: cloudflared
 description: Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/cloudflare.png
-version: 0.1.0
+version: 0.1.1
 appVersion: "2026.3.0"
 home: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
 sources:

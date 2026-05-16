@@ -3,7 +3,7 @@ name: scrutiny
 description: Scrutiny web/API hub for remote S.M.A.R.T collectors
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/scrutiny.png
-version: 0.2.1
+version: 0.2.2
 appVersion: v0.9.2-web
 home: https://github.com/AnalogJ/scrutiny
 sources:
