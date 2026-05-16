@@ -26,6 +26,7 @@ helm repo update
 | --- | --- | --- | --- |
 | [`bazarr`](charts/bazarr) | `0.1.0` | `1.5.6` | Deploys Bazarr subtitle automation on Kubernetes |
 | [`bentopdf`](charts/bentopdf) | `0.1.1` | `2.8.4` | Deploys BentoPDF on Kubernetes |
+| [`cloudflared`](charts/cloudflared) | `0.1.0` | `latest` | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.0` | `version-6.6.1` | Deploys Firefly III with PostgreSQL on Kubernetes |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.0` | `v3.4.6` | Deploys FlareSolverr on Kubernetes |
 | [`jellyfin`](charts/jellyfin) | `0.1.0` | `10.11.8` | Deploys Jellyfin media server on Kubernetes |

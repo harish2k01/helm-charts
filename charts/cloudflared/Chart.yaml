@@ -1,0 +1,23 @@
+apiVersion: v2
+name: cloudflared
+description: Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/cloudflare.png
+version: 0.1.0
+appVersion: latest
+home: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+sources:
+  - https://github.com/cloudflare/cloudflared
+  - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+keywords:
+  - cloudflare
+  - cloudflared
+  - tunnel
+  - zero-trust
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/images: |
+    - name: cloudflared
+      image: cloudflare/cloudflared:latest
+maintainers:
+  - name: harish2k01
