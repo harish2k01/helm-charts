@@ -4,7 +4,7 @@ description: Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/cloudflare.png
 version: 0.1.0
-appVersion: latest
+appVersion: "2026.3.0"
 home: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
 sources:
   - https://github.com/cloudflare/cloudflared
@@ -18,6 +18,6 @@ annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/images: |
     - name: cloudflared
-      image: cloudflare/cloudflared:latest
+      image: cloudflare/cloudflared:2026.3.0
 maintainers:
   - name: harish2k01

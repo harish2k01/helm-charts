@@ -38,7 +38,7 @@ token:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of cloudflared connector pods |
 | `image.repository` | string | `cloudflare/cloudflared` | Container image repository |
-| `image.tag` | string | `latest` | Container image tag |
+| `image.tag` | string | `2026.3.0` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `selectorLabels` | object | `{pod: cloudflared}` | Deployment selector labels |
 | `podSecurityContext` | object | ICMP ping sysctl | Pod security context |
