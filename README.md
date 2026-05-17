@@ -40,6 +40,7 @@ helm repo update
 | [`tailscale`](charts/tailscale) | `0.1.2` | `v1.96.5` | Deploys Tailscale as a Kubernetes subnet router and exit node |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Deploys a Tor SOCKS proxy on Kubernetes |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.2` | `2.2.1-slim` | Deploys Uptime Kuma on Kubernetes |
+| [`vaultwarden`](charts/vaultwarden) | `0.1.0` | `1.36.0` | Deploys Vaultwarden password manager on Kubernetes |
 
 ## Media Automation Charts
 

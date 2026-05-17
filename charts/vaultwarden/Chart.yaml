@@ -1,0 +1,22 @@
+apiVersion: v2
+name: vaultwarden
+description: Deploys Vaultwarden password manager on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/vaultwarden.png
+version: 0.1.0
+appVersion: "1.36.0"
+home: https://github.com/dani-garcia/vaultwarden
+sources:
+  - https://github.com/dani-garcia/vaultwarden
+  - https://hub.docker.com/r/vaultwarden/server
+keywords:
+  - vaultwarden
+  - bitwarden
+  - password-manager
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: vaultwarden
+      image: vaultwarden/server:1.36.0
+maintainers:
+  - name: harish2k01
