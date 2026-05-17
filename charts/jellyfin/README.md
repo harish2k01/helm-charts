@@ -10,6 +10,14 @@ helm repo update
 helm install jellyfin harish2k01/jellyfin
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install jellyfin oci://ghcr.io/harish2k01/helm-charts/jellyfin --version 0.1.2
+```
+
 ## Install With Gateway API HTTPRoute
 
 ```yaml

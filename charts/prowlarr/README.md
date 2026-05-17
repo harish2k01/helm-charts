@@ -10,6 +10,14 @@ helm repo update
 helm install prowlarr harish2k01/prowlarr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install prowlarr oci://ghcr.io/harish2k01/helm-charts/prowlarr --version 0.1.2
+```
+
 ## Install With Gateway API HTTPRoute
 
 ```yaml

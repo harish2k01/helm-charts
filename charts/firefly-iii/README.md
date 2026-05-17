@@ -10,6 +10,14 @@ helm repo update
 helm install firefly-iii harish2k01/firefly-iii
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install firefly-iii oci://ghcr.io/harish2k01/helm-charts/firefly-iii --version 0.1.2
+```
+
 The default inline secrets are placeholders for evaluation only. For persistent or public deployments, provide your own Kubernetes Secret and set `firefly.secrets.existingSecret`.
 
 Minimum secret keys:

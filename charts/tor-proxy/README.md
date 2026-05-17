@@ -10,6 +10,14 @@ helm repo update
 helm install tor-proxy harish2k01/tor-proxy
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install tor-proxy oci://ghcr.io/harish2k01/helm-charts/tor-proxy --version 0.1.2
+```
+
 By default, this chart creates an internal `ClusterIP` Service only.
 
 ## In-Cluster URL

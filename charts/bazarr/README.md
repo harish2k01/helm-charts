@@ -10,6 +10,14 @@ helm repo update
 helm install bazarr harish2k01/bazarr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.1.2
+```
+
 Deploy another Bazarr instance by using a different release name and values file:
 
 ```bash

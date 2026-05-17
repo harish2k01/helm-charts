@@ -10,6 +10,14 @@ helm repo update
 helm install uptime-kuma harish2k01/uptime-kuma
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.1.2
+```
+
 By default, Uptime Kuma stores data in SQLite under `/app/data` with a persistent volume.
 
 ## Install With Ingress

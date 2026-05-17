@@ -10,6 +10,14 @@ helm repo update
 helm install seerr harish2k01/seerr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.1.2
+```
+
 ## Install With Gateway API HTTPRoute
 
 ```yaml

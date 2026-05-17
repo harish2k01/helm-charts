@@ -10,6 +10,14 @@ helm repo update
 helm install vaultwarden harish2k01/vaultwarden
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install vaultwarden oci://ghcr.io/harish2k01/helm-charts/vaultwarden --version 0.1.0
+```
+
 ## Example Values
 
 ```yaml

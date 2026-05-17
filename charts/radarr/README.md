@@ -10,6 +10,14 @@ helm repo update
 helm install radarr harish2k01/radarr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.1.2
+```
+
 Deploy another Radarr instance by using a different release name and values file:
 
 ```bash
