@@ -67,6 +67,11 @@ tailscale:
     - 192.168.0.0/24
   extraArgs: []
   tailscaledExtraArgs: []
+  # Use extraEnv for less common official Tailscale container variables.
+  # If the pod logs show iptables filter/nat table errors, try:
+  # extraEnv:
+  #   TS_DEBUG_FIREWALL_MODE: auto
+  # See README.md for Kubernetes netfilter troubleshooting.
   extraEnv: {}
   envFrom: []
 
