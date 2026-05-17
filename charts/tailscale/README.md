@@ -45,6 +45,37 @@ tailscale:
     - 192.168.1.0/24
 ```
 
+## Kubernetes Netfilter Troubleshooting
+
+Subnet router and exit-node traffic requires Linux forwarding plus firewall/NAT rules. If the pod is running and can reach your LAN itself, but tailnet clients cannot reach the advertised subnet, check the Tailscale health output and logs:
+
+```bash
+kubectl -n <namespace> exec tailscale-0 -- tailscale status
+kubectl -n <namespace> exec tailscale-0 -- tailscale debug prefs
+kubectl -n <namespace> logs statefulset/tailscale --tail=100
+```
+
+If you see errors like `can't initialize iptables table 'filter'`, `can't initialize iptables table 'nat'`, or `modprobe: can't change directory to '/lib/modules'`, the container cannot use the legacy iptables path to create the rules needed for subnet routing. In clusters where nftables is available, you can let Tailscale auto-detect the firewall backend:
+
+```yaml
+tailscale:
+  extraEnv:
+    TS_DEBUG_FIREWALL_MODE: auto
+```
+
+After applying the value, restart the StatefulSet and confirm the logs report the selected firewall mode. If netfilter still cannot be configured from the pod, load the required kernel modules on the Kubernetes nodes or run the subnet router on a normal host, VM, or LXC where Tailscale can manage firewall rules.
+
+When using persisted state with `tailscale.authOnce=true`, previously saved preferences can survive value changes. If you remove exit-node advertisement or change route settings and the pod still shows old preferences, temporarily set:
+
+```yaml
+tailscale:
+  authOnce: false
+  extraArgs:
+    - --reset
+```
+
+Then restart the pod so the official container resets old non-default preferences and re-applies `TS_ROUTES` and `TS_EXTRA_ARGS` from the current Helm values. After the pod starts cleanly and `tailscale debug prefs` shows only the expected routes, you can remove `--reset` and set `authOnce` back to your preferred value.
+
 ## Security Notes
 
 Kernel networking requires `/dev/net/tun`, `NET_ADMIN`, and `NET_RAW`. The chart also enables an init container that sets IPv4 and IPv6 forwarding inside the pod network namespace, matching the sysctl step commonly used for bare-metal and LXC installs.
@@ -77,6 +108,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `tailscale.routes` | list | `[192.168.0.0/24]` | Subnet routes advertised to the tailnet through `TS_ROUTES` |
 | `tailscale.extraArgs` | list | `[]` | Additional flags appended to `TS_EXTRA_ARGS` |
 | `tailscale.tailscaledExtraArgs` | list | `[]` | Additional flags passed through `TS_TAILSCALED_EXTRA_ARGS` |
+| `tailscale.extraEnv` | object | `{}` | Additional official Tailscale container environment variables, such as `TS_DEBUG_FIREWALL_MODE` |
 | `persistence.enabled` | bool | `true` | Persist Tailscale state |
 | `persistence.size` | string | `1Gi` | State PVC size |
 | `persistence.storageClassName` | string | `""` | Optional storage class |
