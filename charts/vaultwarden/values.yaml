@@ -1,0 +1,111 @@
+replicaCount: 1
+
+# Container image. The default tag is pinned instead of using latest so chart
+# installs are repeatable.
+image:
+  repository: vaultwarden/server
+  tag: "1.36.0"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Non-secret Vaultwarden configuration.
+env:
+  TZ: Asia/Kolkata
+  DOMAIN: ""
+  SIGNUPS_ALLOWED: "false"
+  SMTP_HOST: ""
+  SMTP_FROM: ""
+  SMTP_FROM_NAME: Vaultwarden
+  SMTP_USERNAME: ""
+  SMTP_SECURITY: starttls
+  SMTP_PORT: "587"
+
+# Secret environment variables. Use value for simple installs, or point at an
+# existing Kubernetes Secret if you manage secrets outside this chart.
+secretEnv:
+  create: false
+  name: ""
+  values:
+    SMTP_PASSWORD: ""
+    ADMIN_TOKEN: ""
+  existingSecret:
+    name: ""
+    keys: []
+
+# Main HTTP service for the Vaultwarden web UI/API.
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+  portName: http
+  extraPorts: []
+
+extraContainerPorts: []
+
+# Persistent application data. This stores Vaultwarden's database, attachments,
+# sends, and related state.
+persistence:
+  config:
+    enabled: true
+    mountPath: /data
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClassName: ""
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing the web UI/API.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the web UI/API.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /alive
+    port: http
+  initialDelaySeconds: 45
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /alive
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

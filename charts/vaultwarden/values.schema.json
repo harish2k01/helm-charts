@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "vaultwarden values",
+  "description": "Configurable Helm values for the vaultwarden chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "default": "vaultwarden/server"
+        },
+        "tag": {
+          "type": "string",
+          "default": "1.36.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "description": "Non-secret Vaultwarden environment variables.",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "integer",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "secretEnv": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "integer",
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "existingSecret": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "type": "string",
+              "default": ""
+            },
+            "keys": {
+              "type": "array",
+              "default": [],
+              "items": {
+                "type": "object",
+                "required": [
+                  "envName",
+                  "secretKey"
+                ],
+                "additionalProperties": true,
+                "properties": {
+                  "envName": {
+                    "type": "string"
+                  },
+                  "secretKey": {
+                    "type": "string"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "default": 80
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "default": 80
+        },
+        "portName": {
+          "type": "string",
+          "default": "http"
+        }
+      }
+    },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "config": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "default": "/data"
+            },
+            "existingClaim": {
+              "type": "string",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "default": "5Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "httpRoute": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "tolerations": {
+      "type": "array",
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
