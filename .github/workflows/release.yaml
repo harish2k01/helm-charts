@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
   pages: write
   id-token: write
 
@@ -77,6 +78,44 @@ jobs:
             helm repo index _site --url "$REPO_URL"
           fi
 
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Push OCI charts
+        run: |
+          OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
+          REPOSITORY="$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')"
+          OCI_REPOSITORY="oci://ghcr.io/${OWNER}/${REPOSITORY}"
+
+          shopt -s nullglob
+          packages=(_site/*.tgz)
+
+          for package in "${packages[@]}"; do
+            metadata="$(helm show chart "$package")"
+            chart_name="$(printf '%s\n' "$metadata" | sed -n 's/^name:[[:space:]]*//p' | head -n 1)"
+            chart_version="$(printf '%s\n' "$metadata" | sed -n 's/^version:[[:space:]]*//p' | head -n 1)"
+            chart_name="${chart_name%\"}"
+            chart_name="${chart_name#\"}"
+            chart_name="${chart_name%\'}"
+            chart_name="${chart_name#\'}"
+            chart_version="${chart_version%\"}"
+            chart_version="${chart_version#\"}"
+            chart_version="${chart_version%\'}"
+            chart_version="${chart_version#\'}"
+
+            if [ -z "$chart_name" ] || [ -z "$chart_version" ]; then
+              echo "Could not determine chart metadata for ${package}; skipping."
+              continue
+            fi
+
+            if helm show chart "${OCI_REPOSITORY}/${chart_name}" --version "$chart_version" >/dev/null 2>&1; then
+              echo "OCI chart ${chart_name}:${chart_version} already exists; skipping."
+              continue
+            fi
+
+            helm push "$package" "$OCI_REPOSITORY"
+          done
+
       - name: Create GitHub releases
         uses: actions/github-script@v7
         with:
@@ -87,6 +126,7 @@ jobs:
             const { execFileSync } = require('child_process');
 
             const repoUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
+            const ociRepo = `oci://ghcr.io/${context.repo.owner.toLowerCase()}/${context.repo.repo.toLowerCase()}`;
             const chartsDir = 'charts';
             const chartDirs = fs.readdirSync(chartsDir, { withFileTypes: true })
               .filter((entry) => entry.isDirectory())
@@ -144,6 +184,12 @@ jobs:
                 `helm install ${chartName} harish2k01/${chartName} --version ${chartVersion}`,
                 '```',
                 '',
+                '### Install from OCI',
+                '',
+                '```bash',
+                `helm install ${chartName} ${ociRepo}/${chartName} --version ${chartVersion}`,
+                '```',
+                '',
                 '### Upgrade',
                 '',
                 '```bash',
@@ -153,6 +199,7 @@ jobs:
                 '### Links',
                 '',
                 `- Helm repository: ${repoUrl}`,
+                `- OCI chart: \`${ociRepo}/${chartName}:${chartVersion}\``,
                 `- Chart source: https://github.com/${context.repo.owner}/${context.repo.repo}/tree/main/${chart}`,
                 `- Package: ${repoUrl}/${chartName}-${chartVersion}.tgz`,
                 '',
