@@ -10,6 +10,14 @@ helm repo update
 helm install flaresolverr harish2k01/flaresolverr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install flaresolverr oci://ghcr.io/harish2k01/helm-charts/flaresolverr --version 0.1.2
+```
+
 By default, this chart creates only an internal ClusterIP Service.
 
 ## In-Cluster URL

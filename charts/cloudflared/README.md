@@ -18,6 +18,14 @@ kubectl create secret generic cloudflare-tunnel-token \
 helm install cloudflared harish2k01/cloudflared --namespace cloudflare
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.1.1
+```
+
 ## Sealed Secret
 
 For GitOps deployments with Bitnami Sealed Secrets, enable the SealedSecret template and provide encrypted data:

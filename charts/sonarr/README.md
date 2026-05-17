@@ -10,6 +10,14 @@ helm repo update
 helm install sonarr harish2k01/sonarr
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install sonarr oci://ghcr.io/harish2k01/helm-charts/sonarr --version 0.1.2
+```
+
 Deploy another Sonarr instance by using a different release name and values file:
 
 ```bash

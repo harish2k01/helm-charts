@@ -12,6 +12,14 @@ helm repo update
 helm install tailscale harish2k01/tailscale
 ```
 
+## Install From OCI
+
+This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
+
+```bash
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.2
+```
+
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
 
 ```bash
