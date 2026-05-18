@@ -1,0 +1,105 @@
+replicaCount: 1
+
+image:
+  repository: deluan/navidrome
+  tag: "0.61.2"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Non-secret Navidrome settings. Add any other ND_* settings here.
+env:
+  TZ: Asia/Kolkata
+  ND_SCANSCHEDULE: 1h
+
+# Main HTTP service for the Navidrome web UI.
+service:
+  type: ClusterIP
+  port: 4533
+  targetPort: 4533
+  portName: http
+  extraPorts: []
+
+# Additional container ports for custom deployments.
+extraContainerPorts: []
+
+# Persistent Navidrome application data. This stores the database, settings,
+# cache, and other writable app state, not the music library.
+persistence:
+  config:
+    enabled: true
+    mountPath: /data
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClassName: ""
+  music:
+    enabled: true
+    mountPath: /music
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 100Gi
+    storageClassName: ""
+    readOnly: true
+
+# Optional host device mounts for advanced use cases.
+hostDevices:
+  enabled: false
+  devices: []
+
+# Advanced volume hooks for custom mounts that are not covered above.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing the web UI.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the web UI.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 45
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 20
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
