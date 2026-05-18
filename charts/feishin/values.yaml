@@ -1,0 +1,75 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/jeffvli/feishin
+  pullPolicy: IfNotPresent
+  tag: "1.11.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Feishin server preconfiguration. Leave SERVER_URL empty to let users
+# configure their music server from the UI.
+env:
+  SERVER_NAME: ""
+  SERVER_LOCK: "false"
+  SERVER_TYPE: ""
+  SERVER_URL: ""
+  REMOTE_URL: ""
+  LEGACY_AUTHENTICATION: "false"
+  ANALYTICS_DISABLED: "false"
+  PUBLIC_PATH: "/"
+
+service:
+  type: ClusterIP
+  port: 9180
+  targetPort: 9180
+  portName: http
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

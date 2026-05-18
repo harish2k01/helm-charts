@@ -2,6 +2,9 @@
 
 This chart deploys [Uptime Kuma](https://github.com/louislam/uptime-kuma) on Kubernetes with persistent application data, optional MariaDB support, and optional Ingress or Gateway API HTTPRoute access.
 
+> [!NOTE]
+> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+
 ## Install
 
 ```bash

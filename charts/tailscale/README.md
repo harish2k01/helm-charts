@@ -4,6 +4,9 @@ This chart deploys the official [Tailscale](https://tailscale.com) container as 
 
 The chart follows the standard Tailscale container environment variables documented by Tailscale, including `TS_AUTHKEY`, `TS_STATE_DIR`, `TS_USERSPACE`, `TS_ROUTES`, `TS_EXTRA_ARGS`, and the health/metrics endpoint.
 
+> [!NOTE]
+> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+
 ## Install
 
 ```bash

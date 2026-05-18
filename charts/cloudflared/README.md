@@ -4,6 +4,9 @@ This chart deploys the official Cloudflare `cloudflared` container as one or mor
 
 It runs `cloudflared tunnel --no-autoupdate --loglevel info --metrics 0.0.0.0:2000 run` by default and reads the tunnel token from a Kubernetes Secret. The chart can reference a Secret managed outside Helm, create a normal Secret from private values, or create a Bitnami SealedSecret.
 
+> [!NOTE]
+> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+
 ## Install
 
 ```bash
