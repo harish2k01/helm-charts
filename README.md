@@ -71,6 +71,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`firefly-iii`](charts/firefly-iii) | `0.1.2` | `version-6.6.1` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.2` | `v3.4.6` | Media | Deploys FlareSolverr request solving for automation stacks. |
 | [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Media | Deploys Jellyfin media server with library mount support. |
+| [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`qbittorrent`](charts/qbittorrent) | `0.1.2` | `5.2.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
 | [`radarr`](charts/radarr) | `0.1.2` | `6.1.1` | Media | Deploys Radarr movie automation with reusable release values. |

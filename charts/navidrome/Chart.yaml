@@ -1,0 +1,22 @@
+apiVersion: v2
+name: navidrome
+description: Deploys Navidrome music streaming server on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/navidrome.png
+version: 0.1.0
+appVersion: "0.61.2"
+home: https://www.navidrome.org
+sources:
+  - https://github.com/navidrome/navidrome
+  - https://hub.docker.com/r/deluan/navidrome
+keywords:
+  - navidrome
+  - music
+  - media
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: navidrome
+      image: deluan/navidrome:0.61.2
+maintainers:
+  - name: harish2k01
