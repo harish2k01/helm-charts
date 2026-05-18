@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "feishin values",
+  "description": "Configurable Helm values for the feishin chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "ghcr.io/jeffvli/feishin"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "1.11.0"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Feishin server preconfiguration and runtime environment variables.",
+      "additionalProperties": true,
+      "properties": {
+        "SERVER_NAME": {
+          "type": "string",
+          "description": "Preconfigured server display name.",
+          "default": ""
+        },
+        "SERVER_LOCK": {
+          "type": "string",
+          "description": "When true and server settings are configured, only username and password can be changed.",
+          "default": "false"
+        },
+        "SERVER_TYPE": {
+          "type": "string",
+          "description": "Preconfigured server type. Supported values are jellyfin, navidrome, and subsonic.",
+          "default": ""
+        },
+        "SERVER_URL": {
+          "type": "string",
+          "description": "Preconfigured music server URL.",
+          "default": ""
+        },
+        "REMOTE_URL": {
+          "type": "string",
+          "description": "Optional external URL for compatibility with sharing features.",
+          "default": ""
+        },
+        "LEGACY_AUTHENTICATION": {
+          "type": "string",
+          "description": "Legacy auth flag used when SERVER_LOCK is enabled.",
+          "default": "false"
+        },
+        "ANALYTICS_DISABLED": {
+          "type": "string",
+          "description": "Set to true to disable Umami analytics tracking.",
+          "default": "false"
+        },
+        "PUBLIC_PATH": {
+          "type": "string",
+          "description": "Public path served by the nginx container.",
+          "default": "/"
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 9180
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": 9180
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port and matching container port where applicable.",
+          "default": "http"
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for exposing the application through an ingress controller.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules routed to the chart Service.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts and referenced certificate secrets.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for exposing the application through a Gateway.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a Gateway API HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules, including path matches and filters.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {
+            "type": "object",
+            "description": "Gateway API HTTPRoute rule with matches, filters, and backend references.",
+            "additionalProperties": true,
+            "properties": {
+              "matches": {
+                "type": "array",
+                "description": "HTTP match conditions for a route rule.",
+                "default": [
+                  {
+                    "path": {
+                      "type": "PathPrefix",
+                      "value": "/"
+                    }
+                  }
+                ],
+                "items": {}
+              },
+              "filters": {
+                "type": "array",
+                "description": "Optional HTTPRoute filters for the route rule.",
+                "default": [],
+                "items": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe used to restart the container when it becomes unhealthy.",
+      "additionalProperties": true
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe used to decide when the pod can receive traffic.",
+      "additionalProperties": true
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

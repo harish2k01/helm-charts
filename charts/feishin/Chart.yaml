@@ -1,0 +1,23 @@
+apiVersion: v2
+name: feishin
+description: Deploys Feishin music streaming client on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/feishin.png
+version: 0.1.0
+appVersion: "1.11.0"
+home: https://github.com/jeffvli/feishin
+sources:
+  - https://github.com/jeffvli/feishin
+keywords:
+  - feishin
+  - music
+  - jellyfin
+  - navidrome
+  - subsonic
+annotations:
+  artifacthub.io/license: GPL-3.0
+  artifacthub.io/images: |
+    - name: feishin
+      image: ghcr.io/jeffvli/feishin:1.11.0
+maintainers:
+  - name: harish2k01

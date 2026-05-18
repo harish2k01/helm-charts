@@ -2,6 +2,9 @@
 
 This chart deploys [Jellyfin](https://jellyfin.org) using the LinuxServer.io container image, with persistent configuration, optional media library mounts, optional hardware acceleration device mounts, and optional Ingress or Gateway API HTTPRoute access.
 
+> [!NOTE]
+> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+
 ## Install
 
 ```bash

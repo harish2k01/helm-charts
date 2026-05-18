@@ -2,6 +2,9 @@
 
 This chart deploys [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr), typically as an internal service used by Prowlarr or other applications that need challenge solving.
 
+> [!NOTE]
+> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+
 ## Install
 
 ```bash
