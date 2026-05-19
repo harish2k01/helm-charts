@@ -12,7 +12,7 @@
     <meta property="og:title" content="Harish's Helm Charts">
     <meta
       property="og:description"
-      content="Reusable Helm charts for self-hosted Kubernetes apps, published as a Helm repository and GHCR OCI charts."
+      content="Reusable signed Helm charts for self-hosted Kubernetes apps, published as a Helm repository and GHCR OCI charts."
     >
     <meta property="og:type" content="website">
     <script>
@@ -686,13 +686,25 @@
       footer {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px 18px;
+        gap: 12px 28px;
         padding: 32px 0 44px;
         color: var(--muted);
         font-size: 14px;
       }
 
+      .footer-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .footer-item span {
+        flex: 0 0 auto;
+      }
+
       footer code {
+        min-width: 0;
         overflow-wrap: anywhere;
       }
 
@@ -777,11 +789,12 @@
               Deploy production grade charts for media automation,
               networking, monitoring, finance, and homelab services. Every
               chart is published through the classic Helm repository flow and
-              as an OCI package in GHCR.
+              as an OCI package in GHCR with signed provenance files.
             </p>
             <div class="trust-row" aria-label="Repository qualities">
               <span class="trust-item">Portable Defaults</span>
               <span class="trust-item">Helm Repo and OCI</span>
+              <span class="trust-item">Signed Provenance</span>
               <span class="trust-item">Versioned Releases</span>
             </div>
             <div class="badges" aria-label="Repository status">
@@ -804,16 +817,16 @@
           <aside class="release-panel" aria-label="Release pipeline summary">
             <h2>Published for both Helm Workflows</h2>
             <p>
-              Releases are packaged once, then made available through GitHub
-              Pages for legacy Helm installs and GHCR for registry-native OCI
-              installs.
+              Releases are packaged and signed once, then made available
+              through GitHub Pages for legacy Helm installs and GHCR for
+              registry-native OCI installs.
             </p>
             <div class="flow">
               <div class="flow-step">
                 <span class="step-icon">1</span>
                 <span>
-                  <span class="flow-title">Package charts</span>
-                  <span class="flow-detail">Versioned .tgz artifacts</span>
+                  <span class="flow-title">Package and Sign Charts</span>
+                  <span class="flow-detail">Versioned .tgz and .prov artifacts</span>
                 </span>
                 <span class="flow-count">19</span>
               </div>
@@ -841,7 +854,7 @@
           <div class="terminal">
             <div class="terminal-title">
               <span>Legacy Helm Repository</span>
-              <span>index.yaml</span>
+              <span>Signed .prov</span>
             </div>
             <pre><span class="comment"># Add the repository</span>
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
@@ -881,8 +894,8 @@ helm upgrade bentopdf \
             <span>Supported install paths: a classic Helm repository and OCI charts in GHCR.</span>
           </div>
           <div class="stat">
-            <strong>3</strong>
-            <span>Release surfaces with Pages, GitHub Releases, and the container registry.</span>
+            <strong>Signed</strong>
+            <span>Current chart packages include Helm provenance files for package verification.</span>
           </div>
         </section>
 
@@ -1216,10 +1229,18 @@ helm upgrade bentopdf \
       </main>
 
       <footer>
-        <span>Helm Repo:</span>
-        <code>https://harish2k01.github.io/helm-charts</code>
-        <span>OCI Registry:</span>
-        <code>oci://ghcr.io/harish2k01/helm-charts</code>
+        <span class="footer-item">
+          <span>Helm Repo:</span>
+          <code>https://harish2k01.github.io/helm-charts</code>
+        </span>
+        <span class="footer-item">
+          <span>OCI Registry:</span>
+          <code>oci://ghcr.io/harish2k01/helm-charts</code>
+        </span>
+        <span class="footer-item">
+          <span>Signing Key:</span>
+          <code>https://harish2k01.github.io/helm-charts/chart-signing-key.asc</code>
+        </span>
       </footer>
     </div>
     <script>
