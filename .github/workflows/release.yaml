@@ -89,6 +89,17 @@ jobs:
           printf '%s' "${HELM_GPG_PASSPHRASE}" > "${RUNNER_TEMP}/helm-gpg-passphrase"
           chmod 600 "${RUNNER_TEMP}/helm-gpg-passphrase"
 
+          signing_key_uid="$(
+            gpg --batch --with-colons --list-secret-keys "$HELM_GPG_KEY_NAME" |
+              awk -F: '$1 == "uid" { print $10; exit }'
+          )"
+
+          if [ -z "$signing_key_uid" ]; then
+            echo "Could not find a user ID for HELM_GPG_KEY_NAME. Check that it matches the imported private key." >&2
+            gpg --batch --list-secret-keys --keyid-format LONG
+            exit 1
+          fi
+
           gpg --batch --yes --pinentry-mode loopback \
             --passphrase-file "${RUNNER_TEMP}/helm-gpg-passphrase" \
             --export-secret-keys "$HELM_GPG_KEY_NAME" > "${RUNNER_TEMP}/helm-secring.gpg"
@@ -97,7 +108,7 @@ jobs:
 
           {
             echo "GNUPGHOME=${GNUPGHOME}"
-            echo "HELM_SIGNING_KEY_NAME=${HELM_GPG_KEY_NAME}"
+            echo "HELM_SIGNING_KEY_NAME=${signing_key_uid}"
             echo "HELM_SIGNING_KEYRING=${RUNNER_TEMP}/helm-secring.gpg"
             echo "HELM_SIGNING_PUBLIC_KEYRING=${RUNNER_TEMP}/helm-pubring.gpg"
             echo "HELM_SIGNING_PASSPHRASE_FILE=${RUNNER_TEMP}/helm-gpg-passphrase"
