@@ -11,6 +11,7 @@ Every chart is published through both the classic Helm repository format and as 
 ## Highlights
 
 - Dual publishing: GitHub Pages `index.yaml` and GHCR OCI charts.
+- Signed packages: chart archives are published with Helm provenance files.
 - Portable defaults: no personal domains, namespaces, storage classes, or cluster-specific controllers assumed.
 - Versioned releases: chart packages are attached to GitHub Releases and available from the public repository index.
 - Homelab friendly: charts are small, readable, and easy to customize with values files.
@@ -151,4 +152,22 @@ helm uninstall bentopdf
 Helm repository: https://harish2k01.github.io/helm-charts
 Index file:      https://harish2k01.github.io/helm-charts/index.yaml
 OCI registry:   oci://ghcr.io/harish2k01/helm-charts/<chart-name>
+```
+
+## Chart Signing
+
+Release builds sign every chart package with Helm provenance. The public key is published at:
+
+```text
+https://harish2k01.github.io/helm-charts/chart-signing-key.asc
+```
+
+To verify a downloaded package:
+
+```bash
+curl -fsSLO https://harish2k01.github.io/helm-charts/chart-signing-key.asc
+curl -fsSLO https://harish2k01.github.io/helm-charts/bentopdf-0.1.3.tgz
+curl -fsSLO https://harish2k01.github.io/helm-charts/bentopdf-0.1.3.tgz.prov
+gpg --dearmor < chart-signing-key.asc > chart-signing-key.gpg
+helm verify bentopdf-0.1.3.tgz --keyring ./chart-signing-key.gpg
 ```
