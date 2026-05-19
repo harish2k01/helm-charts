@@ -125,7 +125,10 @@ jobs:
 
               provenance_name="${package_name}.prov"
               if [ ! -f "_site/$provenance_name" ]; then
-                curl -fsSL "${package_url}.prov" -o "_site/$provenance_name" || true
+                if ! curl -fsSL "${package_url}.prov" -o "_site/$provenance_name" 2>/dev/null; then
+                  echo "No existing provenance file found for ${package_name}; it will be created if this chart version is still in charts/."
+                  rm -f "_site/$provenance_name"
+                fi
               fi
             done
           fi
