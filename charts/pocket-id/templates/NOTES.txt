@@ -1,0 +1,17 @@
+Pocket ID has been installed.
+
+For a real deployment, set:
+  - env.APP_URL to the public HTTPS URL
+  - secretEnv.existingSecret or secretEnv.values.ENCRYPTION_KEY
+
+To reach Pocket ID inside the cluster:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "pocket-id.fullname" . }} 1411:1411
+
+Then open:
+
+  http://127.0.0.1:1411/
+
+After configuring HTTPS APP_URL, create the first admin account at:
+
+  {{ .Values.env.APP_URL }}/setup

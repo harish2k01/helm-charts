@@ -1,0 +1,136 @@
+replicaCount: 1
+
+# Container image. Pin the tag for repeatable identity-provider rollouts.
+image:
+  repository: ghcr.io/pocket-id/pocket-id
+  tag: "v2.7.0"
+  pullPolicy: IfNotPresent
+
+# Use imagePullSecrets when pulling from a private registry mirror.
+imagePullSecrets: []
+
+# Override generated resource names when integrating with existing naming rules.
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra pod metadata for backup, reload, policy, or observability controllers.
+podAnnotations: {}
+podLabels: {}
+
+# Set pod-level security defaults when your cluster policy requires them.
+podSecurityContext: {}
+
+# Container security context for the Pocket ID process.
+securityContext: {}
+
+# Non-secret Pocket ID configuration. Set APP_URL to the public HTTPS URL used by
+# browsers; WebAuthn/passkeys require a secure context outside localhost.
+env:
+  APP_URL: http://localhost:1411
+  TRUST_PROXY: "false"
+  PUID: "1000"
+  PGID: "1000"
+  TZ: Asia/Kolkata
+  ANALYTICS_DISABLED: "false"
+  VERSION_CHECK_DISABLED: "false"
+
+# Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
+envFrom: []
+
+# Secret environment variables. Prefer existingSecret for production secret
+# management, or set create=true with values for simple installs.
+secretEnv:
+  create: false
+  name: ""
+  values:
+    ENCRYPTION_KEY: ""
+    MAXMIND_LICENSE_KEY: ""
+    SMTP_PASSWORD: ""
+    STATIC_API_KEY: ""
+  existingSecret:
+    name: ""
+    keys: []
+    # - envName: ENCRYPTION_KEY
+    #   secretKey: encryption-key
+    #   optional: false
+
+command: []
+args: []
+
+# Main HTTP service for the Pocket ID web UI and OIDC endpoints.
+service:
+  type: ClusterIP
+  annotations: {}
+  port: 1411
+  targetPort: http
+  portName: http
+  extraPorts: []
+
+containerPorts:
+  - name: http
+    containerPort: 1411
+    protocol: TCP
+
+# Persistent application data. The official container stores SQLite data,
+# uploaded assets, and generated state below /app/data by default.
+persistence:
+  data:
+    enabled: true
+    mountPath: /app/data
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    storageClassName: ""
+
+# Advanced volume hooks for mounted key files, external databases, or custom CA
+# bundles that are not covered by first-class values.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for the Web UI/OIDC endpoints. Use HTTPS for
+# passkey flows in real deployments.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing the Web UI/OIDC endpoints.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  exec:
+    command:
+      - /app/pocket-id
+      - healthcheck
+  initialDelaySeconds: 20
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  exec:
+    command:
+      - /app/pocket-id
+      - healthcheck
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
