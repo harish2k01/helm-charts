@@ -1,0 +1,751 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "ghost values",
+  "description": "Configurable Helm values for the ghost chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of Ghost pod replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for Ghost.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for Ghost.",
+          "default": "ghost"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "6.39.0-alpine"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional image pull secrets.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to Ghost pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to Ghost pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "serviceAccount": {
+      "type": "object",
+      "description": "ServiceAccount configuration for Ghost pods.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether to create a ServiceAccount.",
+          "default": true
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the ServiceAccount.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "name": {
+          "type": "string",
+          "description": "ServiceAccount name override.",
+          "default": ""
+        },
+        "automountServiceAccountToken": {
+          "type": "boolean",
+          "description": "Whether to automount the Kubernetes API token.",
+          "default": false
+        }
+      }
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment rollout settings.",
+      "additionalProperties": true,
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Deployment.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Number of old ReplicaSets to retain.",
+          "default": 3
+        },
+        "strategy": {
+          "type": "object",
+          "description": "Deployment update strategy.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "terminationGracePeriodSeconds": {
+          "type": "integer",
+          "description": "Grace period before the Ghost pod is forcefully terminated.",
+          "default": 60
+        }
+      }
+    },
+    "priorityClassName": {
+      "type": "string",
+      "description": "PriorityClass name assigned to Ghost pods.",
+      "default": ""
+    },
+    "runtimeClassName": {
+      "type": "string",
+      "description": "RuntimeClass name assigned to Ghost pods.",
+      "default": ""
+    },
+    "schedulerName": {
+      "type": "string",
+      "description": "Scheduler name used for Ghost pods.",
+      "default": ""
+    },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "description": "Topology spread constraints for Ghost pods.",
+      "default": [],
+      "items": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Non-secret environment variables passed to Ghost.",
+      "additionalProperties": true,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Public URL where users access Ghost.",
+          "default": "http://localhost:2368"
+        },
+        "NODE_ENV": {
+          "type": "string",
+          "description": "Ghost runtime environment.",
+          "default": "production"
+        }
+      }
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional environment sources such as ConfigMaps or Secrets.",
+      "default": [],
+      "items": {}
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Additional Kubernetes EnvVar entries appended to Ghost.",
+      "default": [],
+      "items": {}
+    },
+    "secretEnv": {
+      "type": "object",
+      "description": "Secret environment variables for Ghost.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether the chart should create a Secret from secretEnv.values.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the chart-created Secret. Empty uses the release fullname.",
+          "default": ""
+        },
+        "values": {
+          "type": "object",
+          "description": "Secret values to write when secretEnv.create is true.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "Existing Kubernetes Secret containing sensitive environment values.",
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Existing Secret name.",
+              "default": ""
+            },
+            "keys": {
+              "type": "array",
+              "description": "Mappings from Secret keys to environment variable names.",
+              "default": [],
+              "items": {}
+            }
+          }
+        }
+      }
+    },
+    "mysql": {
+      "type": "object",
+      "description": "Internal MySQL StatefulSet configuration for Ghost.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to deploy a chart-managed MySQL StatefulSet and inject Ghost database environment variables.",
+          "default": true
+        },
+        "image": {
+          "type": "object",
+          "description": "Container image settings for MySQL.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "MySQL image repository.",
+              "default": "mysql"
+            },
+            "tag": {
+              "type": "string",
+              "description": "MySQL image tag.",
+              "default": "8"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "MySQL image pull policy.",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "description": "MySQL Service settings.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "integer",
+              "description": "MySQL Service port.",
+              "default": 3306
+            }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "description": "MySQL database and credential settings.",
+          "additionalProperties": true,
+          "properties": {
+            "database": {
+              "type": "string",
+              "description": "Database name created for Ghost.",
+              "default": "ghost"
+            },
+            "username": {
+              "type": "string",
+              "description": "Database user created for Ghost.",
+              "default": "ghost"
+            },
+            "password": {
+              "type": "string",
+              "description": "Database password used when existingSecret is empty.",
+              "default": "CHANGE_ME_GHOST_DB_PASSWORD"
+            },
+            "rootPassword": {
+              "type": "string",
+              "description": "Optional MySQL root password.",
+              "default": ""
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Existing Secret containing MySQL password keys.",
+              "default": ""
+            },
+            "passwordKey": {
+              "type": "string",
+              "description": "Secret key containing the Ghost database user password.",
+              "default": "db-password"
+            },
+            "rootPasswordKey": {
+              "type": "string",
+              "description": "Secret key containing the MySQL root password.",
+              "default": "db-root-password"
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "description": "Persistent storage for MySQL data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to create persistent storage for MySQL.",
+              "default": true
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PVC name to reuse for MySQL data.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "MySQL PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "MySQL PVC storage request size.",
+              "default": "10Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "MySQL PVC StorageClass name.",
+              "default": ""
+            }
+          }
+        },
+        "podAnnotations": {
+          "type": "object",
+          "description": "Additional annotations applied to MySQL pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podLabels": {
+          "type": "object",
+          "description": "Additional labels applied to MySQL pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context for MySQL.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context for MySQL.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits for MySQL.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "livenessProbe": {
+          "type": "object",
+          "description": "MySQL liveness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "readinessProbe": {
+          "type": "object",
+          "description": "MySQL readiness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "MySQL pod node selector constraints.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "MySQL pod tolerations.",
+          "default": [],
+          "items": {}
+        },
+        "affinity": {
+          "type": "object",
+          "description": "MySQL pod affinity and anti-affinity rules.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "command": {
+      "type": "array",
+      "description": "Optional command override for the Ghost container.",
+      "default": [],
+      "items": {}
+    },
+    "args": {
+      "type": "array",
+      "description": "Optional argument override for the Ghost container.",
+      "default": [],
+      "items": {}
+    },
+    "extraInitContainers": {
+      "type": "array",
+      "description": "Additional init containers appended to the Ghost pod.",
+      "default": [],
+      "items": {}
+    },
+    "sidecars": {
+      "type": "array",
+      "description": "Additional sidecar containers appended to the Ghost pod.",
+      "default": [],
+      "items": {}
+    },
+    "lifecycle": {
+      "type": "object",
+      "description": "Container lifecycle hooks for Ghost.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for Ghost.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 2368
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives Service traffic.",
+          "default": "http"
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port.",
+          "default": "http"
+        },
+        "loadBalancerIP": {
+          "type": "string",
+          "description": "Static LoadBalancer IP address.",
+          "default": ""
+        },
+        "loadBalancerSourceRanges": {
+          "type": "array",
+          "description": "Allowed source ranges for LoadBalancer services.",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "description": "External traffic policy for NodePort or LoadBalancer services.",
+          "default": ""
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "containerPorts": {
+      "type": "array",
+      "description": "Container ports exposed by the Ghost pod.",
+      "default": [
+        {
+          "name": "http",
+          "containerPort": 2368,
+          "protocol": "TCP"
+        }
+      ],
+      "items": {}
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "content": {
+          "type": "object",
+          "description": "Persistent volume settings for Ghost content.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Create or mount the Ghost content PVC.",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container filesystem path where this volume is mounted.",
+              "default": "/var/lib/ghost/content"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PVC name to reuse instead of creating a new PVC.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PVC storage request size.",
+              "default": "10Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the Ghost container.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for Ghost.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "description": "PodDisruptionBudget configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a PodDisruptionBudget.",
+          "default": false
+        },
+        "minAvailable": {
+          "description": "Minimum available pods for voluntary disruptions.",
+          "default": 1
+        },
+        "maxUnavailable": {
+          "description": "Maximum unavailable pods for voluntary disruptions.",
+          "default": ""
+        }
+      }
+    },
+    "networkPolicy": {
+      "type": "object",
+      "description": "NetworkPolicy configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a NetworkPolicy.",
+          "default": false
+        },
+        "ingressFrom": {
+          "type": "array",
+          "description": "NetworkPolicy ingress peers allowed to reach Ghost.",
+          "default": [],
+          "items": {}
+        },
+        "extraIngress": {
+          "type": "array",
+          "description": "Additional NetworkPolicy ingress rules.",
+          "default": [],
+          "items": {}
+        },
+        "allowDNS": {
+          "type": "boolean",
+          "description": "Allow DNS egress when NetworkPolicy is enabled.",
+          "default": true
+        },
+        "extraEgress": {
+          "type": "array",
+          "description": "Additional NetworkPolicy egress rules.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Kubernetes startup probe used while Ghost initializes.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Pod node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

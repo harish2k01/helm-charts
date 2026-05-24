@@ -1,0 +1,210 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ghost.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "ghost.labels" . | nindent 4 }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  strategy:
+    {{- toYaml .Values.deployment.strategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "ghost.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ghost.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "ghost.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.runtimeClassName }}
+      runtimeClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.schedulerName }}
+      schedulerName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.mysql.enabled .Values.extraInitContainers }}
+      initContainers:
+        {{- if .Values.mysql.enabled }}
+        - name: wait-for-mysql
+          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - until MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER"; do sleep 2; done
+          env:
+            - name: MYSQL_HOST
+              value: {{ include "ghost.mysqlServiceName" . | quote }}
+            - name: MYSQL_PORT
+              value: {{ .Values.mysql.service.port | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.mysql.auth.username | quote }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.mysqlSecretName" . }}
+                  key: {{ .Values.mysql.auth.passwordKey }}
+        {{- end }}
+        {{- with .Values.extraInitContainers }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: ghost
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            {{- toYaml .Values.containerPorts | nindent 12 }}
+          {{- if or .Values.env .Values.extraEnv .Values.secretEnv.create .Values.secretEnv.existingSecret.keys }}
+          env:
+            {{- range $name, $value := .Values.env }}
+            {{- if not (and $.Values.mysql.enabled (has $name (list "database__client" "database__connection__host" "database__connection__port" "database__connection__user" "database__connection__password" "database__connection__database" "database__connection__filename"))) }}
+            {{- if ne (toString $value) "" }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- if .Values.mysql.enabled }}
+            - name: database__client
+              value: mysql
+            - name: database__connection__host
+              value: {{ include "ghost.mysqlServiceName" . | quote }}
+            - name: database__connection__port
+              value: {{ .Values.mysql.service.port | quote }}
+            - name: database__connection__user
+              value: {{ .Values.mysql.auth.username | quote }}
+            - name: database__connection__database
+              value: {{ .Values.mysql.auth.database | quote }}
+            - name: database__connection__password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.mysqlSecretName" . }}
+                  key: {{ .Values.mysql.auth.passwordKey }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.secretEnv.create }}
+            {{- range $name, $value := .Values.secretEnv.values }}
+            {{- if ne (toString $value) "" }}
+            - name: {{ $name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.secretName" $ }}
+                  key: {{ $name }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.secretEnv.existingSecret.keys }}
+            - name: {{ .envName }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.secretName" $ }}
+                  key: {{ .secretKey }}
+                  optional: {{ default false .optional }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.persistence.content.enabled .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- if .Values.persistence.content.enabled }}
+            - name: content
+              mountPath: {{ .Values.persistence.content.mountPath }}
+            {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        {{- with .Values.sidecars }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.persistence.content.enabled .Values.extraVolumes }}
+      volumes:
+        {{- if .Values.persistence.content.enabled }}
+        - name: content
+          persistentVolumeClaim:
+            claimName: {{ default (include "ghost.fullname" .) .Values.persistence.content.existingClaim }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

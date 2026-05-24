@@ -1,0 +1,26 @@
+apiVersion: v2
+name: ghost
+description: Deploys Ghost publishing platform on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png
+version: 0.1.2
+appVersion: "6.39.0-alpine"
+home: https://ghost.org
+sources:
+  - https://github.com/TryGhost/Ghost
+  - https://hub.docker.com/_/ghost
+keywords:
+  - ghost
+  - publishing
+  - cms
+  - blog
+  - newsletter
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: ghost
+      image: ghost:6.39.0-alpine
+    - name: mysql
+      image: mysql:8
+maintainers:
+  - name: harish2k01

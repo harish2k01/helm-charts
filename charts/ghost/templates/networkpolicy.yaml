@@ -1,0 +1,48 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "ghost.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "ghost.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "ghost.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {{- with .Values.networkPolicy.ingressFrom }}
+      from:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ (index .Values.containerPorts 0).containerPort }}
+    {{- with .Values.networkPolicy.extraIngress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  egress:
+    {{- if .Values.networkPolicy.allowDNS }}
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    {{- end }}
+    {{- if .Values.mysql.enabled }}
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "ghost.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: mysql
+      ports:
+        - protocol: TCP
+          port: {{ .Values.mysql.service.port }}
+    {{- end }}
+    {{- with .Values.networkPolicy.extraEgress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

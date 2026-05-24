@@ -1,0 +1,271 @@
+replicaCount: 1
+
+# Official Ghost image. Pin the tag so upgrades are intentional.
+image:
+  repository: ghost
+  tag: "6.39.0-alpine"
+  pullPolicy: IfNotPresent
+
+# Use imagePullSecrets when pulling from a private registry mirror.
+imagePullSecrets: []
+
+# Override generated resource names when integrating with existing naming rules.
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra pod metadata for backup, reload, policy, or observability controllers.
+podAnnotations: {}
+podLabels: {}
+
+# ServiceAccount controls for clusters that enforce token mounting or workload
+# identity policies. Tokens are not mounted by default because Ghost does not
+# need Kubernetes API access.
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: false
+
+# Set pod-level security defaults when your cluster policy requires them.
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+# Container security context for the Ghost process.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# Deployment rollout and scheduling controls for production clusters.
+deployment:
+  annotations: {}
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  terminationGracePeriodSeconds: 60
+
+priorityClassName: ""
+runtimeClassName: ""
+schedulerName: ""
+topologySpreadConstraints: []
+
+# Non-secret Ghost configuration. The chart injects MySQL database__* values
+# automatically when mysql.enabled=true.
+env:
+  url: http://localhost:2368
+  NODE_ENV: production
+
+# Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
+envFrom: []
+
+# Extra environment variables with full Kubernetes EnvVar support, including
+# valueFrom references.
+extraEnv: []
+
+# Secret environment variables for mail passwords, Stripe keys, or other
+# sensitive Ghost configuration values not covered by mysql.auth.
+secretEnv:
+  create: false
+  name: ""
+  values:
+    mail__options__auth__pass: ""
+  existingSecret:
+    name: ""
+    keys: []
+    # - envName: mail__options__auth__pass
+    #   secretKey: smtp-password
+    #   optional: false
+
+command: []
+args: []
+
+# Additional init containers and sidecars, for example backup agents,
+# certificate syncers, or log/metrics exporters.
+extraInitContainers: []
+sidecars: []
+
+# Container lifecycle hooks.
+lifecycle: {}
+
+# Internal MySQL database for Ghost. Disable this section when using an external
+# MySQL 8 service and provide database__* values through env and secretEnv.
+mysql:
+  enabled: true
+  image:
+    repository: mysql
+    tag: "8"
+    pullPolicy: IfNotPresent
+  service:
+    port: 3306
+  auth:
+    database: ghost
+    username: ghost
+    # Suitable only for local testing. Prefer existingSecret for production.
+    password: CHANGE_ME_GHOST_DB_PASSWORD
+    # Leave empty to let MySQL generate a random root password.
+    rootPassword: ""
+    # Existing Secret must contain passwordKey. rootPasswordKey is only used
+    # when rootPassword is set.
+    existingSecret: ""
+    passwordKey: db-password
+    rootPasswordKey: db-root-password
+  persistence:
+    enabled: true
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: ""
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext:
+    fsGroup: 999
+    fsGroupChangePolicy: OnRootMismatch
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  resources: {}
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: OrderedReady
+  terminationGracePeriodSeconds: 60
+  extraEnv: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  livenessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h 127.0.0.1 -u "$MYSQL_USER"
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h 127.0.0.1 -u "$MYSQL_USER"
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Main HTTP service for the Ghost site and admin UI.
+service:
+  type: ClusterIP
+  annotations: {}
+  port: 2368
+  targetPort: http
+  portName: http
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  externalTrafficPolicy: ""
+  extraPorts: []
+
+containerPorts:
+  - name: http
+    containerPort: 2368
+    protocol: TCP
+
+# Persistent Ghost content. This stores images, themes, logs, adapters, and the
+# local SQLite database when using the evaluation defaults.
+persistence:
+  content:
+    enabled: true
+    mountPath: /var/lib/ghost/content
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClassName: ""
+
+# Advanced volume hooks for custom config files, adapters, or CA bundles.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for exposing Ghost through an ingress controller.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for exposing Ghost through a Gateway.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+# Optional PodDisruptionBudget. Enable this when your cluster performs voluntary
+# disruptions and your storage/database setup can tolerate the selected policy.
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  maxUnavailable: ""
+
+# Optional NetworkPolicy. When enabled, ingress is limited to the Ghost service
+# port and egress is limited to DNS plus the chart-managed MySQL service unless
+# extraIngress/extraEgress rules are provided.
+networkPolicy:
+  enabled: false
+  ingressFrom: []
+  extraIngress: []
+  allowDNS: true
+  extraEgress: []
+
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

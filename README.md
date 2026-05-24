@@ -72,6 +72,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`feishin`](charts/feishin) | `0.1.0` | `1.11.0` | Media | Deploys Feishin music streaming client on Kubernetes. |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.2` | `version-6.6.1` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.2` | `v3.4.6` | Media | Deploys FlareSolverr request solving for automation stacks. |
+| [`ghost`](charts/ghost) | `0.1.2` | `6.39.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
 | [`homepage`](charts/homepage) | `0.1.0` | `1.13.1` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Media | Deploys Jellyfin media server with library mount support. |
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |

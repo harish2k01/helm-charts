@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.content.enabled (not .Values.persistence.content.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "ghost.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "ghost.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.persistence.content.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.content.size }}
+  {{- with .Values.persistence.content.storageClassName }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

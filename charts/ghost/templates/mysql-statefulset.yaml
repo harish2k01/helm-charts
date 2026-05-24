@@ -1,0 +1,135 @@
+{{- if .Values.mysql.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "ghost.mysqlServiceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "ghost.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mysql
+spec:
+  serviceName: {{ include "ghost.mysqlServiceName" . }}
+  replicas: 1
+  podManagementPolicy: {{ .Values.mysql.podManagementPolicy }}
+  updateStrategy:
+    {{- toYaml .Values.mysql.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "ghost.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mysql
+  template:
+    metadata:
+      {{- with .Values.mysql.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ghost.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mysql
+        {{- with .Values.mysql.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.mysql.terminationGracePeriodSeconds }}
+      {{- with .Values.mysql.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: mysql
+          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          {{- with .Values.mysql.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: mysql
+              containerPort: {{ .Values.mysql.service.port }}
+              protocol: TCP
+          env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mysql.auth.database | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.mysql.auth.username | quote }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.mysqlSecretName" . }}
+                  key: {{ .Values.mysql.auth.passwordKey }}
+            {{- if .Values.mysql.auth.rootPassword }}
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ghost.mysqlSecretName" . }}
+                  key: {{ .Values.mysql.auth.rootPasswordKey }}
+            {{- else }}
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "true"
+            {{- end }}
+            {{- with .Values.mysql.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.mysql.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.mysql.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.mysql.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+            {{- with .Values.mysql.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- if or .Values.mysql.persistence.existingClaim (not .Values.mysql.persistence.enabled) .Values.mysql.extraVolumes }}
+      volumes:
+        {{- if or .Values.mysql.persistence.existingClaim (not .Values.mysql.persistence.enabled) }}
+        - name: data
+          {{- if .Values.mysql.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.mysql.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- end }}
+        {{- with .Values.mysql.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.mysql.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if and .Values.mysql.persistence.enabled (not .Values.mysql.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "ghost.labels" . | nindent 10 }}
+          app.kubernetes.io/component: mysql
+      spec:
+        accessModes:
+          {{- toYaml .Values.mysql.persistence.accessModes | nindent 10 }}
+        {{- if .Values.mysql.persistence.storageClassName }}
+        storageClassName: {{ .Values.mysql.persistence.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mysql.persistence.size }}
+  {{- end }}
+{{- end }}
