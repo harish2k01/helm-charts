@@ -1,0 +1,85 @@
+# Keep one replica for normal use. Increase only if you want multiple
+# independent shells available at the same time.
+replicaCount: 1
+
+# Debug image published from the k8s-debug-pod image repository. Pin the tag so
+# every install gets the same toolbox version.
+image:
+  repository: ghcr.io/harish2k01/k8s-debug-pod
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# Add pull secrets here if you make the GHCR image private.
+imagePullSecrets: []
+
+# Override generated Kubernetes names when you need to match an existing naming
+# convention or avoid collisions with another release.
+nameOverride: ""
+fullnameOverride: ""
+
+# Use annotations and labels for GitOps metadata, policy exceptions, or
+# selectors used by your own cluster tooling.
+podAnnotations: {}
+podLabels: {}
+
+# Pod-level security context. Leave empty unless your cluster policy requires
+# fsGroup, runAsUser, seccompProfile, or similar settings.
+podSecurityContext: {}
+
+# NET_RAW is useful for ping, traceroute, mtr, and packet-level checks.
+# NET_ADMIN is useful for deeper network inspection tools. Remove capabilities
+# if your cluster policy blocks them or you only need kubectl/curl/dig style
+# debugging.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_RAW
+
+# The ServiceAccount is used by in-pod kubectl. Keep create=true for a
+# self-contained install, or set create=false and name=<existing-sa> to use an
+# account managed elsewhere.
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# By default the debug pod gets read-only cluster visibility through the built-in
+# view ClusterRole. Set create=false for no chart-managed binding, or change
+# clusterRoleName when you intentionally need broader/narrower permissions.
+rbac:
+  create: true
+  clusterRoleName: view
+
+# Override the image entrypoint only for special cases. The default entrypoint
+# prints a short hint and sleeps forever so you can exec into the pod.
+command: []
+args: []
+
+# Use env/envFrom for temporary endpoints, proxy settings, or credentials
+# supplied from Secrets/ConfigMaps. Avoid committing secret values directly.
+env: {}
+envFrom: []
+
+# Conservative defaults keep the pod cheap while leaving enough room for common
+# tools. Raise memory/CPU if you run heavier commands such as large nmap scans,
+# tcpdump captures, or Python scripts.
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Mount extra volumes when debugging files from ConfigMaps, Secrets, PVCs, host
+# paths, or projected service account tokens.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Scheduling controls. Useful when you need the debug pod on a specific node,
+# zone, tainted node pool, or close to a workload you are investigating.
+nodeSelector: {}
+tolerations: []
+affinity: {}

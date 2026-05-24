@@ -1,0 +1,7 @@
+Connect to the debug pod:
+
+  kubectl -n {{ .Release.Namespace }} exec -it deploy/{{ include "k8s-debug-pod.fullname" . }} -- bash
+
+Check rollout:
+
+  kubectl -n {{ .Release.Namespace }} rollout status deploy/{{ include "k8s-debug-pod.fullname" . }}
