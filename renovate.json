@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "helm-values",
+    "helmv3",
+    "github-actions"
+  ],
+  "packageRules": [
+    {
+      "description": "Do not automerge Helm values updates.",
+      "matchManagers": [
+        "helm-values"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Do not update embedded database images managed by application chart compatibility.",
+      "matchPackageNames": [
+        "postgres",
+        "mysql",
+        "mariadb"
+      ],
+      "enabled": false
+    }
+  ]
+}
