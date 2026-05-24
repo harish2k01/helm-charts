@@ -1,0 +1,184 @@
+replicaCount: 1
+
+# Container image. Pin this tag for repeatable installs and predictable
+# upgrades instead of following latest.
+image:
+  repository: ghcr.io/gethomepage/homepage
+  tag: "v1.13.1"
+  pullPolicy: IfNotPresent
+
+# Use image pull secrets when the image is mirrored into a private registry.
+imagePullSecrets: []
+
+# Override generated resource names when integrating with existing naming
+# conventions or migrations.
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra annotations and labels for the Homepage pod, commonly used by policy,
+# backup, or reload controllers.
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+# Homepage supports non-root execution through PUID/PGID. Keep this aligned
+# with the mounted config volume ownership.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+# ServiceAccount/RBAC are needed when kubernetes.yaml uses mode: cluster or
+# when using Kubernetes service discovery/widgets.
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+rbac:
+  create: true
+  gatewayApi: true
+  traefik: true
+  metrics: true
+
+# Additional non-secret environment variables. HOMEPAGE_ALLOWED_HOSTS is
+# rendered from homepage.allowedHosts so the pod IP needed by probes is always
+# included.
+env:
+  TZ: Asia/Kolkata
+  PUID: "1000"
+  PGID: "1000"
+
+# Secret or ConfigMap references for sensitive HOMEPAGE_VAR_ or HOMEPAGE_FILE_
+# values used inside Homepage config files.
+envFrom: []
+
+homepage:
+  # Add public hostnames here, for example homepage.example.com. The chart
+  # always prepends $(MY_POD_IP):3000 so Kubernetes probes pass host validation.
+  allowedHosts: []
+
+  # Use an existing ConfigMap with Homepage config files instead of generating
+  # one from config.files.
+  existingConfigMap: ""
+
+  # Files are mounted into /app/config. Values can be replaced entirely from
+  # your own values file.
+  config:
+    enabled: true
+    files:
+      kubernetes.yaml: |
+        mode: cluster
+        ingress: true
+        gateway: true
+      settings.yaml: |
+        title: Homepage
+      bookmarks.yaml: |
+        - Developer:
+            - GitHub:
+                - abbr: GH
+                  href: https://github.com/
+      services.yaml: |
+        - Cluster:
+            - Kubernetes:
+                href: https://kubernetes.io/
+                description: Kubernetes documentation
+      widgets.yaml: |
+        - kubernetes:
+            cluster:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+              label: cluster
+            nodes:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+        - search:
+            provider: duckduckgo
+            target: _blank
+      docker.yaml: ""
+      custom.css: ""
+      custom.js: ""
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+  portName: http
+  annotations: {}
+  extraPorts: []
+
+extraContainerPorts: []
+
+# Optional config PVC. Leave disabled to run from generated ConfigMap files.
+# Enable this when Homepage should persist edited config or logs in storage.
+persistence:
+  config:
+    enabled: false
+    mountPath: /app/config
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    storageClassName: ""
+
+# Advanced volume hooks for custom files such as proxmox.yaml or provider
+# secrets mounted with HOMEPAGE_FILE_ variables.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress. Set homepage.allowedHosts to the same hostnames.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute. Set homepage.allowedHosts to the same
+# hostnames.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /api/healthcheck
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/healthcheck
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

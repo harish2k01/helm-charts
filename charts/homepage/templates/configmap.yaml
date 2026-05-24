@@ -1,0 +1,14 @@
+{{- if and .Values.homepage.config.enabled (not .Values.homepage.existingConfigMap) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homepage.configMapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homepage.labels" . | nindent 4 }}
+data:
+  {{- range $name, $content := .Values.homepage.config.files }}
+  {{ $name }}: |
+{{ $content | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "homepage.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "homepage.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "homepage.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "homepage.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "homepage.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "$(MY_POD_IP):3000{{- if .Values.homepage.allowedHosts }},{{ join "," .Values.homepage.allowedHosts }}{{- end }}"
+            {{- range $name, $value := .Values.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            {{- with .Values.extraContainerPorts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.persistence.config.enabled }}
+            - name: config
+              mountPath: {{ .Values.persistence.config.mountPath }}
+            {{- end }}
+            {{- if .Values.homepage.config.enabled }}
+            {{- range $name, $_ := .Values.homepage.config.files }}
+            - name: homepage-config
+              mountPath: /app/config/{{ $name }}
+              subPath: {{ $name }}
+            {{- end }}
+            {{- end }}
+            - name: logs
+              mountPath: /app/config/logs
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.config.enabled }}
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ default (include "homepage.fullname" .) .Values.persistence.config.existingClaim }}
+        {{- end }}
+        {{- if .Values.homepage.config.enabled }}
+        - name: homepage-config
+          configMap:
+            name: {{ include "homepage.configMapName" . }}
+        {{- end }}
+        - name: logs
+          emptyDir: {}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

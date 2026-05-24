@@ -4,7 +4,7 @@
 [![Release Charts](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml)
 [![Lint Charts](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml)
 
-Reliable Helm charts for self-hosted Kubernetes applications. This repository provides practical, versioned charts for media automation, networking, monitoring, finance, security, and homelab services.
+Reliable Helm charts for self-hosted Kubernetes applications. This repository provides practical, versioned charts for media automation, dashboards, networking, monitoring, finance, security, and homelab services.
 
 Every chart is published through both the classic Helm repository format and as an OCI chart in GHCR, so users can install through the workflow they already prefer.
 
@@ -71,6 +71,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`feishin`](charts/feishin) | `0.1.0` | `1.11.0` | Media | Deploys Feishin music streaming client on Kubernetes. |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.2` | `version-6.6.1` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.2` | `v3.4.6` | Media | Deploys FlareSolverr request solving for automation stacks. |
+| [`homepage`](charts/homepage) | `0.1.0` | `1.13.1` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Media | Deploys Jellyfin media server with library mount support. |
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
