@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "k8s-debug-pod values",
+  "description": "Configurable Helm values for the k8s-debug-pod chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of debug pod replicas to run.",
+      "default": 1,
+      "minimum": 0
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for the debug container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the debug container.",
+          "default": "ghcr.io/harish2k01/k8s-debug-pod"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable debugging environments.",
+          "default": "0.1.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the debug container.",
+          "default": "IfNotPresent",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to debug pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to debug pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context applied to the debug pod.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context for the debug container.",
+      "additionalProperties": true,
+      "properties": {
+        "allowPrivilegeEscalation": {
+          "type": "boolean",
+          "description": "Whether the debug container can gain additional privileges.",
+          "default": false
+        },
+        "capabilities": {
+          "type": "object",
+          "description": "Linux capabilities added to or dropped from the debug container.",
+          "additionalProperties": true,
+          "properties": {
+            "add": {
+              "type": "array",
+              "description": "Linux capabilities added to the debug container.",
+              "default": [
+                "NET_ADMIN",
+                "NET_RAW"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "drop": {
+              "type": "array",
+              "description": "Linux capabilities dropped from the debug container.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "serviceAccount": {
+      "type": "object",
+      "description": "ServiceAccount configuration for in-cluster Kubernetes API access.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a ServiceAccount for the debug pod.",
+          "default": true
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the ServiceAccount.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "name": {
+          "type": "string",
+          "description": "ServiceAccount name override. When empty, the chart fullname is used if serviceAccount.create is true.",
+          "default": ""
+        }
+      }
+    },
+    "rbac": {
+      "type": "object",
+      "description": "RBAC configuration for the debug pod ServiceAccount.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a ClusterRoleBinding for the debug pod ServiceAccount.",
+          "default": true
+        },
+        "clusterRoleName": {
+          "type": "string",
+          "description": "ClusterRole bound to the debug pod ServiceAccount.",
+          "default": "view"
+        }
+      }
+    },
+    "command": {
+      "type": "array",
+      "description": "Optional command override for the debug container entrypoint.",
+      "default": [],
+      "items": {}
+    },
+    "args": {
+      "type": "array",
+      "description": "Optional argument override for the debug container command.",
+      "default": [],
+      "items": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Non-secret environment variables passed to the debug container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional envFrom sources, such as ConfigMaps or Secrets, added to the debug container.",
+      "default": [],
+      "items": {}
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for the debug container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the debug container.",
+      "default": [],
+      "items": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

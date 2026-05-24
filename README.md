@@ -82,6 +82,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.3` | `1.14.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
 | [`tailscale`](charts/tailscale) | `0.1.2` | `v1.96.5` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
+| [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.0` | `0.1.0` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.2` | `2.2.1-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
 | [`vaultwarden`](charts/vaultwarden) | `0.1.0` | `1.36.0` | Security | Deploys Vaultwarden password management on Kubernetes. |
 
