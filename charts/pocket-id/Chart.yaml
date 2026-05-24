@@ -1,0 +1,23 @@
+apiVersion: v2
+name: pocket-id
+description: Deploys Pocket ID passkey-based OIDC provider on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/pocket-id.png
+version: 0.1.0
+appVersion: "v2.7.0"
+home: https://pocket-id.org
+sources:
+  - https://github.com/pocket-id/pocket-id
+keywords:
+  - pocket-id
+  - oidc
+  - passkeys
+  - identity-provider
+  - authentication
+annotations:
+  artifacthub.io/license: BSD-2-Clause
+  artifacthub.io/images: |
+    - name: pocket-id
+      image: ghcr.io/pocket-id/pocket-id:v2.7.0
+maintainers:
+  - name: harish2k01

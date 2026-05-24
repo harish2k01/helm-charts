@@ -1,0 +1,410 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "pocket-id values",
+  "description": "Configurable Helm values for the pocket-id chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of application pod replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for Pocket ID.",
+          "default": "ghcr.io/pocket-id/pocket-id"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "v2.7.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Non-secret environment variables passed to the Pocket ID container.",
+      "additionalProperties": true,
+      "properties": {
+        "APP_URL": {
+          "type": "string",
+          "description": "Public URL where users access Pocket ID.",
+          "default": "http://localhost:1411"
+        },
+        "TRUST_PROXY": {
+          "type": "string",
+          "description": "Whether Pocket ID should trust reverse proxy forwarding headers.",
+          "default": "false"
+        },
+        "PUID": {
+          "type": "string",
+          "description": "User ID used by the container process for mounted files.",
+          "default": "1000"
+        },
+        "PGID": {
+          "type": "string",
+          "description": "Group ID used by the container process for mounted files.",
+          "default": "1000"
+        },
+        "TZ": {
+          "type": "string",
+          "description": "Timezone used by the application container.",
+          "default": "Asia/Kolkata"
+        },
+        "ANALYTICS_DISABLED": {
+          "type": "string",
+          "description": "Set to true to disable Pocket ID analytics heartbeat.",
+          "default": "false"
+        },
+        "VERSION_CHECK_DISABLED": {
+          "type": "string",
+          "description": "Set to true to disable automatic version checks.",
+          "default": "false"
+        }
+      }
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional environment sources such as ConfigMaps or Secrets.",
+      "default": [],
+      "items": {}
+    },
+    "secretEnv": {
+      "type": "object",
+      "description": "Secret environment variables for Pocket ID.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether the chart should create a Kubernetes Secret from secretEnv.values.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the chart-created Secret. Empty uses the release fullname.",
+          "default": ""
+        },
+        "values": {
+          "type": "object",
+          "description": "Secret values to write when secretEnv.create is true.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "Existing Kubernetes Secret containing environment values.",
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Existing Secret name.",
+              "default": ""
+            },
+            "keys": {
+              "type": "array",
+              "description": "Mappings from Secret keys to environment variable names.",
+              "default": [],
+              "items": {}
+            }
+          }
+        }
+      }
+    },
+    "command": {
+      "type": "array",
+      "description": "Optional command override for the Pocket ID container.",
+      "default": [],
+      "items": {}
+    },
+    "args": {
+      "type": "array",
+      "description": "Optional argument override for the Pocket ID container.",
+      "default": [],
+      "items": {}
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing Pocket ID inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type, such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 1411
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives traffic from the Service.",
+          "default": "http"
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port.",
+          "default": "http"
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports to expose beside the primary application port.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "containerPorts": {
+      "type": "array",
+      "description": "Container ports exposed by the Pocket ID pod.",
+      "default": [
+        {
+          "name": "http",
+          "containerPort": 1411,
+          "protocol": "TCP"
+        }
+      ],
+      "items": {}
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "data": {
+          "type": "object",
+          "description": "Persistent volume settings for Pocket ID application data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Create or mount the app data PVC.",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container filesystem path where this volume is mounted.",
+              "default": "/app/data"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PersistentVolumeClaim access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PersistentVolumeClaim storage request size.",
+              "default": "5Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the main application container.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for exposing Pocket ID through an ingress controller.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules routed to the chart Service.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts and referenced certificate secrets.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for exposing Pocket ID through a Gateway.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a Gateway API HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules, including path matches and filters.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe used to restart the container when it becomes unhealthy.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe used to decide when the pod can receive traffic.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Pod node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}
