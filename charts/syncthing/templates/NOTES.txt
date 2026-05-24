@@ -1,0 +1,14 @@
+Syncthing has been installed.
+
+The default Service exposes:
+  - TCP 8384 for the Web UI
+  - TCP/UDP 22000 for device sync traffic
+  - UDP 21027 for local discovery
+
+To reach the Web UI inside the cluster:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "syncthing.fullname" . }} 8384:8384
+
+Then open:
+
+  http://127.0.0.1:8384/
