@@ -1,0 +1,137 @@
+replicaCount: 1
+
+# Container image. Pin this tag for repeatable DNS infrastructure rollouts.
+image:
+  repository: adguard/adguardhome
+  tag: "v0.107.76"
+  pullPolicy: IfNotPresent
+
+# Set when pulling from a private registry or mirror that requires credentials.
+imagePullSecrets: []
+
+# Override generated resource names when installing multiple releases or when
+# integrating with pre-existing naming conventions.
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra pod metadata for backup agents, reloaders, policy engines, or dashboards.
+podAnnotations: {}
+podLabels: {}
+
+# Keep empty by default because low ports such as 53 and 80 often require image
+# defaults or explicit capabilities chosen for your cluster.
+podSecurityContext: {}
+securityContext: {}
+
+# Optional non-secret environment variables passed to AdGuard Home.
+env: {}
+
+# Optional envFrom entries, for example configMapRef or secretRef blocks.
+envFrom: []
+
+# Optional command/args overrides for advanced image customization.
+command: []
+args: []
+
+# Service exposing the initial setup/admin UI and DNS ports. Use LoadBalancer,
+# MetalLB annotations, or externalTrafficPolicy when clients outside the cluster
+# should use this pod as their DNS resolver.
+service:
+  type: ClusterIP
+  annotations: {}
+  externalTrafficPolicy: ""
+  ports:
+    - name: http-setup
+      port: 3000
+      targetPort: http-setup
+      protocol: TCP
+    - name: dns-tcp
+      port: 53
+      targetPort: dns-tcp
+      protocol: TCP
+    - name: dns-udp
+      port: 53
+      targetPort: dns-udp
+      protocol: UDP
+
+# Container ports should line up with service.ports. Add ports here before
+# exposing optional services like DoT, DoQ, DNSCrypt, DHCP, or post-setup HTTP.
+containerPorts:
+  - name: http-setup
+    containerPort: 3000
+    protocol: TCP
+  - name: dns-tcp
+    containerPort: 53
+    protocol: TCP
+  - name: dns-udp
+    containerPort: 53
+    protocol: UDP
+
+# Persistent data and query state stored by AdGuard Home.
+persistence:
+  work:
+    enabled: true
+    mountPath: /opt/adguardhome/work
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    storageClassName: ""
+  conf:
+    enabled: true
+    mountPath: /opt/adguardhome/conf
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    storageClassName: ""
+
+# Advanced volume hooks for custom certificates, config files, or host mounts.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Optional Kubernetes Ingress for the setup/admin UI. Ingress only covers HTTP;
+# expose DNS with the Service.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+# Optional Gateway API HTTPRoute for the setup/admin UI.
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# Increase resources if blocklists, query logging, or client counts are large.
+resources: {}
+
+livenessProbe:
+  tcpSocket:
+    port: http-setup
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  tcpSocket:
+    port: http-setup
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Use scheduling controls to place DNS on stable nodes or nodes with fixed
+# external addresses.
+nodeSelector: {}
+tolerations: []
+affinity: {}

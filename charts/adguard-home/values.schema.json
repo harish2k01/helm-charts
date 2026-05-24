@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "adguard-home values",
+  "description": "Configurable Helm values for the adguard-home chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of application pod replicas to run. Keep this at one unless storage and network exposure are designed for multiple DNS pods.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for AdGuard Home.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository.",
+          "default": "adguard/adguardhome"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this for repeatable installs.",
+          "default": "v0.107.76"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Image pull secrets for private registries.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in generated resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Non-secret environment variables passed to the container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional envFrom sources such as ConfigMaps or Secrets.",
+      "default": [],
+      "items": {}
+    },
+    "command": {
+      "type": "array",
+      "description": "Optional command override for the container entrypoint.",
+      "default": [],
+      "items": {}
+    },
+    "args": {
+      "type": "array",
+      "description": "Optional argument override for the container command.",
+      "default": [],
+      "items": {}
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for DNS and web traffic.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "description": "Optional external traffic policy for NodePort or LoadBalancer services.",
+          "default": ""
+        },
+        "ports": {
+          "type": "array",
+          "description": "Service ports exposed for HTTP, DNS, and optional encrypted DNS protocols.",
+          "default": [
+            {
+              "name": "http-setup",
+              "port": 3000,
+              "targetPort": "http-setup",
+              "protocol": "TCP"
+            },
+            {
+              "name": "dns-tcp",
+              "port": 53,
+              "targetPort": "dns-tcp",
+              "protocol": "TCP"
+            },
+            {
+              "name": "dns-udp",
+              "port": 53,
+              "targetPort": "dns-udp",
+              "protocol": "UDP"
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "containerPorts": {
+      "type": "array",
+      "description": "Container ports exposed by AdGuard Home.",
+      "default": [
+        {
+          "name": "http-setup",
+          "containerPort": 3000,
+          "protocol": "TCP"
+        },
+        {
+          "name": "dns-tcp",
+          "containerPort": 53,
+          "protocol": "TCP"
+        },
+        {
+          "name": "dns-udp",
+          "containerPort": 53,
+          "protocol": "UDP"
+        }
+      ],
+      "items": {}
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "work": {
+          "$ref": "#/definitions/persistentVolume",
+          "description": "Persistent volume for AdGuard Home work data."
+        },
+        "conf": {
+          "$ref": "#/definitions/persistentVolume",
+          "description": "Persistent volume for AdGuard Home configuration."
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the container.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress for the web UI.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional Ingress annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "Ingress TLS settings.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute for the web UI.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional HTTPRoute annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs for the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  },
+  "definitions": {
+    "persistentVolume": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to mount this persistent volume.",
+          "default": true
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Container filesystem path for this volume."
+        },
+        "existingClaim": {
+          "type": "string",
+          "description": "Existing PersistentVolumeClaim name to reuse.",
+          "default": ""
+        },
+        "accessModes": {
+          "type": "array",
+          "description": "PersistentVolumeClaim access modes.",
+          "default": [
+            "ReadWriteOnce"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "size": {
+          "type": "string",
+          "description": "PersistentVolumeClaim storage request size."
+        },
+        "storageClassName": {
+          "type": "string",
+          "description": "StorageClass name. Leave empty to use the cluster default.",
+          "default": ""
+        }
+      }
+    }
+  }
+}

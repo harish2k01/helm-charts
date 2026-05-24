@@ -1,0 +1,13 @@
+AdGuard Home has been installed.
+
+The default Service exposes:
+  - TCP 3000 for the first-run setup and admin UI
+  - TCP/UDP 53 for DNS
+
+To reach the setup UI inside the cluster:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "adguard-home.fullname" . }} 3000:3000
+
+Then open:
+
+  http://127.0.0.1:3000/

@@ -1,0 +1,24 @@
+apiVersion: v2
+name: adguard-home
+description: Deploys AdGuard Home DNS filtering on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/adguard-home.png
+version: 0.1.0
+appVersion: "v0.107.76"
+home: https://adguard.com/adguard-home/overview.html
+sources:
+  - https://github.com/AdguardTeam/AdGuardHome
+  - https://hub.docker.com/r/adguard/adguardhome
+keywords:
+  - adguard-home
+  - adguard
+  - dns
+  - filtering
+  - privacy
+annotations:
+  artifacthub.io/license: GPL-3.0
+  artifacthub.io/images: |
+    - name: adguard-home
+      image: adguard/adguardhome:v0.107.76
+maintainers:
+  - name: harish2k01
