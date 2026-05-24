@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "homepage values",
+  "description": "Configurable Helm values for the homepage chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of Homepage pod replicas to run. Consider sticky sessions when using more than one replica.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for Homepage.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository.",
+          "default": "ghcr.io/gethomepage/homepage"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "v1.13.1"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional image pull secrets for private registries.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in generated resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "serviceAccount": {
+      "type": "object",
+      "description": "ServiceAccount settings used by Homepage for Kubernetes API access.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create a ServiceAccount for Homepage.",
+          "default": true
+        },
+        "automount": {
+          "type": "boolean",
+          "description": "Automount the ServiceAccount token into the pod.",
+          "default": true
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional ServiceAccount annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "name": {
+          "type": "string",
+          "description": "Existing or custom ServiceAccount name.",
+          "default": ""
+        }
+      }
+    },
+    "rbac": {
+      "type": "object",
+      "description": "ClusterRole and ClusterRoleBinding settings for Kubernetes discovery.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create RBAC resources for Homepage Kubernetes discovery.",
+          "default": true
+        },
+        "gatewayApi": {
+          "type": "boolean",
+          "description": "Include Gateway API read permissions.",
+          "default": true
+        },
+        "traefik": {
+          "type": "boolean",
+          "description": "Include Traefik IngressRoute read permissions.",
+          "default": true
+        },
+        "metrics": {
+          "type": "boolean",
+          "description": "Include metrics.k8s.io read permissions for resource widgets.",
+          "default": true
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "description": "Additional non-secret environment variables.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Secret or ConfigMap references used as environment sources.",
+      "default": [],
+      "items": {}
+    },
+    "homepage": {
+      "type": "object",
+      "description": "Homepage-specific configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "allowedHosts": {
+          "type": "array",
+          "description": "Additional hosts allowed by HOMEPAGE_ALLOWED_HOSTS.",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "existingConfigMap": {
+          "type": "string",
+          "description": "Existing ConfigMap containing Homepage config files.",
+          "default": ""
+        },
+        "config": {
+          "type": "object",
+          "description": "Generated Homepage configuration files.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Generate and mount Homepage config files from this chart.",
+              "default": true
+            },
+            "files": {
+              "type": "object",
+              "description": "Map of filename to file content mounted under /app/config.",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "properties": {}
+            }
+          }
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port.",
+          "default": 3000
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container target port.",
+          "default": 3000
+        },
+        "portName": {
+          "type": "string",
+          "description": "Service port name.",
+          "default": "http"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional Service annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "extraContainerPorts": {
+      "type": "array",
+      "description": "Additional container ports.",
+      "default": [],
+      "items": {}
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "config": {
+          "type": "object",
+          "description": "Persistent volume for /app/config.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Create or mount a config PVC.",
+              "default": false
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container path for the config PVC.",
+              "default": "/app/config"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing config PVC name.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PVC storage request.",
+              "default": "1Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Empty uses the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional pod volumes.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional container volume mounts.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Ingress configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional Ingress annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host rules.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "Ingress TLS entries.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create an HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional HTTPRoute annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "HTTPRoute hostnames.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute rules.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "Container CPU and memory requests and limits.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity settings.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

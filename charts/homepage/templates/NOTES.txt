@@ -1,0 +1,13 @@
+Homepage is deployed.
+
+Service:
+  {{ include "homepage.fullname" . }}:{{ .Values.service.port }}
+
+If exposing Homepage through Ingress or HTTPRoute, add the exact hostnames to:
+
+  homepage.allowedHosts
+
+Example:
+
+  helm upgrade --install {{ .Release.Name }} {{ .Chart.Name }} \
+    --set homepage.allowedHosts[0]=homepage.example.com
