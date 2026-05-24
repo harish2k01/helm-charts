@@ -1,0 +1,22 @@
+apiVersion: v2
+name: syncthing
+description: Deploys Syncthing continuous file synchronization on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/syncthing.png
+version: 0.1.0
+appVersion: "2.1.0"
+home: https://syncthing.net
+sources:
+  - https://github.com/syncthing/syncthing
+keywords:
+  - syncthing
+  - synchronization
+  - files
+  - backup
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: syncthing
+      image: syncthing/syncthing:2.1.0
+maintainers:
+  - name: harish2k01
