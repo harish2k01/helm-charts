@@ -117,6 +117,8 @@ jobs:
 
       - name: Build Helm repository
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
 
@@ -143,6 +145,99 @@ jobs:
               fi
             done
           fi
+
+          node <<'NODE'
+          const fs = require('fs');
+          const https = require('https');
+          const path = require('path');
+
+          const token = process.env.GITHUB_TOKEN;
+          const repository = process.env.GITHUB_REPOSITORY || '';
+          const [owner, repo] = repository.split('/');
+
+          if (!token || !owner || !repo) {
+            throw new Error('GITHUB_TOKEN and GITHUB_REPOSITORY are required to restore release assets.');
+          }
+
+          function request(url, headers = {}) {
+            return new Promise((resolve, reject) => {
+              const options = {
+                headers: {
+                  'Accept': 'application/vnd.github+json',
+                  'Authorization': `Bearer ${token}`,
+                  'User-Agent': 'helm-charts-release-workflow',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  ...headers,
+                },
+              };
+
+              https.get(url, options, (response) => {
+                if ([301, 302, 303, 307, 308].includes(response.statusCode)) {
+                  response.resume();
+                  request(response.headers.location, headers).then(resolve, reject);
+                  return;
+                }
+
+                if (response.statusCode < 200 || response.statusCode >= 300) {
+                  response.resume();
+                  reject(new Error(`GET ${url} failed with ${response.statusCode}`));
+                  return;
+                }
+
+                resolve(response);
+              }).on('error', reject);
+            });
+          }
+
+          async function requestJson(url) {
+            const response = await request(url);
+            let body = '';
+            for await (const chunk of response) {
+              body += chunk;
+            }
+            return JSON.parse(body);
+          }
+
+          async function download(url, destination) {
+            const response = await request(url, { Accept: 'application/octet-stream' });
+            await new Promise((resolve, reject) => {
+              const file = fs.createWriteStream(destination);
+              response.pipe(file);
+              file.on('finish', resolve);
+              file.on('error', reject);
+            });
+          }
+
+          async function main() {
+            for (let page = 1; ; page += 1) {
+              const releases = await requestJson(`https://api.github.com/repos/${owner}/${repo}/releases?per_page=100&page=${page}`);
+              if (releases.length === 0) {
+                break;
+              }
+
+              for (const release of releases) {
+                for (const asset of release.assets || []) {
+                  if (!asset.name.endsWith('.tgz') && !asset.name.endsWith('.tgz.prov')) {
+                    continue;
+                  }
+
+                  const destination = path.join('_site', asset.name);
+                  if (fs.existsSync(destination)) {
+                    continue;
+                  }
+
+                  console.log(`Restoring release asset ${asset.name} from ${release.tag_name}`);
+                  await download(asset.url, destination);
+                }
+              }
+            }
+          }
+
+          main().catch((error) => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
 
           for chart in charts/*; do
             if [ -d "$chart" ]; then
