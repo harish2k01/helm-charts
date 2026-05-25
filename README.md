@@ -4,7 +4,7 @@
 [![Release Charts](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml)
 [![Lint Charts](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg)](https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml)
 
-Reliable Helm charts for self-hosted Kubernetes applications. This repository provides practical, versioned charts for media automation, dashboards, networking, monitoring, finance, storage, security, and homelab services.
+Reliable Helm charts for self-hosted Kubernetes applications. This repository provides practical, versioned charts for media automation, analytics, dashboards, networking, monitoring, finance, storage, security, and homelab services.
 
 Every chart is published through both the classic Helm repository format and as an OCI chart in GHCR, so users can install through the workflow they already prefer.
 
@@ -75,6 +75,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`ghost`](charts/ghost) | `0.1.2` | `6.39.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
 | [`homepage`](charts/homepage) | `0.1.0` | `1.13.1` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Media | Deploys Jellyfin media server with library mount support. |
+| [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.0` | `0.1.0` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
@@ -87,7 +88,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`syncthing`](charts/syncthing) | `0.1.0` | `2.1.0` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
 | [`tailscale`](charts/tailscale) | `0.1.2` | `v1.96.5` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
-| [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.0` | `0.1.0` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
+| [`umami`](charts/umami) | `0.1.0` | `3.1.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.2` | `2.2.1-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
 | [`vaultwarden`](charts/vaultwarden) | `0.1.0` | `1.36.0` | Security | Deploys Vaultwarden password management on Kubernetes. |
 

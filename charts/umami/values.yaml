@@ -1,0 +1,142 @@
+# Run one replica by default. Keep this at 1 when using the bundled PostgreSQL
+# database; increase only when Umami and your database setup are ready for it.
+replicaCount: 1
+
+image:
+  # Official Umami container image published by the upstream project.
+  repository: ghcr.io/umami-software/umami
+  pullPolicy: IfNotPresent
+  # Pin this to a concrete version for repeatable installs and safer upgrades.
+  tag: "3.1.0"
+
+# Set when pulling images from a private registry or mirror.
+imagePullSecrets: []
+
+# Override generated resource names when embedding this chart in larger releases.
+nameOverride: ""
+fullnameOverride: ""
+
+# Add annotations or labels consumed by policy engines, reloaders, or operators.
+podAnnotations: {}
+podLabels: {}
+
+# Pod and container security context knobs are left empty so clusters can apply
+# their own defaults through admission policies.
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# Umami v3 requires PostgreSQL. Use the bundled PostgreSQL for simple installs,
+# or disable it and enable database.external for a managed database service.
+database:
+  postgresql:
+    enabled: true
+    image:
+      repository: postgres
+      pullPolicy: IfNotPresent
+      tag: "17-alpine"
+    service:
+      port: 5432
+    auth:
+      database: umami
+      username: umami
+      # Default is for quick evaluation. Use existingSecret or override this for production.
+      password: "umami"
+      # Existing secret must contain passwordKey.
+      existingSecret: ""
+      passwordKey: db-password
+    persistence:
+      enabled: true
+      storageClassName: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      existingClaim: ""
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podSecurityContext: {}
+    healthcheck:
+      enabled: true
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  external:
+    enabled: false
+    # Full PostgreSQL connection URL. Prefer existingSecret for production.
+    url: ""
+    # Existing secret must contain databaseUrlKey.
+    existingSecret: ""
+    databaseUrlKey: DATABASE_URL
+
+umami:
+  # Use an existing Secret for APP_SECRET in production. The secret must contain appSecretKey.
+  secrets:
+    existingSecret: ""
+    appSecretKey: APP_SECRET
+    # Change rolloutToken when externally managed secrets change and pods should restart.
+    rolloutToken: "1"
+    inline:
+      # Replace this before exposing Umami. Generate with: openssl rand -hex 32
+      APP_SECRET: "replace-me-with-a-random-string"
+
+  # Non-secret Umami runtime environment variables. DATABASE_URL and APP_SECRET
+  # are managed by the chart from database and secret settings.
+  env:
+    PORT: "3000"
+    DISABLE_TELEMETRY: "1"
+
+  # Additional envFrom entries for ConfigMaps or Secrets managed outside the chart.
+  envFrom: []
+
+  # Extra volumes are useful for mounting custom CA bundles or geo databases.
+  extraVolumes: []
+  extraVolumeMounts: []
+
+  resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /api/heartbeat
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/heartbeat
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

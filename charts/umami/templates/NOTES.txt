@@ -1,0 +1,11 @@
+Umami has been installed.
+
+Default login after first startup:
+  username: admin
+  password: umami
+
+Replace umami.secrets.inline.APP_SECRET and database.postgresql.auth.password
+before exposing this deployment beyond local evaluation.
+
+To access Umami inside the cluster:
+  http://{{ include "umami.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}

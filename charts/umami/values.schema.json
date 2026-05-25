@@ -1,0 +1,498 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "umami values",
+  "description": "Configurable Helm values for the umami chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of Umami application replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for Umami.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository.",
+          "default": "ghcr.io/umami-software/umami"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy.",
+          "default": "IfNotPresent"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this for repeatable installs.",
+          "default": "3.1.0"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Image pull secrets for private registries.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in generated resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to Umami pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to Umami pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context for Umami.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context for Umami.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Service type such as ClusterIP, NodePort, or LoadBalancer.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port.",
+          "default": 3000
+        },
+        "targetPort": {
+          "type": "integer",
+          "description": "Umami container port receiving Service traffic.",
+          "default": 3000
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Ingress resource configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations applied to the Ingress.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "Ingress TLS configuration.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Annotations applied to the HTTPRoute.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs for this HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute rules.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "description": "PostgreSQL database configuration. Enable either postgresql or external.",
+      "additionalProperties": true,
+      "properties": {
+        "postgresql": {
+          "type": "object",
+          "description": "Bundled PostgreSQL StatefulSet configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Deploy a bundled PostgreSQL StatefulSet.",
+              "default": true
+            },
+            "image": {
+              "type": "object",
+              "description": "PostgreSQL image settings.",
+              "additionalProperties": true,
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "description": "PostgreSQL image repository.",
+                  "default": "postgres"
+                },
+                "pullPolicy": {
+                  "type": "string",
+                  "description": "PostgreSQL image pull policy.",
+                  "default": "IfNotPresent"
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "PostgreSQL image tag.",
+                  "default": "17-alpine"
+                }
+              }
+            },
+            "service": {
+              "type": "object",
+              "description": "PostgreSQL service settings.",
+              "additionalProperties": true,
+              "properties": {
+                "port": {
+                  "type": "integer",
+                  "description": "PostgreSQL service port.",
+                  "default": 5432
+                }
+              }
+            },
+            "auth": {
+              "type": "object",
+              "description": "PostgreSQL authentication settings.",
+              "additionalProperties": true,
+              "properties": {
+                "database": {
+                  "type": "string",
+                  "description": "PostgreSQL database name.",
+                  "default": "umami"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "PostgreSQL username.",
+                  "default": "umami"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Inline PostgreSQL password for evaluation. Prefer existingSecret for production.",
+                  "default": "umami"
+                },
+                "existingSecret": {
+                  "type": "string",
+                  "description": "Existing Secret containing the PostgreSQL password.",
+                  "default": ""
+                },
+                "passwordKey": {
+                  "type": "string",
+                  "description": "Secret key containing the PostgreSQL password.",
+                  "default": "db-password"
+                }
+              }
+            },
+            "persistence": {
+              "type": "object",
+              "description": "PostgreSQL persistent storage settings.",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Enable persistent storage for PostgreSQL.",
+                  "default": true
+                },
+                "storageClassName": {
+                  "type": "string",
+                  "description": "StorageClass name. Empty uses the cluster default.",
+                  "default": ""
+                },
+                "accessModes": {
+                  "type": "array",
+                  "description": "PVC access modes.",
+                  "default": [
+                    "ReadWriteOnce"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "size": {
+                  "type": "string",
+                  "description": "PVC storage request size.",
+                  "default": "8Gi"
+                },
+                "existingClaim": {
+                  "type": "string",
+                  "description": "Existing PVC to reuse instead of creating a volumeClaimTemplate.",
+                  "default": ""
+                }
+              }
+            },
+            "resources": {
+              "type": "object",
+              "description": "PostgreSQL CPU and memory requests and limits.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "nodeSelector": {
+              "type": "object",
+              "description": "PostgreSQL node selector.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "tolerations": {
+              "type": "array",
+              "description": "PostgreSQL tolerations.",
+              "default": [],
+              "items": {}
+            },
+            "affinity": {
+              "type": "object",
+              "description": "PostgreSQL affinity rules.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "podSecurityContext": {
+              "type": "object",
+              "description": "PostgreSQL pod security context.",
+              "additionalProperties": true,
+              "properties": {}
+            },
+            "healthcheck": {
+              "type": "object",
+              "description": "PostgreSQL probe timing settings.",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Enable PostgreSQL probes.",
+                  "default": true
+                },
+                "interval": {
+                  "type": "string",
+                  "description": "Probe interval, expressed with an s suffix.",
+                  "default": "10s"
+                },
+                "retries": {
+                  "type": "integer",
+                  "description": "Probe failure threshold.",
+                  "default": 5
+                },
+                "timeout": {
+                  "type": "string",
+                  "description": "Probe timeout, expressed with an s suffix.",
+                  "default": "5s"
+                }
+              }
+            }
+          }
+        },
+        "external": {
+          "type": "object",
+          "description": "External PostgreSQL DATABASE_URL configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Use an external PostgreSQL DATABASE_URL instead of bundled PostgreSQL.",
+              "default": false
+            },
+            "url": {
+              "type": "string",
+              "description": "Inline PostgreSQL connection URL. Prefer existingSecret for production.",
+              "default": ""
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Existing Secret containing DATABASE_URL.",
+              "default": ""
+            },
+            "databaseUrlKey": {
+              "type": "string",
+              "description": "Secret key containing DATABASE_URL.",
+              "default": "DATABASE_URL"
+            }
+          }
+        }
+      }
+    },
+    "umami": {
+      "type": "object",
+      "description": "Umami application-specific configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "secrets": {
+          "type": "object",
+          "description": "Secret management for Umami application secrets.",
+          "additionalProperties": true,
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "description": "Existing Secret containing APP_SECRET.",
+              "default": ""
+            },
+            "appSecretKey": {
+              "type": "string",
+              "description": "Secret key containing APP_SECRET.",
+              "default": "APP_SECRET"
+            },
+            "rolloutToken": {
+              "type": "string",
+              "description": "Arbitrary token used to roll pods when externally managed secrets change.",
+              "default": "1"
+            },
+            "inline": {
+              "type": "object",
+              "description": "Inline app secrets for evaluation. Prefer existingSecret for production.",
+              "additionalProperties": true,
+              "properties": {
+                "APP_SECRET": {
+                  "type": "string",
+                  "description": "Random string used by Umami to secure authentication tokens.",
+                  "default": "replace-me-with-a-random-string"
+                }
+              }
+            }
+          }
+        },
+        "env": {
+          "type": "object",
+          "description": "Non-secret Umami runtime environment variables.",
+          "additionalProperties": true,
+          "properties": {
+            "PORT": {
+              "type": "string",
+              "description": "HTTP port used by the Umami process.",
+              "default": "3000"
+            },
+            "DISABLE_TELEMETRY": {
+              "type": "string",
+              "description": "Disable upstream telemetry when set to 1.",
+              "default": "1"
+            }
+          }
+        },
+        "envFrom": {
+          "type": "array",
+          "description": "Additional envFrom entries for ConfigMaps or Secrets.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumes": {
+          "type": "array",
+          "description": "Additional pod volumes.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "description": "Additional Umami container volume mounts.",
+          "default": [],
+          "items": {}
+        },
+        "resources": {
+          "type": "object",
+          "description": "Umami CPU and memory requests and limits.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe for Umami.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe for Umami.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector for Umami pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Tolerations for Umami pods.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Affinity rules for Umami pods.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}
