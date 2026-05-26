@@ -1,6 +1,6 @@
 # AdGuard Home Helm Chart
 
-This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) using the official container image, with persistent work and configuration volumes, DNS service ports, and optional Ingress or Gateway API HTTPRoute access for the web UI.
+This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) using the official container image, with persistent work and configuration storage, DNS service ports, and optional Ingress or Gateway API HTTPRoute access for the web UI.
 
 > [!NOTE]
 > This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
@@ -18,7 +18,7 @@ helm install adguard-home harish2k01/adguard-home
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.0
+helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.2
 ```
 
 ## First Run
@@ -122,28 +122,26 @@ ingress:
 
 ## Persistence
 
-The official image uses separate work and configuration directories.
+The official image uses separate work and configuration directories. This chart creates one PVC and mounts those directories from separate folders inside that claim.
 
 ```yaml
 persistence:
+  size: 3Gi
   work:
-    enabled: true
-    size: 2Gi
+    subPath: work
   conf:
-    enabled: true
-    size: 1Gi
+    subPath: conf
 ```
 
-To reuse existing PVCs:
+To reuse an existing PVC:
 
 ```yaml
 persistence:
+  existingClaim: adguard-home-data
   work:
-    enabled: true
-    existingClaim: adguard-home-work
+    subPath: work
   conf:
-    enabled: true
-    existingClaim: adguard-home-conf
+    subPath: conf
 ```
 
 ## Values
@@ -159,12 +157,13 @@ persistence:
 | `service.externalTrafficPolicy` | string | `""` | External traffic policy for NodePort or LoadBalancer services |
 | `service.ports` | list | HTTP setup and DNS ports | Service ports to expose |
 | `containerPorts` | list | HTTP setup and DNS ports | Container ports exposed by the pod |
-| `persistence.work.enabled` | bool | `true` | Create or mount the work PVC |
-| `persistence.work.existingClaim` | string | `""` | Existing PVC for `/opt/adguardhome/work` |
-| `persistence.work.size` | string | `2Gi` | Work PVC size |
-| `persistence.conf.enabled` | bool | `true` | Create or mount the configuration PVC |
-| `persistence.conf.existingClaim` | string | `""` | Existing PVC for `/opt/adguardhome/conf` |
-| `persistence.conf.size` | string | `1Gi` | Configuration PVC size |
+| `persistence.existingClaim` | string | `""` | Existing PVC to reuse for all AdGuard Home data |
+| `persistence.size` | string | `3Gi` | Data PVC size |
+| `persistence.storageClassName` | string | `""` | StorageClass for the data PVC |
+| `persistence.work.mountPath` | string | `/opt/adguardhome/work` | Work directory mount path |
+| `persistence.work.subPath` | string | `work` | PVC directory mounted at `/opt/adguardhome/work` |
+| `persistence.conf.mountPath` | string | `/opt/adguardhome/conf` | Configuration directory mount path |
+| `persistence.conf.subPath` | string | `conf` | PVC directory mounted at `/opt/adguardhome/conf` |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress for the web UI |
 | `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute for the web UI |
 | `livenessProbe` | object | TCP check on `http-setup` | Container liveness probe |

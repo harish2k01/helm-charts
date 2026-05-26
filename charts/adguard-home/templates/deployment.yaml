@@ -1,7 +1,8 @@
 apiVersion: apps/v1
+{{- $fullName := include "adguard-home.fullname" . }}
 kind: Deployment
 metadata:
-  name: {{ include "adguard-home.fullname" . }}
+  name: {{ $fullName }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "adguard-home.labels" . | nindent 4 }}
@@ -73,36 +74,23 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumeMounts }}
           volumeMounts:
-            {{- if .Values.persistence.work.enabled }}
-            - name: work
+            - name: data
               mountPath: {{ .Values.persistence.work.mountPath }}
-            {{- end }}
-            {{- if .Values.persistence.conf.enabled }}
-            - name: conf
+              subPath: {{ .Values.persistence.work.subPath | quote }}
+            - name: data
               mountPath: {{ .Values.persistence.conf.mountPath }}
-            {{- end }}
+              subPath: {{ .Values.persistence.conf.subPath | quote }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- end }}
-      {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumes }}
       volumes:
-        {{- if .Values.persistence.work.enabled }}
-        - name: work
+        - name: data
           persistentVolumeClaim:
-            claimName: {{ default (printf "%s-work" (include "adguard-home.fullname" .)) .Values.persistence.work.existingClaim }}
-        {{- end }}
-        {{- if .Values.persistence.conf.enabled }}
-        - name: conf
-          persistentVolumeClaim:
-            claimName: {{ default (printf "%s-conf" (include "adguard-home.fullname" .)) .Values.persistence.conf.existingClaim }}
-        {{- end }}
+            claimName: {{ default (printf "%s-data" $fullName) .Values.persistence.existingClaim }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

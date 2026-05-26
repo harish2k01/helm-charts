@@ -1,37 +1,19 @@
-{{- if and .Values.persistence.work.enabled (not .Values.persistence.work.existingClaim) }}
+{{- $fullName := include "adguard-home.fullname" . -}}
+{{- if not .Values.persistence.existingClaim }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "adguard-home.fullname" . }}-work
+  name: {{ $fullName }}-data
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "adguard-home.labels" . | nindent 4 }}
 spec:
   accessModes:
-    {{- toYaml .Values.persistence.work.accessModes | nindent 4 }}
+    {{- toYaml .Values.persistence.accessModes | nindent 4 }}
   resources:
     requests:
-      storage: {{ .Values.persistence.work.size }}
-  {{- with .Values.persistence.work.storageClassName }}
-  storageClassName: {{ . | quote }}
-  {{- end }}
----
-{{- end }}
-{{- if and .Values.persistence.conf.enabled (not .Values.persistence.conf.existingClaim) }}
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ include "adguard-home.fullname" . }}-conf
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "adguard-home.labels" . | nindent 4 }}
-spec:
-  accessModes:
-    {{- toYaml .Values.persistence.conf.accessModes | nindent 4 }}
-  resources:
-    requests:
-      storage: {{ .Values.persistence.conf.size }}
-  {{- with .Values.persistence.conf.storageClassName }}
+      storage: {{ .Values.persistence.size }}
+  {{- with .Values.persistence.storageClassName }}
   storageClassName: {{ . | quote }}
   {{- end }}
 {{- end }}
