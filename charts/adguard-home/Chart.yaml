@@ -3,7 +3,7 @@ name: adguard-home
 description: Deploys AdGuard Home DNS filtering on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/adguard-home.png
-version: 0.1.0
+version: 0.1.1
 appVersion: "v0.107.76"
 home: https://adguard.com/adguard-home/overview.html
 sources:

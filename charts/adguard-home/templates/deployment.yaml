@@ -1,7 +1,9 @@
 apiVersion: apps/v1
+{{- $fullName := include "adguard-home.fullname" . }}
+{{- $sharedPersistence := and .Values.persistence.shared.enabled (or .Values.persistence.work.enabled .Values.persistence.conf.enabled) }}
 kind: Deployment
 metadata:
-  name: {{ include "adguard-home.fullname" . }}
+  name: {{ $fullName }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "adguard-home.labels" . | nindent 4 }}
@@ -76,12 +78,18 @@ spec:
           {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumeMounts }}
           volumeMounts:
             {{- if .Values.persistence.work.enabled }}
-            - name: work
+            - name: {{ ternary "data" "work" $sharedPersistence }}
               mountPath: {{ .Values.persistence.work.mountPath }}
+              {{- if $sharedPersistence }}
+              subPath: {{ .Values.persistence.work.subPath | quote }}
+              {{- end }}
             {{- end }}
             {{- if .Values.persistence.conf.enabled }}
-            - name: conf
+            - name: {{ ternary "data" "conf" $sharedPersistence }}
               mountPath: {{ .Values.persistence.conf.mountPath }}
+              {{- if $sharedPersistence }}
+              subPath: {{ .Values.persistence.conf.subPath | quote }}
+              {{- end }}
             {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
@@ -89,15 +97,21 @@ spec:
           {{- end }}
       {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumes }}
       volumes:
+        {{- if $sharedPersistence }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-data" $fullName) .Values.persistence.shared.existingClaim }}
+        {{- else }}
         {{- if .Values.persistence.work.enabled }}
         - name: work
           persistentVolumeClaim:
-            claimName: {{ default (printf "%s-work" (include "adguard-home.fullname" .)) .Values.persistence.work.existingClaim }}
+            claimName: {{ default (printf "%s-work" $fullName) .Values.persistence.work.existingClaim }}
         {{- end }}
         {{- if .Values.persistence.conf.enabled }}
         - name: conf
           persistentVolumeClaim:
-            claimName: {{ default (printf "%s-conf" (include "adguard-home.fullname" .)) .Values.persistence.conf.existingClaim }}
+            claimName: {{ default (printf "%s-conf" $fullName) .Values.persistence.conf.existingClaim }}
+        {{- end }}
         {{- end }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}

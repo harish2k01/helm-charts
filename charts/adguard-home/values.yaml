@@ -69,9 +69,19 @@ containerPorts:
 
 # Persistent data and query state stored by AdGuard Home.
 persistence:
+  # Optional single PVC mode. When enabled, the work and conf directories mount
+  # the same claim with their respective subPath values.
+  shared:
+    enabled: false
+    existingClaim: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 3Gi
+    storageClassName: ""
   work:
     enabled: true
     mountPath: /opt/adguardhome/work
+    subPath: work
     existingClaim: ""
     accessModes:
       - ReadWriteOnce
@@ -80,6 +90,7 @@ persistence:
   conf:
     enabled: true
     mountPath: /opt/adguardhome/conf
+    subPath: conf
     existingClaim: ""
     accessModes:
       - ReadWriteOnce

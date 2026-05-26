@@ -1,6 +1,6 @@
 # AdGuard Home Helm Chart
 
-This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) using the official container image, with persistent work and configuration volumes, DNS service ports, and optional Ingress or Gateway API HTTPRoute access for the web UI.
+This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) using the official container image, with persistent work and configuration storage, DNS service ports, and optional Ingress or Gateway API HTTPRoute access for the web UI.
 
 > [!NOTE]
 > This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
@@ -18,7 +18,7 @@ helm install adguard-home harish2k01/adguard-home
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.0
+helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.1
 ```
 
 ## First Run
@@ -122,7 +122,7 @@ ingress:
 
 ## Persistence
 
-The official image uses separate work and configuration directories.
+The official image uses separate work and configuration directories. By default, the chart creates one PVC for each directory.
 
 ```yaml
 persistence:
@@ -132,6 +132,21 @@ persistence:
   conf:
     enabled: true
     size: 1Gi
+```
+
+To store both directories in one PVC, enable shared persistence. The `work.subPath` and `conf.subPath` directories are created inside the shared claim by Kubernetes when mounted.
+
+```yaml
+persistence:
+  shared:
+    enabled: true
+    size: 3Gi
+  work:
+    enabled: true
+    subPath: work
+  conf:
+    enabled: true
+    subPath: conf
 ```
 
 To reuse existing PVCs:
@@ -144,6 +159,21 @@ persistence:
   conf:
     enabled: true
     existingClaim: adguard-home-conf
+```
+
+To reuse one existing PVC:
+
+```yaml
+persistence:
+  shared:
+    enabled: true
+    existingClaim: adguard-home-data
+  work:
+    enabled: true
+    subPath: work
+  conf:
+    enabled: true
+    subPath: conf
 ```
 
 ## Values
@@ -159,12 +189,17 @@ persistence:
 | `service.externalTrafficPolicy` | string | `""` | External traffic policy for NodePort or LoadBalancer services |
 | `service.ports` | list | HTTP setup and DNS ports | Service ports to expose |
 | `containerPorts` | list | HTTP setup and DNS ports | Container ports exposed by the pod |
-| `persistence.work.enabled` | bool | `true` | Create or mount the work PVC |
+| `persistence.shared.enabled` | bool | `false` | Use one PVC for all enabled data mounts |
+| `persistence.shared.existingClaim` | string | `""` | Existing shared PVC to reuse |
+| `persistence.shared.size` | string | `3Gi` | Shared PVC size |
+| `persistence.work.enabled` | bool | `true` | Create or mount the work PVC, or mount the work subPath when shared persistence is enabled |
 | `persistence.work.existingClaim` | string | `""` | Existing PVC for `/opt/adguardhome/work` |
 | `persistence.work.size` | string | `2Gi` | Work PVC size |
-| `persistence.conf.enabled` | bool | `true` | Create or mount the configuration PVC |
+| `persistence.work.subPath` | string | `work` | Shared PVC directory mounted at `/opt/adguardhome/work` |
+| `persistence.conf.enabled` | bool | `true` | Create or mount the configuration PVC, or mount the configuration subPath when shared persistence is enabled |
 | `persistence.conf.existingClaim` | string | `""` | Existing PVC for `/opt/adguardhome/conf` |
 | `persistence.conf.size` | string | `1Gi` | Configuration PVC size |
+| `persistence.conf.subPath` | string | `conf` | Shared PVC directory mounted at `/opt/adguardhome/conf` |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress for the web UI |
 | `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute for the web UI |
 | `livenessProbe` | object | TCP check on `http-setup` | Container liveness probe |

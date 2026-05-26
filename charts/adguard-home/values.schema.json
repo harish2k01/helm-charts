@@ -171,6 +171,10 @@
       "description": "Persistent storage configuration.",
       "additionalProperties": true,
       "properties": {
+        "shared": {
+          "$ref": "#/definitions/sharedPersistentVolume",
+          "description": "Optional single PVC shared by the work and configuration mounts using subPath."
+        },
         "work": {
           "$ref": "#/definitions/persistentVolume",
           "description": "Persistent volume for AdGuard Home work data."
@@ -326,6 +330,10 @@
           "type": "string",
           "description": "Container filesystem path for this volume."
         },
+        "subPath": {
+          "type": "string",
+          "description": "Directory inside the shared PVC to mount when persistence.shared.enabled is true."
+        },
         "existingClaim": {
           "type": "string",
           "description": "Existing PersistentVolumeClaim name to reuse.",
@@ -348,6 +356,42 @@
         "storageClassName": {
           "type": "string",
           "description": "StorageClass name. Leave empty to use the cluster default.",
+          "default": ""
+        }
+      }
+    },
+    "sharedPersistentVolume": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to use one PersistentVolumeClaim for all enabled AdGuard Home data mounts.",
+          "default": false
+        },
+        "existingClaim": {
+          "type": "string",
+          "description": "Existing shared PersistentVolumeClaim name to reuse.",
+          "default": ""
+        },
+        "accessModes": {
+          "type": "array",
+          "description": "PersistentVolumeClaim access modes for the shared claim.",
+          "default": [
+            "ReadWriteOnce"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "size": {
+          "type": "string",
+          "description": "PersistentVolumeClaim storage request size for the shared claim.",
+          "default": "3Gi"
+        },
+        "storageClassName": {
+          "type": "string",
+          "description": "StorageClass name for the shared claim. Leave empty to use the cluster default.",
           "default": ""
         }
       }
