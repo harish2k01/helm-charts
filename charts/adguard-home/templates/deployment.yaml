@@ -1,6 +1,5 @@
 apiVersion: apps/v1
 {{- $fullName := include "adguard-home.fullname" . }}
-{{- $sharedPersistence := and .Values.persistence.shared.enabled (or .Values.persistence.work.enabled .Values.persistence.conf.enabled) }}
 kind: Deployment
 metadata:
   name: {{ $fullName }}
@@ -75,48 +74,23 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumeMounts }}
           volumeMounts:
-            {{- if .Values.persistence.work.enabled }}
-            - name: {{ ternary "data" "work" $sharedPersistence }}
+            - name: data
               mountPath: {{ .Values.persistence.work.mountPath }}
-              {{- if $sharedPersistence }}
               subPath: {{ .Values.persistence.work.subPath | quote }}
-              {{- end }}
-            {{- end }}
-            {{- if .Values.persistence.conf.enabled }}
-            - name: {{ ternary "data" "conf" $sharedPersistence }}
+            - name: data
               mountPath: {{ .Values.persistence.conf.mountPath }}
-              {{- if $sharedPersistence }}
               subPath: {{ .Values.persistence.conf.subPath | quote }}
-              {{- end }}
-            {{- end }}
             {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- end }}
-      {{- if or .Values.persistence.work.enabled .Values.persistence.conf.enabled .Values.extraVolumes }}
       volumes:
-        {{- if $sharedPersistence }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ default (printf "%s-data" $fullName) .Values.persistence.shared.existingClaim }}
-        {{- else }}
-        {{- if .Values.persistence.work.enabled }}
-        - name: work
-          persistentVolumeClaim:
-            claimName: {{ default (printf "%s-work" $fullName) .Values.persistence.work.existingClaim }}
-        {{- end }}
-        {{- if .Values.persistence.conf.enabled }}
-        - name: conf
-          persistentVolumeClaim:
-            claimName: {{ default (printf "%s-conf" $fullName) .Values.persistence.conf.existingClaim }}
-        {{- end }}
-        {{- end }}
+            claimName: {{ default (printf "%s-data" $fullName) .Values.persistence.existingClaim }}
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

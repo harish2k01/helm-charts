@@ -67,35 +67,19 @@ containerPorts:
     containerPort: 53
     protocol: UDP
 
-# Persistent data and query state stored by AdGuard Home.
+# Persistent data and query state stored by AdGuard Home in one PVC.
 persistence:
-  # Optional single PVC mode. When enabled, the work and conf directories mount
-  # the same claim with their respective subPath values.
-  shared:
-    enabled: false
-    existingClaim: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 3Gi
-    storageClassName: ""
+  existingClaim: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 3Gi
+  storageClassName: ""
   work:
-    enabled: true
     mountPath: /opt/adguardhome/work
     subPath: work
-    existingClaim: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 2Gi
-    storageClassName: ""
   conf:
-    enabled: true
     mountPath: /opt/adguardhome/conf
     subPath: conf
-    existingClaim: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 1Gi
-    storageClassName: ""
 
 # Advanced volume hooks for custom certificates, config files, or host mounts.
 extraVolumes: []
