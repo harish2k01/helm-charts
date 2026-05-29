@@ -6,7 +6,7 @@ replicaCount: 1
 # so Renovate can detect and raise PRs for new Tailscale releases.
 image:
   repository: tailscale/tailscale
-  tag: "v1.96.5"
+  tag: "v1.98.4"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
