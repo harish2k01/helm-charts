@@ -1,0 +1,20 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "owncloud.mariadbServiceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "owncloud.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mariadb
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+      name: mysql
+  selector:
+    {{- include "owncloud.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: mariadb
+{{- end }}

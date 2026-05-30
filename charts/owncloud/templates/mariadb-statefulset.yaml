@@ -1,0 +1,139 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "owncloud.mariadbServiceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "owncloud.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mariadb
+spec:
+  serviceName: {{ include "owncloud.mariadbServiceName" . }}
+  replicas: 1
+  podManagementPolicy: {{ .Values.mariadb.podManagementPolicy }}
+  updateStrategy:
+    {{- toYaml .Values.mariadb.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "owncloud.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mariadb
+  template:
+    metadata:
+      {{- with .Values.mariadb.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "owncloud.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mariadb
+        {{- with .Values.mariadb.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.mariadb.terminationGracePeriodSeconds }}
+      {{- with .Values.mariadb.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: mariadb
+          image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
+          imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
+          {{- with .Values.mariadb.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.mariadb.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: mysql
+              containerPort: {{ .Values.mariadb.service.port }}
+              protocol: TCP
+          env:
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.name | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.username | quote }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "owncloud.databaseSecretName" . }}
+                  key: {{ .Values.database.passwordKey }}
+            {{- if .Values.mariadb.auth.rootPassword }}
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "owncloud.databaseSecretName" . }}
+                  key: {{ .Values.mariadb.auth.rootPasswordKey }}
+            {{- else }}
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "true"
+            {{- end }}
+            {{- with .Values.mariadb.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.mariadb.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.mariadb.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.mariadb.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+            {{- with .Values.mariadb.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      {{- if or .Values.mariadb.persistence.existingClaim (not .Values.mariadb.persistence.enabled) .Values.mariadb.extraVolumes }}
+      volumes:
+        {{- if or .Values.mariadb.persistence.existingClaim (not .Values.mariadb.persistence.enabled) }}
+        - name: data
+          {{- if .Values.mariadb.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.mariadb.persistence.existingClaim }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- end }}
+        {{- with .Values.mariadb.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      {{- with .Values.mariadb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mariadb.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mariadb.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if and .Values.mariadb.persistence.enabled (not .Values.mariadb.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "owncloud.labels" . | nindent 10 }}
+          app.kubernetes.io/component: mariadb
+      spec:
+        accessModes:
+          {{- toYaml .Values.mariadb.persistence.accessModes | nindent 10 }}
+        {{- if .Values.mariadb.persistence.storageClassName }}
+        storageClassName: {{ .Values.mariadb.persistence.storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mariadb.persistence.size }}
+  {{- end }}
+{{- end }}

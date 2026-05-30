@@ -1,0 +1,19 @@
+{{- if and .Values.persistence.data.enabled (not .Values.persistence.data.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "owncloud.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "owncloud.labels" . | nindent 4 }}
+    app.kubernetes.io/component: owncloud
+spec:
+  accessModes:
+    {{- toYaml .Values.persistence.data.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size }}
+  {{- with .Values.persistence.data.storageClassName }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,20 @@
+{{- if and .Values.redis.enabled .Values.redis.internal }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "owncloud.redisServiceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "owncloud.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.redis.service.port }}
+      targetPort: redis
+      protocol: TCP
+      name: redis
+  selector:
+    {{- include "owncloud.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+{{- end }}
