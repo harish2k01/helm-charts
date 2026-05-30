@@ -1,0 +1,29 @@
+apiVersion: v2
+name: owncloud
+description: Deploys ownCloud Server with MariaDB and Redis on Kubernetes
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/owncloud.png
+version: 0.1.0
+appVersion: "10.16.2"
+home: https://owncloud.com
+sources:
+  - https://github.com/owncloud/core
+  - https://hub.docker.com/r/owncloud/server
+  - https://doc.owncloud.com/server/latest/admin_manual/installation/docker/index.html
+keywords:
+  - owncloud
+  - storage
+  - files
+  - sync
+  - collaboration
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: owncloud
+      image: owncloud/server:10.16.2
+    - name: mariadb
+      image: mariadb:10.11
+    - name: redis
+      image: redis:6
+maintainers:
+  - name: harish2k01

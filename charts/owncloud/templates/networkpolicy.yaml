@@ -1,0 +1,60 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "owncloud.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "owncloud.labels" . | nindent 4 }}
+    app.kubernetes.io/component: owncloud
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "owncloud.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: owncloud
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {{- with .Values.networkPolicy.ingressFrom }}
+      from:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ (index .Values.containerPorts 0).containerPort }}
+    {{- with .Values.networkPolicy.extraIngress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  egress:
+    {{- if .Values.networkPolicy.allowDNS }}
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    {{- end }}
+    {{- if .Values.mariadb.enabled }}
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "owncloud.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: mariadb
+      ports:
+        - protocol: TCP
+          port: {{ .Values.mariadb.service.port }}
+    {{- end }}
+    {{- if and .Values.redis.enabled .Values.redis.internal }}
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "owncloud.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: redis
+      ports:
+        - protocol: TCP
+          port: {{ .Values.redis.service.port }}
+    {{- end }}
+    {{- with .Values.networkPolicy.extraEgress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

@@ -1,0 +1,30 @@
+ownCloud has been installed.
+
+For production, configure:
+  - owncloud.domain and owncloud.trustedDomains for the public hostname
+  - owncloud.admin.existingSecret or owncloud.admin.password for the initial admin credentials
+  - database.existingSecret or database.password for the database credentials
+  - persistence.data.size and storageClassName for file storage
+
+Admin credentials are only applied when ownCloud initializes a fresh data volume.
+
+{{- if .Values.mariadb.enabled }}
+
+This release includes a MariaDB StatefulSet:
+
+  {{ include "owncloud.mariadbServiceName" . }}:{{ .Values.mariadb.service.port }}
+{{- end }}
+{{- if and .Values.redis.enabled .Values.redis.internal }}
+
+This release includes a Redis StatefulSet:
+
+  {{ include "owncloud.redisServiceName" . }}:{{ .Values.redis.service.port }}
+{{- end }}
+
+To reach ownCloud inside the cluster:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "owncloud.fullname" . }} 8080:{{ .Values.service.port }}
+
+Then open:
+
+  http://127.0.0.1:8080/

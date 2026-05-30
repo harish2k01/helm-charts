@@ -1,0 +1,1055 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "owncloud values",
+  "description": "Configurable Helm values for the owncloud chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of ownCloud pod replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for ownCloud Server.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for ownCloud.",
+          "default": "owncloud/server"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "10.16.2"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional image pull secrets.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to ownCloud pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to ownCloud pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "serviceAccount": {
+      "type": "object",
+      "description": "ServiceAccount configuration for ownCloud pods.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether to create a ServiceAccount.",
+          "default": true
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the ServiceAccount.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "name": {
+          "type": "string",
+          "description": "ServiceAccount name override.",
+          "default": ""
+        },
+        "automountServiceAccountToken": {
+          "type": "boolean",
+          "description": "Whether to automount the Kubernetes API token.",
+          "default": false
+        }
+      }
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment rollout settings.",
+      "additionalProperties": true,
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Deployment.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "revisionHistoryLimit": {
+          "type": "integer",
+          "description": "Number of old ReplicaSets to retain.",
+          "default": 3
+        },
+        "strategy": {
+          "type": "object",
+          "description": "Deployment update strategy.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "terminationGracePeriodSeconds": {
+          "type": "integer",
+          "description": "Grace period before the ownCloud pod is forcefully terminated.",
+          "default": 120
+        }
+      }
+    },
+    "priorityClassName": {
+      "type": "string",
+      "description": "PriorityClass name assigned to ownCloud pods.",
+      "default": ""
+    },
+    "runtimeClassName": {
+      "type": "string",
+      "description": "RuntimeClass name assigned to ownCloud pods.",
+      "default": ""
+    },
+    "schedulerName": {
+      "type": "string",
+      "description": "Scheduler name used for ownCloud pods.",
+      "default": ""
+    },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "description": "Topology spread constraints for ownCloud pods.",
+      "default": [],
+      "items": {}
+    },
+    "owncloud": {
+      "type": "object",
+      "description": "ownCloud bootstrap settings.",
+      "additionalProperties": true,
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "Domain and optional port ownCloud uses for generated URLs.",
+          "default": "localhost:8080"
+        },
+        "trustedDomains": {
+          "type": "array",
+          "description": "Hostnames and IPs allowed by ownCloud trusted domain checks.",
+          "default": [
+            "localhost"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "mysqlUtf8mb4": {
+          "type": "boolean",
+          "description": "Enable utf8mb4 support for MySQL/MariaDB.",
+          "default": true
+        },
+        "admin": {
+          "type": "object",
+          "description": "Initial ownCloud admin credentials.",
+          "additionalProperties": true,
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Initial admin username when existingSecret is empty.",
+              "default": "admin"
+            },
+            "password": {
+              "type": "string",
+              "description": "Initial admin password when existingSecret is empty.",
+              "default": "CHANGE_ME_OWNCLOUD_ADMIN_PASSWORD"
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Existing Secret containing initial admin credentials.",
+              "default": ""
+            },
+            "usernameKey": {
+              "type": "string",
+              "description": "Secret key containing the initial admin username.",
+              "default": "admin-username"
+            },
+            "passwordKey": {
+              "type": "string",
+              "description": "Secret key containing the initial admin password.",
+              "default": "admin-password"
+            }
+          }
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "description": "Database settings consumed by ownCloud.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "ownCloud database type.",
+          "default": "mysql"
+        },
+        "name": {
+          "type": "string",
+          "description": "Database name used by ownCloud.",
+          "default": "owncloud"
+        },
+        "username": {
+          "type": "string",
+          "description": "Database username used by ownCloud.",
+          "default": "owncloud"
+        },
+        "password": {
+          "type": "string",
+          "description": "Database password used when existingSecret is empty.",
+          "default": "CHANGE_ME_OWNCLOUD_DB_PASSWORD"
+        },
+        "host": {
+          "type": "string",
+          "description": "External database host. Empty uses the chart-managed MariaDB service.",
+          "default": ""
+        },
+        "existingSecret": {
+          "type": "string",
+          "description": "Existing Secret containing database password keys.",
+          "default": ""
+        },
+        "passwordKey": {
+          "type": "string",
+          "description": "Secret key containing the ownCloud database password.",
+          "default": "db-password"
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "description": "Additional non-secret environment variables passed to ownCloud.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional environment sources such as ConfigMaps or Secrets.",
+      "default": [],
+      "items": {}
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Additional Kubernetes EnvVar entries appended to ownCloud.",
+      "default": [],
+      "items": {}
+    },
+    "secretEnv": {
+      "type": "object",
+      "description": "Secret environment variables for ownCloud.",
+      "additionalProperties": true,
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Whether the chart should create a Secret from secretEnv.values.",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the chart-created Secret. Empty uses the release fullname.",
+          "default": ""
+        },
+        "values": {
+          "type": "object",
+          "description": "Secret values to write when secretEnv.create is true.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "existingSecret": {
+          "type": "object",
+          "description": "Existing Kubernetes Secret containing sensitive environment values.",
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Existing Secret name.",
+              "default": ""
+            },
+            "keys": {
+              "type": "array",
+              "description": "Mappings from Secret keys to environment variable names.",
+              "default": [],
+              "items": {}
+            }
+          }
+        }
+      }
+    },
+    "command": {
+      "type": "array",
+      "description": "Optional command override for the ownCloud container.",
+      "default": [],
+      "items": {}
+    },
+    "args": {
+      "type": "array",
+      "description": "Optional argument override for the ownCloud container.",
+      "default": [],
+      "items": {}
+    },
+    "extraInitContainers": {
+      "type": "array",
+      "description": "Additional init containers appended to the ownCloud pod.",
+      "default": [],
+      "items": {}
+    },
+    "sidecars": {
+      "type": "array",
+      "description": "Additional sidecar containers appended to the ownCloud pod.",
+      "default": [],
+      "items": {}
+    },
+    "lifecycle": {
+      "type": "object",
+      "description": "Container lifecycle hooks for ownCloud.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "mariadb": {
+      "type": "object",
+      "description": "Internal MariaDB StatefulSet configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to deploy a chart-managed MariaDB StatefulSet.",
+          "default": true
+        },
+        "image": {
+          "type": "object",
+          "description": "Container image settings for MariaDB.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "MariaDB image repository.",
+              "default": "mariadb"
+            },
+            "tag": {
+              "type": "string",
+              "description": "MariaDB image tag.",
+              "default": "10.11"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "MariaDB image pull policy.",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "description": "MariaDB Service settings.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "integer",
+              "description": "MariaDB Service port.",
+              "default": 3306
+            }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "description": "MariaDB root credential settings.",
+          "additionalProperties": true,
+          "properties": {
+            "rootPassword": {
+              "type": "string",
+              "description": "Optional MariaDB root password.",
+              "default": ""
+            },
+            "rootPasswordKey": {
+              "type": "string",
+              "description": "Secret key containing the MariaDB root password.",
+              "default": "db-root-password"
+            }
+          }
+        },
+        "args": {
+          "type": "array",
+          "description": "MariaDB container args appended to the image entrypoint.",
+          "default": [
+            "--max-allowed-packet=128M",
+            "--innodb-log-file-size=64M"
+          ],
+          "items": {}
+        },
+        "persistence": {
+          "type": "object",
+          "description": "Persistent storage for MariaDB data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to create persistent storage for MariaDB.",
+              "default": true
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PVC name to reuse for MariaDB data.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "MariaDB PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "MariaDB PVC storage request size.",
+              "default": "10Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "MariaDB PVC StorageClass name.",
+              "default": ""
+            }
+          }
+        },
+        "podAnnotations": {
+          "type": "object",
+          "description": "Additional annotations applied to MariaDB pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podLabels": {
+          "type": "object",
+          "description": "Additional labels applied to MariaDB pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context for MariaDB.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context for MariaDB.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits for MariaDB.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "updateStrategy": {
+          "type": "object",
+          "description": "MariaDB StatefulSet update strategy.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podManagementPolicy": {
+          "type": "string",
+          "description": "MariaDB StatefulSet pod management policy.",
+          "default": "OrderedReady"
+        },
+        "terminationGracePeriodSeconds": {
+          "type": "integer",
+          "description": "MariaDB termination grace period in seconds.",
+          "default": 60
+        },
+        "extraEnv": {
+          "type": "array",
+          "description": "Additional environment variables for MariaDB.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumes": {
+          "type": "array",
+          "description": "Additional volumes for MariaDB pods.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "description": "Additional volume mounts for MariaDB.",
+          "default": [],
+          "items": {}
+        },
+        "livenessProbe": {
+          "type": "object",
+          "description": "MariaDB liveness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "readinessProbe": {
+          "type": "object",
+          "description": "MariaDB readiness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "MariaDB pod node selector constraints.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "MariaDB pod tolerations.",
+          "default": [],
+          "items": {}
+        },
+        "affinity": {
+          "type": "object",
+          "description": "MariaDB pod affinity and anti-affinity rules.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "redis": {
+      "type": "object",
+      "description": "Redis integration and optional internal StatefulSet configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to configure ownCloud to use Redis.",
+          "default": true
+        },
+        "internal": {
+          "type": "boolean",
+          "description": "Whether to deploy a chart-managed Redis StatefulSet.",
+          "default": true
+        },
+        "host": {
+          "type": "string",
+          "description": "External Redis host. Empty uses the chart-managed Redis service when internal is true.",
+          "default": ""
+        },
+        "image": {
+          "type": "object",
+          "description": "Container image settings for Redis.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "Redis image repository.",
+              "default": "redis"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Redis image tag.",
+              "default": "6"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Redis image pull policy.",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "service": {
+          "type": "object",
+          "description": "Redis Service settings.",
+          "additionalProperties": true,
+          "properties": {
+            "port": {
+              "type": "integer",
+              "description": "Redis Service port.",
+              "default": 6379
+            }
+          }
+        },
+        "args": {
+          "type": "array",
+          "description": "Redis container args appended to the image entrypoint.",
+          "default": [
+            "--databases",
+            "1"
+          ],
+          "items": {}
+        },
+        "persistence": {
+          "type": "object",
+          "description": "Persistent storage for Redis data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether to create persistent storage for Redis.",
+              "default": true
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PVC name to reuse for Redis data.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "Redis PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "Redis PVC storage request size.",
+              "default": "1Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "Redis PVC StorageClass name.",
+              "default": ""
+            }
+          }
+        },
+        "podAnnotations": {
+          "type": "object",
+          "description": "Additional annotations applied to Redis pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podLabels": {
+          "type": "object",
+          "description": "Additional labels applied to Redis pods.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podSecurityContext": {
+          "type": "object",
+          "description": "Pod-level security context for Redis.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "securityContext": {
+          "type": "object",
+          "description": "Container-level security context for Redis.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "resources": {
+          "type": "object",
+          "description": "CPU and memory requests and limits for Redis.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "updateStrategy": {
+          "type": "object",
+          "description": "Redis StatefulSet update strategy.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "podManagementPolicy": {
+          "type": "string",
+          "description": "Redis StatefulSet pod management policy.",
+          "default": "OrderedReady"
+        },
+        "terminationGracePeriodSeconds": {
+          "type": "integer",
+          "description": "Redis termination grace period in seconds.",
+          "default": 30
+        },
+        "extraEnv": {
+          "type": "array",
+          "description": "Additional environment variables for Redis.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumes": {
+          "type": "array",
+          "description": "Additional volumes for Redis pods.",
+          "default": [],
+          "items": {}
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "description": "Additional volume mounts for Redis.",
+          "default": [],
+          "items": {}
+        },
+        "livenessProbe": {
+          "type": "object",
+          "description": "Redis liveness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "readinessProbe": {
+          "type": "object",
+          "description": "Redis readiness probe.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "nodeSelector": {
+          "type": "object",
+          "description": "Redis pod node selector constraints.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "tolerations": {
+          "type": "array",
+          "description": "Redis pod tolerations.",
+          "default": [],
+          "items": {}
+        },
+        "affinity": {
+          "type": "object",
+          "description": "Redis pod affinity and anti-affinity rules.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for ownCloud.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Service.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port exposed inside the cluster.",
+          "default": 8080
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container port or named port that receives Service traffic.",
+          "default": "http"
+        },
+        "portName": {
+          "type": "string",
+          "description": "Name assigned to the Service port.",
+          "default": "http"
+        },
+        "loadBalancerIP": {
+          "type": "string",
+          "description": "Static LoadBalancer IP address.",
+          "default": ""
+        },
+        "loadBalancerSourceRanges": {
+          "type": "array",
+          "description": "Allowed source ranges for LoadBalancer services.",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "description": "External traffic policy for NodePort or LoadBalancer services.",
+          "default": ""
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "containerPorts": {
+      "type": "array",
+      "description": "Container ports exposed by the ownCloud pod.",
+      "default": [
+        {
+          "name": "http",
+          "containerPort": 8080,
+          "protocol": "TCP"
+        }
+      ],
+      "items": {}
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "data": {
+          "type": "object",
+          "description": "Persistent volume settings for ownCloud data.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Create or mount the ownCloud data PVC.",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container filesystem path where this volume is mounted.",
+              "default": "/mnt/data"
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PVC name to reuse instead of creating a new PVC.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PVC access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PVC storage request size.",
+              "default": "50Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the ownCloud container.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for ownCloud.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podDisruptionBudget": {
+      "type": "object",
+      "description": "PodDisruptionBudget configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a PodDisruptionBudget.",
+          "default": false
+        },
+        "minAvailable": {
+          "description": "Minimum available pods for voluntary disruptions.",
+          "default": 1
+        },
+        "maxUnavailable": {
+          "description": "Maximum unavailable pods for voluntary disruptions.",
+          "default": ""
+        }
+      }
+    },
+    "networkPolicy": {
+      "type": "object",
+      "description": "NetworkPolicy configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a NetworkPolicy.",
+          "default": false
+        },
+        "ingressFrom": {
+          "type": "array",
+          "description": "NetworkPolicy ingress peers allowed to reach ownCloud.",
+          "default": [],
+          "items": {}
+        },
+        "extraIngress": {
+          "type": "array",
+          "description": "Additional NetworkPolicy ingress rules.",
+          "default": [],
+          "items": {}
+        },
+        "allowDNS": {
+          "type": "boolean",
+          "description": "Allow DNS egress when NetworkPolicy is enabled.",
+          "default": true
+        },
+        "extraEgress": {
+          "type": "array",
+          "description": "Additional NetworkPolicy egress rules.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Kubernetes startup probe used while ownCloud initializes.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Pod node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}
