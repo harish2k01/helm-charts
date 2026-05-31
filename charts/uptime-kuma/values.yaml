@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: louislam/uptime-kuma
   pullPolicy: IfNotPresent
-  tag: "2.2.1-slim"
+  tag: "2.4.0-slim"
 
 imagePullSecrets: []
 nameOverride: ""
