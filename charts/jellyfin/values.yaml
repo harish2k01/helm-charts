@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: lscr.io/linuxserver/jellyfin
-  tag: "10.11.8"
+  tag: "10.11.11"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
