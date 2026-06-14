@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "portfolio-tracker values",
+  "description": "Configurable Helm values for Portfolio Tracker.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1,
+      "description": "Number of application replicas."
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "default": "ghcr.io/harish2k01/portfolio-tracker"
+        },
+        "tag": {
+          "type": "string",
+          "default": "0.1.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"],
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "podLabels": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "securityContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"],
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 3000
+        },
+        "targetPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 3000
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "hosts": {
+          "type": "array",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "parentRefs": {
+          "type": "array",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "items": {}
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "postgresql": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "image": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "default": "postgres"
+                },
+                "tag": {
+                  "type": "string",
+                  "default": "16-alpine"
+                },
+                "pullPolicy": {
+                  "type": "string",
+                  "enum": ["Always", "IfNotPresent", "Never"],
+                  "default": "IfNotPresent"
+                }
+              }
+            },
+            "service": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "port": {
+                  "type": "integer",
+                  "default": 5432
+                }
+              }
+            },
+            "auth": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "database": {
+                  "type": "string",
+                  "default": "portfolio_tracker"
+                },
+                "username": {
+                  "type": "string",
+                  "default": "portfolio_tracker"
+                },
+                "password": {
+                  "type": "string",
+                  "default": "portfolio_tracker"
+                },
+                "existingSecret": {
+                  "type": "string",
+                  "default": ""
+                },
+                "passwordKey": {
+                  "type": "string",
+                  "default": "db-password"
+                }
+              }
+            },
+            "persistence": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "storageClassName": {
+                  "type": "string",
+                  "default": ""
+                },
+                "accessModes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "size": {
+                  "type": "string",
+                  "default": "8Gi"
+                },
+                "existingClaim": {
+                  "type": "string",
+                  "default": ""
+                }
+              }
+            },
+            "resources": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "nodeSelector": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "tolerations": {
+              "type": "array",
+              "items": {}
+            },
+            "affinity": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "podSecurityContext": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "healthcheck": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "external": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "url": {
+              "type": "string",
+              "default": ""
+            },
+            "existingSecret": {
+              "type": "string",
+              "default": ""
+            },
+            "databaseUrlKey": {
+              "type": "string",
+              "default": "DATABASE_URL"
+            }
+          }
+        }
+      }
+    },
+    "portfolioTracker": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "secrets": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "default": ""
+            },
+            "rolloutToken": {
+              "type": "string",
+              "default": "1"
+            },
+            "inline": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "NEXTAUTH_SECRET": {
+                  "type": "string",
+                  "default": "replace-me-with-a-long-random-string"
+                },
+                "SMTP_USER": {
+                  "type": "string",
+                  "default": ""
+                },
+                "SMTP_PASS": {
+                  "type": "string",
+                  "default": ""
+                }
+              }
+            }
+          }
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["string", "number", "boolean"]
+          }
+        },
+        "envFrom": {
+          "type": "array",
+          "items": {}
+        },
+        "extraVolumes": {
+          "type": "array",
+          "items": {}
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "items": {}
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "livenessProbe": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "readinessProbe": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "tolerations": {
+      "type": "array",
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

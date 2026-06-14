@@ -79,6 +79,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`owncloud`](charts/owncloud) | `0.1.0` | `10.16.2` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
+| [`portfolio-tracker`](charts/portfolio-tracker) | `0.1.0` | `0.1.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`qbittorrent`](charts/qbittorrent) | `0.1.2` | `5.2.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
 | [`radarr`](charts/radarr) | `0.1.2` | `6.1.1` | Media | Deploys Radarr movie automation with reusable release values. |
