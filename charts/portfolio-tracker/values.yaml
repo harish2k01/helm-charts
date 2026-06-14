@@ -1,0 +1,148 @@
+# Run one replica by default. Increase only after configuring an external
+# PostgreSQL database and confirming migrations are serialized safely.
+replicaCount: 1
+
+image:
+  # Image published by the portfolio-tracker repository release workflow.
+  repository: ghcr.io/harish2k01/portfolio-tracker
+  pullPolicy: IfNotPresent
+  # Pin this to a semantic release version for repeatable GitOps deployments.
+  tag: "0.1.0"
+
+# Set when pulling images from a private registry or mirror.
+imagePullSecrets: []
+
+# Override generated resource names when embedding this chart in larger releases.
+nameOverride: ""
+fullnameOverride: ""
+
+# Add annotations or labels consumed by policy engines, reloaders, or operators.
+podAnnotations: {}
+podLabels: {}
+
+# Pod and container security context knobs are left empty so clusters can apply
+# their own defaults through admission policies.
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# Portfolio Tracker requires PostgreSQL. Use the bundled StatefulSet for simple
+# installs, or disable it and enable database.external for a managed database.
+database:
+  postgresql:
+    enabled: true
+    image:
+      repository: postgres
+      pullPolicy: IfNotPresent
+      tag: "16-alpine"
+    service:
+      port: 5432
+    auth:
+      database: portfolio_tracker
+      username: portfolio_tracker
+      # Default is for quick evaluation. Use existingSecret or override this for production.
+      password: "portfolio_tracker"
+      # Existing secret must contain passwordKey.
+      existingSecret: ""
+      passwordKey: db-password
+    persistence:
+      enabled: true
+      storageClassName: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 8Gi
+      existingClaim: ""
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    podSecurityContext: {}
+    healthcheck:
+      enabled: true
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  external:
+    enabled: false
+    # Full PostgreSQL connection URL. Prefer existingSecret for production.
+    url: ""
+    # Existing secret must contain databaseUrlKey.
+    existingSecret: ""
+    databaseUrlKey: DATABASE_URL
+
+portfolioTracker:
+  # Use an existing Secret in production. It must contain NEXTAUTH_SECRET and
+  # may also contain SMTP_USER and SMTP_PASS.
+  secrets:
+    existingSecret: ""
+    # Change rolloutToken when externally managed secrets change and pods should restart.
+    rolloutToken: "1"
+    inline:
+      # Replace before exposing the app. Generate with: openssl rand -base64 32
+      NEXTAUTH_SECRET: "replace-me-with-a-long-random-string"
+      SMTP_USER: ""
+      SMTP_PASS: ""
+
+  # Non-secret runtime environment. DATABASE_URL and secret values are managed
+  # separately by the chart.
+  env:
+    NEXTAUTH_URL: "http://localhost:3000"
+    APP_BASE_URL: "http://localhost:3000"
+    SMTP_HOST: ""
+    SMTP_PORT: "587"
+    SMTP_FROM: ""
+    SMTP_SECURE: "false"
+
+  # Additional envFrom entries for ConfigMaps or Secrets managed outside the chart.
+  envFrom: []
+
+  # Extra volumes are useful for mounting custom CA bundles.
+  extraVolumes: []
+  extraVolumeMounts: []
+
+  resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
