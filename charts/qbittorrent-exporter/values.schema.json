@@ -1,0 +1,361 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "qbittorrent-exporter values",
+  "description": "Configurable Helm values for the qbittorrent-exporter chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of exporter pod replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for qbittorrent-exporter.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository.",
+          "default": "ghcr.io/martabal/qbittorrent-exporter"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy.",
+          "default": "v2.0.1"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional image pull secrets for private registries.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used in generated names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional pod annotations.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional pod labels.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "qbittorrent": {
+      "type": "object",
+      "description": "qBittorrent exporter runtime configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "baseUrl": {
+          "type": "string",
+          "description": "qBittorrent WebUI base URL reachable from the exporter pod.",
+          "default": "http://qbittorrent:8080"
+        },
+        "auth": {
+          "type": "object",
+          "description": "Authentication settings for connecting to qBittorrent.",
+          "additionalProperties": true,
+          "properties": {
+            "method": {
+              "type": "string",
+              "description": "Authentication mode. Use apiKey for qBittorrent 5.2.0+ and legacy for older versions.",
+              "default": "legacy",
+              "enum": [
+                "legacy",
+                "apiKey",
+                "cookieName",
+                "none"
+              ]
+            },
+            "existingSecret": {
+              "type": "string",
+              "description": "Secret name containing credentials, or the name to use for chart-created Secrets.",
+              "default": ""
+            },
+            "createSecret": {
+              "type": "boolean",
+              "description": "Create a normal Kubernetes Secret from inline credential values.",
+              "default": false
+            },
+            "username": {
+              "type": "string",
+              "description": "Inline legacy qBittorrent username used only when createSecret is true.",
+              "default": ""
+            },
+            "password": {
+              "type": "string",
+              "description": "Inline legacy qBittorrent password used only when createSecret is true.",
+              "default": ""
+            },
+            "apiKey": {
+              "type": "string",
+              "description": "Inline qBittorrent API key used only when createSecret is true.",
+              "default": ""
+            },
+            "cookieName": {
+              "type": "string",
+              "description": "qBittorrent cookie name for qBittorrent 5.2.0+ cookie-based auth.",
+              "default": ""
+            },
+            "usernameSecretKey": {
+              "type": "string",
+              "description": "Secret key containing the legacy username.",
+              "default": "username"
+            },
+            "passwordSecretKey": {
+              "type": "string",
+              "description": "Secret key containing the legacy password.",
+              "default": "password"
+            },
+            "apiKeySecretKey": {
+              "type": "string",
+              "description": "Secret key containing the qBittorrent API key.",
+              "default": "api-key"
+            }
+          }
+        },
+        "exporter": {
+          "type": "object",
+          "description": "Exporter listener and scrape endpoint settings.",
+          "additionalProperties": true,
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "Host or IP address for the exporter to bind.",
+              "default": ""
+            },
+            "port": {
+              "type": "integer",
+              "description": "Exporter listen port.",
+              "default": 8090
+            },
+            "path": {
+              "type": "string",
+              "description": "Path where metrics are exposed.",
+              "default": "/metrics"
+            },
+            "logLevel": {
+              "type": "string",
+              "description": "Exporter log level.",
+              "default": "INFO"
+            },
+            "timeout": {
+              "type": "string",
+              "description": "Optional qBittorrent request timeout.",
+              "default": ""
+            },
+            "fullRefreshInterval": {
+              "type": "string",
+              "description": "Optional number of scrapes between full data syncs.",
+              "default": ""
+            }
+          }
+        },
+        "features": {
+          "type": "object",
+          "description": "Metric collection feature switches.",
+          "additionalProperties": true,
+          "properties": {
+            "enableTracker": {
+              "type": "boolean",
+              "description": "Collect tracker metrics.",
+              "default": true
+            },
+            "enableHighCardinality": {
+              "type": "boolean",
+              "description": "Enable high-cardinality torrent and tracker metrics.",
+              "default": false
+            },
+            "enableIncreasedCardinality": {
+              "type": "boolean",
+              "description": "Enable increased-cardinality torrent info metrics.",
+              "default": false
+            },
+            "enableLabelWithTracker": {
+              "type": "boolean",
+              "description": "Add tracker labels to torrent metrics.",
+              "default": false
+            },
+            "enableLabelWithHash": {
+              "type": "boolean",
+              "description": "Add torrent hash labels to torrent metrics.",
+              "default": false
+            },
+            "enableLabelWithTag": {
+              "type": "boolean",
+              "description": "Add torrent tag labels to torrent metrics.",
+              "default": false
+            }
+          }
+        },
+        "extraEnv": {
+          "type": "object",
+          "description": "Additional non-secret environment variables.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "envFrom": {
+          "type": "array",
+          "description": "Additional envFrom sources.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port.",
+          "default": 8090
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container target port.",
+          "default": 8090
+        },
+        "portName": {
+          "type": "string",
+          "description": "Service and container port name.",
+          "default": "http"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Service annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "description": "Prometheus Operator ServiceMonitor settings.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create a ServiceMonitor.",
+          "default": false
+        },
+        "interval": {
+          "type": "string",
+          "description": "Scrape interval.",
+          "default": "30s"
+        },
+        "path": {
+          "type": "string",
+          "description": "Metrics scrape path.",
+          "default": "/metrics"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional ServiceMonitor labels.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional ServiceMonitor annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "Container resource requests and limits.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "extraContainerPorts": {
+      "type": "array",
+      "description": "Additional container ports.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional pod volumes.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional container volume mounts.",
+      "default": [],
+      "items": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

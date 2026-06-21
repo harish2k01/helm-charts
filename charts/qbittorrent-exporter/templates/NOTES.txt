@@ -1,0 +1,7 @@
+qBittorrent exporter has been installed.
+
+Service:
+  {{ include "qbittorrent-exporter.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+Metrics:
+  {{ include "qbittorrent-exporter.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}{{ .Values.qbittorrent.exporter.path }}
