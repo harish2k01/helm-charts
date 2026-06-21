@@ -82,6 +82,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`portfolio-tracker`](charts/portfolio-tracker) | `0.1.0` | `0.1.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`qbittorrent`](charts/qbittorrent) | `0.1.2` | `5.2.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
+| [`qbittorrent-exporter`](charts/qbittorrent-exporter) | `0.1.0` | `v2.0.1` | Monitoring | Deploys the martabal qBittorrent Prometheus exporter. |
 | [`radarr`](charts/radarr) | `0.1.2` | `6.1.1` | Media | Deploys Radarr movie automation with reusable release values. |
 | [`scrutiny`](charts/scrutiny) | `0.2.2` | `v0.9.2-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
 | [`seerr`](charts/seerr) | `0.1.2` | `v3.2.0` | Media | Deploys Seerr media request management for shared libraries. |

@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qbittorrent-exporter.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "qbittorrent-exporter.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "qbittorrent-exporter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qbittorrent-exporter.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: qbittorrent-exporter
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+            {{- with .Values.extraContainerPorts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            - name: QBITTORRENT_BASE_URL
+              value: {{ .Values.qbittorrent.baseUrl | quote }}
+            {{- if eq .Values.qbittorrent.auth.method "legacy" }}
+            - name: QBITTORRENT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent-exporter.secretName" . }}
+                  key: {{ .Values.qbittorrent.auth.usernameSecretKey }}
+            - name: QBITTORRENT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent-exporter.secretName" . }}
+                  key: {{ .Values.qbittorrent.auth.passwordSecretKey }}
+            {{- else if eq .Values.qbittorrent.auth.method "apiKey" }}
+            - name: QBITTORRENT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qbittorrent-exporter.secretName" . }}
+                  key: {{ .Values.qbittorrent.auth.apiKeySecretKey }}
+            {{- end }}
+            {{- if or (eq .Values.qbittorrent.auth.method "cookieName") .Values.qbittorrent.auth.cookieName }}
+            - name: QBITTORRENT_COOKIE_NAME
+              value: {{ required "qbittorrent.auth.cookieName is required when auth method is cookieName" .Values.qbittorrent.auth.cookieName | quote }}
+            {{- end }}
+            - name: EXPORTER_PORT
+              value: {{ .Values.qbittorrent.exporter.port | quote }}
+            - name: EXPORTER_PATH
+              value: {{ .Values.qbittorrent.exporter.path | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.qbittorrent.exporter.logLevel | quote }}
+            - name: ENABLE_TRACKER
+              value: {{ .Values.qbittorrent.features.enableTracker | quote }}
+            - name: ENABLE_HIGH_CARDINALITY
+              value: {{ .Values.qbittorrent.features.enableHighCardinality | quote }}
+            - name: ENABLE_INCREASED_CARDINALITY
+              value: {{ .Values.qbittorrent.features.enableIncreasedCardinality | quote }}
+            - name: ENABLE_LABEL_WITH_TRACKER
+              value: {{ .Values.qbittorrent.features.enableLabelWithTracker | quote }}
+            - name: ENABLE_LABEL_WITH_HASH
+              value: {{ .Values.qbittorrent.features.enableLabelWithHash | quote }}
+            - name: ENABLE_LABEL_WITH_TAG
+              value: {{ .Values.qbittorrent.features.enableLabelWithTag | quote }}
+            {{- with .Values.qbittorrent.exporter.host }}
+            - name: EXPORTER_HOST
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.qbittorrent.exporter.timeout }}
+            - name: QBITTORRENT_TIMEOUT
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.qbittorrent.exporter.fullRefreshInterval }}
+            - name: QBITTORRENT_FULL_REFRESH_INTERVAL
+              value: {{ . | quote }}
+            {{- end }}
+            {{- range $name, $value := .Values.qbittorrent.extraEnv }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- with .Values.qbittorrent.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

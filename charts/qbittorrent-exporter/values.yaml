@@ -1,0 +1,125 @@
+replicaCount: 1
+
+# Container image for martabal/qbittorrent-exporter. Pin the tag so exporter
+# authentication behavior changes are explicit upgrades.
+image:
+  repository: ghcr.io/martabal/qbittorrent-exporter
+  tag: "v2.0.1"
+  pullPolicy: IfNotPresent
+
+# Set when pulling from a private registry.
+imagePullSecrets: []
+
+# Override generated Kubernetes resource names when installing multiple releases.
+nameOverride: ""
+fullnameOverride: ""
+
+# Extra pod metadata for GitOps, backup, or policy integrations.
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+qbittorrent:
+  # qBittorrent WebUI base URL reachable from the exporter pod.
+  baseUrl: "http://qbittorrent:8080"
+
+  auth:
+    # For qBittorrent 5.2.0 and newer, use apiKey. For older versions, use legacy.
+    # Set to none only when the qBittorrent WebUI requires no authentication.
+    method: legacy
+
+    # Name of a Secret to read or create. Empty uses the release fullname when
+    # createSecret is true.
+    existingSecret: ""
+    createSecret: false
+
+    # Inline values are useful for local testing. Prefer an existing Secret or
+    # your own external secret management for GitOps environments.
+    username: ""
+    password: ""
+    apiKey: ""
+
+    # qBittorrent 5.2.0+ can also use a configured cookie name. This value is
+    # passed directly because it is the cookie name, not a cookie secret.
+    cookieName: ""
+
+    usernameSecretKey: username
+    passwordSecretKey: password
+    apiKeySecretKey: api-key
+
+  # Exporter listener and scrape settings.
+  exporter:
+    host: ""
+    port: 8090
+    path: /metrics
+    logLevel: INFO
+    timeout: ""
+    fullRefreshInterval: ""
+
+  # Metric switches from the upstream exporter. Leave these defaults unless you
+  # know your Prometheus cardinality budget can handle more torrent labels.
+  features:
+    # Collect tracker metrics. This is on by default upstream.
+    enableTracker: true
+    # Enables the broad high-cardinality torrent/tracker info metrics. This can
+    # create many time series on large torrent libraries.
+    enableHighCardinality: false
+    # Enables a smaller high-cardinality set for torrent info/save path/state/
+    # comment. Less expensive than enableHighCardinality, still not free.
+    enableIncreasedCardinality: false
+    # Adds tracker as a label on torrent metrics. This increases series count.
+    enableLabelWithTracker: false
+    # Adds torrent hash as a label on torrent metrics. Useful for uniqueness,
+    # but expensive for Prometheus cardinality.
+    enableLabelWithHash: false
+    # Adds torrent tag as a label on torrent metrics. Can multiply series when
+    # torrents have multiple tags.
+    enableLabelWithTag: false
+
+  # Extra non-secret environment variables passed to the exporter.
+  extraEnv: {}
+  envFrom: []
+
+service:
+  type: ClusterIP
+  port: 8090
+  targetPort: 8090
+  portName: http
+  annotations: {}
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /metrics
+  labels: {}
+  annotations: {}
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /metrics
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+extraContainerPorts: []
+extraVolumes: []
+extraVolumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
