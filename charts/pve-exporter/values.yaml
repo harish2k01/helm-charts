@@ -1,0 +1,91 @@
+replicaCount: 1
+
+image:
+  repository: prompve/prometheus-pve-exporter
+  tag: "3.8.2"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+proxmox:
+  # One or more Proxmox API endpoints to scrape.
+  targets:
+    - 10.10.10.100
+
+  config:
+    # Name of an existing Secret containing the exporter config. Empty uses the
+    # release fullname when createSecret is true.
+    existingSecret: ""
+
+    # Create a normal Kubernetes Secret from proxmox.config.value. Prefer an
+    # existing Secret or your own external secret management for GitOps.
+    createSecret: false
+
+    # Secret key containing the pve.yml config.
+    secretKey: pve.yaml
+
+    # Inline exporter config used only when createSecret is true.
+    value: ""
+
+    # Path where the config file is mounted in the exporter container.
+    mountPath: /etc/prometheus/pve.yml
+
+service:
+  type: ClusterIP
+  port: 9221
+  targetPort: 9221
+  portName: http
+  annotations: {}
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /pve
+  labels: {}
+  annotations: {}
+  params:
+    module:
+      - default
+    cluster:
+      - "1"
+    node:
+      - "1"
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+extraContainerPorts: []
+extraEnv: {}
+envFrom: []
+extraVolumes: []
+extraVolumeMounts: []
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

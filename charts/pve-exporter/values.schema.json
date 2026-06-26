@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "pve-exporter values",
+  "description": "Configurable Helm values for the pve-exporter chart.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "description": "Number of exporter pod replicas to run.",
+      "default": 1
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository.",
+          "default": "prompve/prometheus-pve-exporter"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag.",
+          "default": "3.8.2"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy.",
+          "default": "IfNotPresent"
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional image pull secrets for private registries.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used in generated names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional pod annotations.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional pod labels.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "proxmox": {
+      "type": "object",
+      "description": "Proxmox exporter configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "targets": {
+          "type": "array",
+          "description": "Proxmox API endpoints to scrape.",
+          "default": [
+            "10.10.10.100"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "number"
+            ]
+          }
+        },
+        "config": {
+          "type": "object",
+          "description": "Secret-backed pve.yml configuration.",
+          "additionalProperties": true,
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "description": "Secret name containing the exporter config.",
+              "default": ""
+            },
+            "createSecret": {
+              "type": "boolean",
+              "description": "Create a normal Kubernetes Secret from the inline config value.",
+              "default": false
+            },
+            "secretKey": {
+              "type": "string",
+              "description": "Secret key containing the exporter config.",
+              "default": "pve.yaml"
+            },
+            "value": {
+              "type": "string",
+              "description": "Inline exporter config used only when createSecret is true.",
+              "default": ""
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "Container path where the exporter config is mounted.",
+              "default": "/etc/prometheus/pve.yml"
+            }
+          }
+        }
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Kubernetes Service type.",
+          "default": "ClusterIP"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Service port.",
+          "default": 9221
+        },
+        "targetPort": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Container target port.",
+          "default": 9221
+        },
+        "portName": {
+          "type": "string",
+          "description": "Service and container port name.",
+          "default": "http"
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Service annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "serviceMonitor": {
+      "type": "object",
+      "description": "Prometheus Operator ServiceMonitor settings.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Create ServiceMonitor resources.",
+          "default": false
+        },
+        "interval": {
+          "type": "string",
+          "description": "Scrape interval.",
+          "default": "30s"
+        },
+        "path": {
+          "type": "string",
+          "description": "Metrics scrape path.",
+          "default": "/pve"
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional ServiceMonitor labels.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional ServiceMonitor annotations.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "params": {
+          "type": "object",
+          "description": "Prometheus scrape query parameters.",
+          "additionalProperties": true,
+          "properties": {}
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "Container resource requests and limits.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "description": "Kubernetes liveness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "readinessProbe": {
+      "type": "object",
+      "description": "Kubernetes readiness probe.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "extraContainerPorts": {
+      "type": "array",
+      "description": "Additional container ports.",
+      "default": [],
+      "items": {}
+    },
+    "extraEnv": {
+      "type": "object",
+      "description": "Additional non-secret environment variables.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional envFrom sources.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional pod volumes.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional container volume mounts.",
+      "default": [],
+      "items": {}
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules.",
+      "additionalProperties": true,
+      "properties": {}
+    }
+  }
+}

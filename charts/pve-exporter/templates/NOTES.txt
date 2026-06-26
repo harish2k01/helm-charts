@@ -1,0 +1,18 @@
+PVE Exporter has been deployed.
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+Verify deployment:
+kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Verify service:
+kubectl get svc -n {{ .Release.Namespace }} {{ include "pve-exporter.fullname" . }}
+
+Port-forward to test manually:
+kubectl port-forward svc/{{ include "pve-exporter.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }} -n {{ .Release.Namespace }}
+
+Then open:
+http://localhost:{{ .Values.service.port }}{{ .Values.serviceMonitor.path }}?target={{ index .Values.proxmox.targets 0 }}
+
+Credentials are read from Secret {{ include "pve-exporter.configSecretName" . }} key {{ .Values.proxmox.config.secretKey }}.

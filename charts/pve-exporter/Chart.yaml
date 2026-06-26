@@ -1,0 +1,22 @@
+apiVersion: v2
+name: pve-exporter
+description: Deploys the prometheus-pve-exporter for scraping Proxmox VE metrics
+type: application
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/proxmox.png
+version: 0.1.0
+appVersion: "3.8.2"
+home: https://github.com/prometheus-pve/prometheus-pve-exporter
+sources:
+  - https://github.com/prometheus-pve/prometheus-pve-exporter
+keywords:
+  - proxmox
+  - prometheus
+  - exporter
+  - monitoring
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/images: |
+    - name: pve-exporter
+      image: prompve/prometheus-pve-exporter:3.8.2
+maintainers:
+  - name: harish2k01

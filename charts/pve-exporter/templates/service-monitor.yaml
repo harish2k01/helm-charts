@@ -1,0 +1,41 @@
+{{- if .Values.serviceMonitor.enabled }}
+{{- $root := . }}
+{{- range $target := $root.Values.proxmox.targets }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "pve-exporter.fullname" $root }}-{{ $target | toString | replace "." "-" | replace ":" "-" }}
+  namespace: {{ $root.Release.Namespace }}
+  labels:
+    {{- include "pve-exporter.labels" $root | nindent 4 }}
+    {{- with $root.Values.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $root.Values.serviceMonitor.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "pve-exporter.selectorLabels" $root | nindent 6 }}
+  namespaceSelector:
+    matchNames:
+      - {{ $root.Release.Namespace }}
+  endpoints:
+    - port: {{ $root.Values.service.portName }}
+      interval: {{ $root.Values.serviceMonitor.interval }}
+      path: {{ $root.Values.serviceMonitor.path }}
+      params:
+        {{- toYaml $root.Values.serviceMonitor.params | nindent 8 }}
+      relabelings:
+        - sourceLabels: [__address__]
+          targetLabel: __param_target
+          replacement: {{ $target | quote }}
+        - sourceLabels: [__param_target]
+          targetLabel: instance
+        - targetLabel: __address__
+          replacement: {{ include "pve-exporter.fullname" $root }}.{{ $root.Release.Namespace }}.svc:{{ $root.Values.service.port }}
+{{- end }}
+{{- end }}
