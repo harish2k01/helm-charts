@@ -44,7 +44,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
 
       - name: Install GnuPG
         shell: bash
