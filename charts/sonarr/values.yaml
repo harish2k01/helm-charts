@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: lscr.io/linuxserver/sonarr
-  tag: "4.0.17"
+  tag: "4.0.19"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
