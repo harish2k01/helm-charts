@@ -178,7 +178,7 @@ redis:
   host: ""
   image:
     repository: redis
-    tag: "6"
+    tag: "8"
     pullPolicy: IfNotPresent
   service:
     port: 6379
