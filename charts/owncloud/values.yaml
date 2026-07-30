@@ -3,7 +3,7 @@ replicaCount: 1
 # Official ownCloud Server image. Pin the tag so upgrades are intentional.
 image:
   repository: owncloud/server
-  tag: "10.16.2"
+  tag: "10.16.4"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
