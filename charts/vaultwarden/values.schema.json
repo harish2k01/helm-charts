@@ -19,7 +19,7 @@
         },
         "tag": {
           "type": "string",
-          "default": "1.36.0"
+          "default": "1.37.1"
         },
         "pullPolicy": {
           "type": "string",
