@@ -70,7 +70,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`bentopdf`](charts/bentopdf) | `0.1.3` | `2.8.4` | Documents | Deploys BentoPDF document conversion on Kubernetes. |
 | [`cloudflared`](charts/cloudflared) | `0.1.1` | `2026.3.0` | Network | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes. |
 | [`feishin`](charts/feishin) | `0.1.0` | `1.11.0` | Media | Deploys Feishin music streaming client on Kubernetes. |
-| [`firefly-iii`](charts/firefly-iii) | `0.1.2` | `version-6.6.1` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
+| [`firefly-iii`](charts/firefly-iii) | `0.1.3` | `version-6.6.6` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.2` | `v3.4.6` | Media | Deploys FlareSolverr request solving for automation stacks. |
 | [`ghost`](charts/ghost) | `0.1.2` | `6.39.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
 | [`homepage`](charts/homepage) | `0.1.0` | `1.13.1` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
