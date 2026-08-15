@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: vaultwarden
-      image: vaultwarden/server:1.36.0
+      image: vaultwarden/server:1.37.1
 maintainers:
   - name: harish2k01
