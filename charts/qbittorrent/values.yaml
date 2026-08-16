@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: lscr.io/linuxserver/qbittorrent
-  tag: "5.2.0"
+  tag: "20.04.1"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
