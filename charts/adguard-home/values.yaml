@@ -3,7 +3,7 @@ replicaCount: 1
 # Container image. Pin this tag for repeatable DNS infrastructure rollouts.
 image:
   repository: adguard/adguardhome
-  tag: "v0.107.76"
+  tag: "v0.107.79"
   pullPolicy: IfNotPresent
 
 # Set when pulling from a private registry or mirror that requires credentials.
