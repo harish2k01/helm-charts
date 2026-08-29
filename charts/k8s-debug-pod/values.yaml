@@ -6,7 +6,7 @@ replicaCount: 1
 # every install gets the same toolbox version.
 image:
   repository: ghcr.io/harish2k01/k8s-debug-pod
-  tag: "0.1.0"
+  tag: "0.1.1"
   pullPolicy: IfNotPresent
 
 # Add pull secrets here if you make the GHCR image private.
