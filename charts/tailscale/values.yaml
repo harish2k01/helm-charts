@@ -32,7 +32,7 @@ sysctl:
   enabled: true
   image:
     repository: busybox
-    tag: "1.37"
+    tag: "1.38"
     pullPolicy: IfNotPresent
   securityContext:
     privileged: true
