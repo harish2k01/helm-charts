@@ -7,7 +7,7 @@ image:
   repository: ghcr.io/harish2k01/portfolio-tracker
   pullPolicy: IfNotPresent
   # Pin this to a semantic release version for repeatable GitOps deployments.
-  tag: "0.1.0"
+  tag: "0.7.0"
 
 # Set when pulling images from a private registry or mirror.
 imagePullSecrets: []
