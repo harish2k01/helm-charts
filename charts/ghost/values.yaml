@@ -3,7 +3,7 @@ replicaCount: 1
 # Official Ghost image. Pin the tag so upgrades are intentional.
 image:
   repository: ghost
-  tag: "6.39.0-alpine"
+  tag: "6.63.0-alpine"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
