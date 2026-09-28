@@ -5,12 +5,14 @@ on:
     paths:
       - charts/**
       - .github/workflows/lint.yaml
+      - tests/portfolio-next.test.mjs
   push:
     branches:
       - main
     paths:
       - charts/**
       - .github/workflows/lint.yaml
+      - tests/portfolio-next.test.mjs
 
 jobs:
   lint:
@@ -24,3 +26,8 @@ jobs:
 
       - name: Lint charts
         run: helm lint charts/*
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Verify portfolio image identity and routing
+        run: node --test tests/portfolio-next.test.mjs

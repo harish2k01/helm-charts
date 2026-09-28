@@ -79,6 +79,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`owncloud`](charts/owncloud) | `0.1.0` | `10.16.2` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
+| [`portfolio-next`](charts/portfolio-next) | `0.1.0` | `v0.1.0` | Publishing | Deploys the static Astro portfolio with digest-pinned NGINX and optional Gateway API routing. |
 | [`portfolio-tracker`](charts/portfolio-tracker) | `0.1.0` | `0.1.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`pve-exporter`](charts/pve-exporter) | `0.1.0` | `3.8.2` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
