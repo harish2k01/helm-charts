@@ -55,6 +55,9 @@ spec:
             readOnlyRootFilesystem: true
             capabilities:
               drop: [ALL]
+              # The official image assigns this file capability to /usr/bin/caddy.
+              # It must remain in the bounding set even when listening on 8080.
+              add: [NET_BIND_SERVICE]
           ports:
             - name: http
               containerPort: 8080
