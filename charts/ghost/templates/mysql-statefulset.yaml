@@ -117,7 +117,9 @@ spec:
       {{- end }}
   {{- if and .Values.mysql.persistence.enabled (not .Values.mysql.persistence.existingClaim) }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: data
         labels:
           {{- include "ghost.labels" . | nindent 10 }}

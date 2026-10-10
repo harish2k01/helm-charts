@@ -18,7 +18,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.1.2
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.3
 ```
 
 ## Database Configuration
