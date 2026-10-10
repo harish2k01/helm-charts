@@ -269,3 +269,17 @@ readinessProbe:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# Optional Social Web proxy. Requires httpRoute.enabled; preserves the public
+# Host header and routes ActivityPub discovery/API requests to this upstream.
+activityPub:
+  enabled: false
+  target: https://ap.ghost.org
+  image: caddy:2.10.2-alpine
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi

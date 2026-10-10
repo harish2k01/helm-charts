@@ -215,3 +215,34 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Social Web (ActivityPub)
+
+Enable `activityPub.enabled` with `httpRoute.enabled` to route
+`/.ghost/activitypub/`, `/.well-known/webfinger`, and `/.well-known/nodeinfo`
+through a small Caddy proxy. The upstream defaults to Ghost's hosted service
+(`https://ap.ghost.org`); `activityPub.target` may point to a separately managed
+ActivityPub service. The public Host header and request paths are retained.
+The proxy does not deploy an ActivityPub database or server.
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: public-gateway
+  hostnames: [blog.example.com]
+activityPub:
+  enabled: true
+```
+
+Hosted ActivityPub is subject to [Ghost's usage limits](https://docs.ghost.org/hosting/).
+Network operations are processed by the configured upstream. The proxy needs
+DNS and outbound HTTPS access; restrictive cluster policies must allow both.
+This option currently supports Gateway API HTTPRoute, not Ingress.
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `activityPub.enabled` | bool | `false` | Enable the optional Social Web proxy and routes. |
+| `activityPub.target` | string | `https://ap.ghost.org` | ActivityPub upstream URL. |
+| `activityPub.image` | string | `caddy:2.10.2-alpine` | Proxy container image. |
+| `activityPub.resources` | object | See values.yaml | Proxy resource requests and limits. |

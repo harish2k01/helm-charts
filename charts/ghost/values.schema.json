@@ -746,6 +746,32 @@
       "description": "Pod affinity and anti-affinity rules.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "activityPub": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional Gateway API ActivityPub proxy.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^https?://[^\\s{};]+$",
+          "default": "https://ap.ghost.org",
+          "description": "ActivityPub upstream URL."
+        },
+        "image": {
+          "type": "string",
+          "minLength": 1,
+          "default": "caddy:2.10.2-alpine"
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
     }
   }
 }
