@@ -251,3 +251,8 @@ The official Caddy image marks its executable with `NET_BIND_SERVICE`. The
 proxy drops all capabilities and adds only this capability, which is allowed
 by Kubernetes Restricted Pod Security. Removing it prevents the binary from
 starting, including when it is configured to listen on port 8080.
+
+The proxy strips trailing slashes internally before forwarding requests. This
+prevents redirect loops between cached Ghost slash-adding redirects and the
+ActivityPub upstream's slash-removing redirects. The deployment configuration
+checksum also rolls out this normalization change to existing proxy pods.

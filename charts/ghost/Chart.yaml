@@ -3,7 +3,7 @@ name: ghost
 description: Deploys Ghost publishing platform on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png
-version: 0.2.1
+version: 0.2.2
 appVersion: "6.39.0-alpine"
 home: https://ghost.org
 sources:
