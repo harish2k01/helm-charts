@@ -1,0 +1,24 @@
+apiVersion: v2
+name: profilarr
+description: Deploys Profilarr configuration management with optional release parsing for Radarr and Sonarr
+type: application
+version: 0.1.0
+appVersion: "2.2.0"
+home: https://dictionarry.dev
+sources:
+  - https://github.com/Dictionarry-Hub/profilarr
+keywords:
+  - profilarr
+  - media
+  - radarr
+  - sonarr
+  - quality-profiles
+maintainers:
+  - name: harish2k01
+annotations:
+  artifacthub.io/license: MIT
+  artifacthub.io/images: |
+    - name: profilarr
+      image: ghcr.io/dictionarry-hub/profilarr:2.2.0
+    - name: profilarr-parser
+      image: ghcr.io/dictionarry-hub/profilarr-parser:2.2.0
