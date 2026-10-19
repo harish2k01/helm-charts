@@ -39,7 +39,11 @@ Use existing charts as the primary pattern before inventing a new structure. Pre
 - `annotations.artifacthub.io/images`
 - `icon` when a relevant stable upstream icon exists
 
-For icons, prefer stable project icons such as `https://raw.githubusercontent.com/selfhst/icons/main/png/<name>.png` when available. If there is no trustworthy icon for the chart, either omit `icon` or choose a durable upstream project asset. Do not add random or fragile image URLs.
+For every new chart, check the [selfh.st icon collection](https://github.com/selfhst/icons) for the application's logo before choosing an icon. Use a matching selfh.st icon when it exists, following the existing URL pattern `https://raw.githubusercontent.com/selfhst/icons/main/png/<icon-name>.png`.
+
+Check the actual collection filename rather than assuming it matches the chart name; a connector or exporter may use its upstream application's logo. Verify that the exact URL returns a successful HTTP response and an image before adding it to `Chart.yaml`. Do this lookup during chart authoring, not as a network dependency in the catalog generator or release checks.
+
+If selfh.st has no matching icon, use a verified, durable upstream project logo when available; otherwise omit `icon` so the catalog displays app initials. Do not use an unrelated logo or invent an icon URL. After adding the icon, run `npm run build:catalog` so the website inherits the same URL from chart metadata.
 
 Keep `version` as the Helm chart version. Keep `appVersion` as the application or image version. Bump chart versions intentionally when chart behavior, defaults, templates, or documentation change.
 

@@ -191,6 +191,8 @@ helm verify bentopdf-0.1.3.tgz --keyring ./chart-signing-key.gpg
 
 The catalog is a static website served by GitHub Pages at `https://charts.harish2k01.in`. It includes app logos from chart metadata, light and dark themes, search/category filters, and installation details for every chart in one scrolling list. The H/home/server mark identifies Harish's homelab and serves as the favicon.
 
+Application logos come from the [selfh.st icon collection](https://github.com/selfhst/icons) where available, using the `icon` URL in each chart's metadata. Charts without a suitable logo display app initials.
+
 `docs/catalog.json` is generated from chart metadata in `charts/*/Chart.yaml` and categories in the chart table above. To refresh it locally with Node.js 24:
 
 ```bash
