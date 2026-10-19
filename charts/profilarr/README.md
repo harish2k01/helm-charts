@@ -10,13 +10,13 @@ Deploys [Profilarr](https://github.com/Dictionarry-Hub/profilarr) for managing R
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
-helm install profilarr harish2k01/profilarr --version 0.1.0
+helm install profilarr harish2k01/profilarr --version 0.1.1
 ```
 
 ## Install From OCI
 
 ```bash
-helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.1.0
+helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.1.1
 ```
 
 ## Gateway API HTTPRoute
