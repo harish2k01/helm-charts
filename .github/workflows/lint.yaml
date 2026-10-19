@@ -10,6 +10,7 @@ on:
       - package-lock.json
       - README.md
       - .github/workflows/lint.yaml
+      - .github/workflows/release.yaml
       - tests/*.test.mjs
   push:
     branches:
@@ -22,6 +23,7 @@ on:
       - package-lock.json
       - README.md
       - .github/workflows/lint.yaml
+      - .github/workflows/release.yaml
       - tests/*.test.mjs
 
 jobs:
