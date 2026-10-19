@@ -2,9 +2,10 @@ apiVersion: v2
 name: profilarr
 description: Deploys Profilarr configuration management with optional release parsing for Radarr and Sonarr
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "2.2.0"
 home: https://dictionarry.dev
+icon: https://raw.githubusercontent.com/selfhst/icons/main/png/profilarr.png
 sources:
   - https://github.com/Dictionarry-Hub/profilarr
 keywords:

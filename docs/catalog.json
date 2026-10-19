@@ -148,10 +148,10 @@
       "name": "Profilarr",
       "slug": "profilarr",
       "category": "Media",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "appVersion": "2.2.0",
       "description": "Deploys Profilarr configuration management with optional release parsing for Radarr and Sonarr",
-      "icon": null
+      "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/profilarr.png"
     },
     {
       "name": "Prowlarr",
