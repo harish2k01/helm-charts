@@ -66,6 +66,17 @@
       "additionalProperties": true,
       "properties": {}
     },
+    "hostNetwork": {
+      "type": "boolean",
+      "description": "Run the pod in the node's network namespace so the node itself joins the tailnet.",
+      "default": false
+    },
+    "dnsPolicy": {
+      "type": "string",
+      "description": "Pod DNS policy. Empty uses ClusterFirst, or ClusterFirstWithHostNet when hostNetwork is enabled.",
+      "enum": ["", "ClusterFirst", "ClusterFirstWithHostNet", "Default", "None"],
+      "default": ""
+    },
     "securityContext": {
       "type": "object",
       "description": "Container-level security context for the main application container.",

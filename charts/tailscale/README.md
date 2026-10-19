@@ -87,6 +87,21 @@ tailscale:
 
 Then restart the pod so the official container resets old non-default preferences and re-applies `TS_ROUTES` and `TS_EXTRA_ARGS` from the current Helm values. After the pod starts cleanly and `tailscale debug prefs` shows only the expected routes, you can remove `--reset` and set `authOnce` back to your preferred value.
 
+## Host Network
+
+By default the pod joins the tailnet as its own machine, so its tailnet IP and MagicDNS name reach the pod, not the Kubernetes node. To make the node itself the tailnet machine, for example to reach SSH or the Kubernetes API on the node through its MagicDNS name, enable host networking:
+
+```yaml
+hostNetwork: true
+tailscale:
+  hostname: my-node
+  hostnameFromPodName: false
+  advertiseExitNode: false
+  routes: []
+```
+
+Tailscale then manages the node's interfaces, routes, and firewall rules directly, and the sysctl init container changes the node's forwarding settings. Run at most one host-network pod per node.
+
 ## Security Notes
 
 Kernel networking requires `/dev/net/tun`, `NET_ADMIN`, and `NET_RAW`. The chart also enables an init container that sets IPv4 and IPv6 forwarding inside the pod network namespace, matching the sysctl step commonly used for bare-metal and LXC installs.
@@ -101,6 +116,8 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `image.repository` | string | `tailscale/tailscale` | Container image repository |
 | `image.tag` | string | `v1.96.5` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
+| `hostNetwork` | bool | `false` | Run the pod in the node's network namespace so the node itself joins the tailnet |
+| `dnsPolicy` | string | `""` | Pod DNS policy; empty uses `ClusterFirst`, or `ClusterFirstWithHostNet` with `hostNetwork` |
 | `securityContext.privileged` | bool | `true` | Enables privileges required for tun/kernel networking |
 | `sysctl.enabled` | bool | `true` | Runs an init container to enable IP forwarding |
 | `authKey.existingSecret` | string | `""` | Existing Secret containing the Tailscale auth key |

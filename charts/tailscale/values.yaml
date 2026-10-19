@@ -19,6 +19,18 @@ podLabels: {}
 # Tailscale exit-node/subnet-router mode needs kernel networking, /dev/net/tun,
 # and packet-forwarding privileges inside the pod network namespace.
 podSecurityContext: {}
+
+# Run the pod in the node's network namespace instead of the pod network. The
+# node itself then joins the tailnet, so its tailnet IP and MagicDNS name reach
+# services running on the node (for example SSH or the Kubernetes API) instead
+# of the pod. Tailscale then manages the node's interfaces, routes, and firewall
+# rules directly, and the sysctl init container changes the node's forwarding
+# settings. Run at most one such pod per node.
+hostNetwork: false
+
+# Pod DNS policy. Leave empty to use ClusterFirst, or ClusterFirstWithHostNet
+# when hostNetwork is enabled so cluster DNS keeps working.
+dnsPolicy: ""
 securityContext:
   privileged: true
   capabilities:
