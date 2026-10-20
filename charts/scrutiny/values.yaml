@@ -10,10 +10,108 @@ influxdb:
     pullPolicy: IfNotPresent
   resources: {}
   # Additional INFLUXD_* settings, including storage compaction tuning.
-  # InfluxDB 2.9 hashes tokens by default. See README before opting out.
+  # InfluxDB 2.9 hashes tokens by default. See CHANGELOG.md before opting out.
   env: {}
+  # Optional runtime environment reference for influxd 2.9.1.
+  # These are commented intentionally: replace the empty example with your value.
+  # Do not enable e2e-testing/testing-always-allow-setup in production.
+  # Changing bind/path settings requires matching ports, mounts and Scrutiny URL.
+  # INFLUXD_LOG_LEVEL: "" # supported log levels are debug, info, and error; unset uses upstream default.
+  # INFLUXD_FLUX_LOG_ENABLED: "" # enables detailed logging for flux queries; unset uses upstream default.
+  # INFLUXD_TRACING_TYPE: "" # path to boltdb database; unset uses upstream default.
+  # INFLUXD_SQLITE_PATH: "" # override default assets by serving from a specific directory (developer mode); unset uses upstream default.
+  # INFLUXD_STORE: "" # backing store for REST resources (disk or memory); unset uses upstream default.
+  # INFLUXD_E2E_TESTING: "" # add /debug/flush endpoint to clear stores; used for end-to-end tests; unset uses upstream default.
+  # INFLUXD_TESTING_ALWAYS_ALLOW_SETUP: "" # ensures the /api/v2/setup endpoint always returns true to allow onboarding; unset uses upstream default.
+  # INFLUXD_ENGINE_PATH: "" # path to persistent engine files; unset uses upstream default.
+  # INFLUXD_SECRET_STORE: "" # data store for secrets (bolt or vault); unset uses upstream default.
+  # INFLUXD_REPORTING_DISABLED: "" # disable sending telemetry data to https://telemetry.influxdata.com every 8 hours; unset uses upstream default.
+  # INFLUXD_PID_FILE: "" # write process ID to a file; unset uses upstream default.
+  # INFLUXD_OVERWRITE_PID_FILE: "" # overwrite PID file if it already exists instead of exiting; unset uses upstream default.
+  # INFLUXD_SESSION_LENGTH: "" # ttl in minutes for newly created sessions; unset uses upstream default.
+  # INFLUXD_SESSION_RENEW_DISABLED: "" # disables automatically extending session ttl on request; unset uses upstream default.
+  # INFLUXD_VAULT_ADDR: "" # address of the Vault server expressed as a URL and port, for example: https://127.0.0.1:8200/.; unset uses upstream default.
+  # INFLUXD_VAULT_CLIENT_TIMEOUT: "" # timeout variable. The default value is 60s.; unset uses upstream default.
+  # INFLUXD_VAULT_MAX_RETRIES: "" # maximum number of retries when a 5xx error code is encountered. The default is 2, for three total attempts. Set this to 0 or less to disable retrying.; unset uses upstream default.
+  # INFLUXD_VAULT_CACERT: "" # path to a PEM-encoded CA certificate file on the local disk. This file is used to verify the Vault server's SSL certificate. This environment variable takes precedence over VAULT_CAPATH.; unset uses upstream default.
+  # INFLUXD_VAULT_CAPATH: "" # path to a directory of PEM-encoded CA certificate files on the local disk. These certificates are used to verify the Vault server's SSL certificate.; unset uses upstream default.
+  # INFLUXD_VAULT_CLIENT_CERT: "" # path to a PEM-encoded client certificate on the local disk. This file is used for TLS communication with the Vault server.; unset uses upstream default.
+  # INFLUXD_VAULT_CLIENT_KEY: "" # path to an unencrypted, PEM-encoded private key on disk which corresponds to the matching client certificate.; unset uses upstream default.
+  # INFLUXD_VAULT_SKIP_VERIFY: "" # do not verify Vault's presented certificate before communicating with it. Setting this variable is not recommended and voids Vault's security model.; unset uses upstream default.
+  # INFLUXD_VAULT_TLS_SERVER_NAME: "" # name to use as the SNI host when connecting via TLS.; unset uses upstream default.
+  # INFLUXD_VAULT_TOKEN: "" # vault authentication token; unset uses upstream default.
+  # INFLUXD_HTTP_BIND_ADDRESS: "" # bind address for the REST HTTP API; unset uses upstream default.
+  # INFLUXD_HTTP_READ_HEADER_TIMEOUT: "" # max duration the server should spend trying to read HTTP headers for new requests. Set to 0 for no timeout; unset uses upstream default.
+  # INFLUXD_HTTP_READ_TIMEOUT: "" # max duration the server should spend trying to read the entirety of new requests. Set to 0 for no timeout; unset uses upstream default.
+  # INFLUXD_HTTP_WRITE_TIMEOUT: "" # max duration the server should spend on processing+responding to requests. Set to 0 for no timeout; unset uses upstream default.
+  # INFLUXD_HTTP_IDLE_TIMEOUT: "" # max duration the server should keep established connections alive while waiting for new requests. Set to 0 for no timeout; unset uses upstream default.
+  # INFLUXD_TLS_CERT: "" # TLS certificate for HTTPs; unset uses upstream default.
+  # INFLUXD_TLS_KEY: "" # TLS key for HTTPs; unset uses upstream default.
+  # INFLUXD_TLS_MIN_VERSION: "" # Minimum accepted TLS version; unset uses upstream default.
+  # INFLUXD_TLS_STRICT_CIPHERS: "" # Restrict accept ciphers to: ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, ECDHE_RSA_WITH_AES_128_GCM_SHA256, ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, ECDHE_RSA_WITH_AES_256_GCM_SHA384, ECDHE_ECDSA_WITH_CHACHA20_POLY1305, ECDHE_RSA_WITH_CHACHA20_POLY1305; unset uses upstream default.
+  # INFLUXD_NO_TASKS: "" # disables the task scheduler; unset uses upstream default.
+  # INFLUXD_QUERY_CONCURRENCY: "" # the number of queries that are allowed to execute concurrently. Set to 0 to allow an unlimited number of concurrent queries; unset uses upstream default.
+  # INFLUXD_QUERY_INITIAL_MEMORY_BYTES: "" # the initial number of bytes allocated for a query when it is started. If this is unset, then query-memory-bytes will be used; unset uses upstream default.
+  # INFLUXD_QUERY_MEMORY_BYTES: "" # maximum number of bytes a query is allowed to use at any given time. This must be greater or equal to query-initial-memory-bytes; unset uses upstream default.
+  # INFLUXD_QUERY_MAX_MEMORY_BYTES: "" # the maximum amount of memory used for queries. Can only be set when query-concurrency is limited. If this is unset, then this number is query-concurrency * query-memory-bytes; unset uses upstream default.
+  # INFLUXD_QUERY_QUEUE_SIZE: "" # the number of queries that are allowed to be awaiting execution before new queries are rejected. Must be > 0 if query-concurrency is not unlimited; unset uses upstream default.
+  # INFLUXD_FEATURE_FLAGS: "" # feature flag overrides; unset uses upstream default.
+  # INFLUXD_INSTANCE_ID: "" # add an instance id for replications to prevent collisions and allow querying by edge node; unset uses upstream default.
+  # INFLUXD_STORAGE_WRITE_TIMEOUT: "" # The max amount of time the engine will spend completing a write request before cancelling with a timeout.; unset uses upstream default.
+  # INFLUXD_STORAGE_WAL_FSYNC_DELAY: "" # The amount of time that a write will wait before fsyncing. A duration greater than 0 can be used to batch up multiple fsync calls. This is useful for slower disks or when WAL write contention is seen.; unset uses upstream default.
+  # INFLUXD_STORAGE_WAL_MAX_CONCURRENT_WRITES: "" # The max number of writes that will attempt to write to the WAL at a time. (default <nprocs> * 2); unset uses upstream default.
+  # INFLUXD_STORAGE_WAL_MAX_WRITE_DELAY: "" # The max amount of time a write will wait when the WAL already has `storage-wal-max-concurrent-writes` active writes. Set to 0 to disable the timeout.; unset uses upstream default.
+  # INFLUXD_STORAGE_WAL_FLUSH_ON_SHUTDOWN: "" # Flushes and clears the WAL on shutdown; unset uses upstream default.
+  # INFLUXD_STORAGE_VALIDATE_KEYS: "" # Validates incoming writes to ensure keys only have valid unicode characters.; unset uses upstream default.
+  # INFLUXD_STORAGE_NO_VALIDATE_FIELD_SIZE: "" # Skip field-size validation on incoming writes.; unset uses upstream default.
+  # INFLUXD_STORAGE_CACHE_MAX_MEMORY_SIZE: "" # The maximum size a shard's cache can reach before it starts rejecting writes.; unset uses upstream default.
+  # INFLUXD_STORAGE_CACHE_SNAPSHOT_MEMORY_SIZE: "" # The size at which the engine will snapshot the cache and write it to a TSM file, freeing up memory.; unset uses upstream default.
+  # INFLUXD_STORAGE_CACHE_SNAPSHOT_WRITE_COLD_DURATION: "" # The length of time at which the engine will snapshot the cache and write it to a new TSM file if the shard hasn't received writes or deletes.; unset uses upstream default.
+  # INFLUXD_STORAGE_COMPACT_FULL_WRITE_COLD_DURATION: "" # The duration at which the engine will compact all TSM files in a shard if it hasn't received a write or delete.; unset uses upstream default.
+  # INFLUXD_STORAGE_COMPACT_THROUGHPUT_BURST: "" # The rate limit in bytes per second that we will allow TSM compactions to write to disk.; unset uses upstream default.
+  # INFLUXD_STORAGE_MAX_CONCURRENT_COMPACTIONS: "" # The maximum number of concurrent full and level compactions that can run at one time. A value of 0 results in 50% of runtime.GOMAXPROCS(0) used at runtime. Any number greater than 0 limits compactions to that value. This setting does not apply to cache snapshotting.; unset uses upstream default.
+  # INFLUXD_STORAGE_MAX_INDEX_LOG_FILE_SIZE: "" # The threshold, in bytes, when an index write-ahead log file will compact into an index file. Lower sizes will cause log files to be compacted more quickly and result in lower heap usage at the expense of write throughput.; unset uses upstream default.
+  # INFLUXD_STORAGE_SERIES_ID_SET_CACHE_SIZE: "" # The size of the internal cache used in the TSI index to store previously calculated series results.; unset uses upstream default.
+  # INFLUXD_STORAGE_SERIES_FILE_MAX_CONCURRENT_SNAPSHOT_COMPACTIONS: "" # The maximum number of concurrent snapshot compactions that can be running at one time across all series partitions in a database.; unset uses upstream default.
+  # INFLUXD_STORAGE_TSM_USE_MADV_WILLNEED: "" # Controls whether we hint to the kernel that we intend to page in mmap'd sections of TSM files.; unset uses upstream default.
+  # INFLUXD_STORAGE_RETENTION_CHECK_INTERVAL: "" # The interval of time when retention policy enforcement checks run.; unset uses upstream default.
+  # INFLUXD_STORAGE_SHARD_PRECREATOR_CHECK_INTERVAL: "" # The interval of time when the check to pre-create new shards runs.; unset uses upstream default.
+  # INFLUXD_STORAGE_SHARD_PRECREATOR_ADVANCE_PERIOD: "" # The default period ahead of the endtime of a shard group that its successor group is created.; unset uses upstream default.
+  # INFLUXD_INFLUXQL_MAX_SELECT_POINT: "" # The maximum number of points a SELECT can process. A value of 0 will make the maximum point count unlimited. This will only be checked every second so queries will not be aborted immediately when hitting the limit.; unset uses upstream default.
+  # INFLUXD_INFLUXQL_MAX_SELECT_SERIES: "" # The maximum number of series a SELECT can run. A value of 0 will make the maximum series count unlimited.; unset uses upstream default.
+  # INFLUXD_INFLUXQL_MAX_SELECT_BUCKETS: "" # The maximum number of group by time bucket a SELECT can create. A value of zero will max the maximum number of buckets unlimited.; unset uses upstream default.
+  # INFLUXD_NATS_PORT: "" # deprecated: nats has been replaced; unset uses upstream default.
+  # INFLUXD_NATS_MAX_PAYLOAD_BYTES: "" # deprecated: nats has been replaced; unset uses upstream default.
+  # INFLUXD_PPROF_DISABLED: "" # Don't expose debugging information over HTTP at /debug/pprof; unset uses upstream default.
+  # INFLUXD_METRICS_DISABLED: "" # Don't expose metrics over HTTP at /metrics; unset uses upstream default.
+  # INFLUXD_UI_DISABLED: "" # Disable the InfluxDB UI; unset uses upstream default.
+  # INFLUXD_HARDENING_ENABLED: "" # enable hardening options (disallow private IPs within flux and templates HTTP requests; disable file URLs in templates); unset uses upstream default.
+  # INFLUXD_TEMPLATE_FILE_URLS_DISABLED: "" # disable template file URLs; unset uses upstream default.
+  # INFLUXD_STRONG_PASSWORDS: "" # enable password strength enforcement; unset uses upstream default.
+  # INFLUXD_USE_HASHED_TOKENS: "" # enable storing hashed API tokens on disk (enabled by default; pass --use-hashed-tokens=false to disable for < 2.8 compatibility); unset uses upstream default.
+  # The entrypoint also reads these bootstrap/path options (not influxd flags):
+  # DOCKER_INFLUXDB_INIT_MODE: "setup" # Opt-in first-start setup; Scrutiny normally owns onboarding.
+  # DOCKER_INFLUXDB_INIT_USERNAME: "" # First admin username, only with init mode setup.
+  # DOCKER_INFLUXDB_INIT_PASSWORD_FILE: "/run/secrets/influx-password" # Mount Secret; no plaintext values.
+  # DOCKER_INFLUXDB_INIT_ADMIN_TOKEN_FILE: "/run/secrets/influx-token" # Mount Secret; preserve outside DB.
+  # DOCKER_INFLUXDB_INIT_ORG: "scrutiny" # Must match Scrutiny when using entrypoint setup.
+  # DOCKER_INFLUXDB_INIT_BUCKET: "metrics" # Must match Scrutiny when using entrypoint setup.
+  # DOCKER_INFLUXDB_INIT_RETENTION: "0" # Entry point setup bucket retention; 0 is infinite.
+  # DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME: "default" # CLI config profile during setup.
+  # DOCKER_INFLUXDB_INIT_USER_ID: "" # Optional explicit ID for bootstrap user.
+  # DOCKER_INFLUXDB_INIT_ORG_ID: "" # Optional explicit ID for bootstrap organization.
+  # DOCKER_INFLUXDB_INIT_BUCKET_ID: "" # Optional explicit ID for bootstrap bucket.
+  # DOCKER_INFLUXDB_INIT_UPGRADE_V1_CONFIG: "" # Only for deliberate v1->v2 upgrade jobs, not this v2 sidecar.
+  # DOCKER_INFLUXDB_INIT_UPGRADE_V1_DIR: "" # v1 upgrade source data directory.
+  # INFLUXD_CONFIG_PATH: "/etc/influxdb2/config.yml" # Mounted config; inferred by entrypoint if unset.
+  # INFLUXD_INIT_PORT: "9999" # Temporary onboarding listener; normal service remains 8086.
+  # INFLUX_CONFIGS_PATH: "/etc/influxdb2/influx-configs" # CLI credential store; persist securely if using CLI.
   # Use Secrets/ConfigMaps for bootstrap credentials or shared settings.
   envFrom: []
+  # Individual Secret key references using Kubernetes EnvVar/valueFrom.
+  extraEnv: []
+  # Mount config or Secret files through extraVolumes below.
+  extraVolumeMounts: []
   # Extra influxd flags. Leave empty to retain upstream defaults.
   args: []
 
@@ -74,3 +172,38 @@ resources: {}
 
 probes:
   enabled: true
+
+# Scrutiny runtime environment overrides; empty preserves seeded/persisted config.
+# Configuration precedence is env > file > upstream default. Do not enable a
+# commented override merely to copy an upstream default into an existing install.
+env: {}
+# SCRUTINY_WEB_LISTEN_HOST: "0.0.0.0" # Bind address; default all interfaces.
+# SCRUTINY_WEB_LISTEN_PORT: "8080" # Match Service/container/probes if changed.
+# SCRUTINY_WEB_LISTEN_BASEPATH: "" # URL prefix; prefer scrutiny.web.basepath.
+# SCRUTINY_WEB_SRC_FRONTEND_PATH: "/opt/scrutiny/web" # Static frontend assets.
+# SCRUTINY_WEB_DATABASE_LOCATION: "/opt/scrutiny/config/scrutiny.db" # SQLite file on config PVC.
+# SCRUTINY_LOG_LEVEL: "INFO" # DEBUG, INFO, WARN, ERROR.
+# SCRUTINY_LOG_FILE: "" # Empty logs to stdout; file needs a writable mount.
+# SCRUTINY_NOTIFY_URLS: "" # Notification URL list; tokens belong in a Secret.
+# SCRUTINY_WEB_INFLUXDB_SCHEME: "http" # http or https.
+# SCRUTINY_WEB_INFLUXDB_HOST: "127.0.0.1" # Chart sidecar; upstream default localhost.
+# SCRUTINY_WEB_INFLUXDB_PORT: "8086" # InfluxDB v2 API port.
+# SCRUTINY_WEB_INFLUXDB_ORG: "scrutiny" # Existing organization for stored metrics.
+# SCRUTINY_WEB_INFLUXDB_BUCKET: "metrics" # Existing metrics bucket prefix.
+# SCRUTINY_WEB_INFLUXDB_INIT_USERNAME: "admin" # First-start only username; choose before onboarding.
+# SCRUTINY_WEB_INFLUXDB_INIT_PASSWORD: "" # Upstream default password12345; set via Secret on first install.
+# SCRUTINY_WEB_INFLUXDB_TOKEN: "" # Upstream scrutiny-default-admin-token; Secret override must match existing DB token.
+# SCRUTINY_WEB_INFLUXDB_TLS_INSECURE_SKIP_VERIFY: "false" # Keep false; use a valid TLS certificate.
+# SCRUTINY_WEB_INFLUXDB_RETENTION_POLICY: "true" # Allow management of downsampled bucket retention.
+envFrom: []
+# - secretRef:
+#     name: scrutiny-credentials
+extraEnv: []
+# - name: SCRUTINY_WEB_INFLUXDB_TOKEN
+#   valueFrom:
+#     secretKeyRef:
+#       name: scrutiny-credentials
+#       key: influx-token
+extraVolumeMounts: []
+# Shared volumes for mounted config/Secret files; Kubernetes volume objects.
+extraVolumes: []
