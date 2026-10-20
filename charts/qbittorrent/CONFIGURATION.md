@@ -40,3 +40,7 @@ Config-file-only options remain supported by the application UI and its existing
 ## App settings and database
 
 The LinuxServer image exposes WEBUI_PORT and TORRENTING_PORT as its application-specific environment interface. Download behavior, proxy settings, authentication, CSRF/host validation, categories, RSS and WebAPI request fields are persisted qBittorrent settings (`/config/qBittorrent/qBittorrent.conf`) or API/UI inputs; setting env.QBITTORRENT_* does not configure them. Preserve writable `/config` plus download mounts and session/resume state. The app owns its SQLite/session format; no external PostgreSQL/MySQL database image is embedded. Configuring another WebUI port requires matching env, container/Service target and probes. Peer TCP/UDP Service exposure is optional and must match TORRENTING_PORT.
+
+## Verified container build
+
+The 5.2.4 amd64 image manifest identifies [wrapper source d68e3a4df919](https://github.com/linuxserver/docker-qbittorrent/tree/d68e3a4df919ebdd59940aa423e0acacc851ba21) and build `Linuxserver.io version:- 5.2.4_v2.0.15-ls481 Build-date:- 2026-10-18T11:49:47+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.

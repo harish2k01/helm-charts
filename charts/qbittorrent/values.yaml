@@ -36,6 +36,9 @@ env:
   # Mask applied to newly created files Upstream default: 022.
   # UMASK: "022"
 
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
 envFrom: []
 
 service:

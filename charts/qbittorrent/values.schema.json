@@ -105,6 +105,10 @@
         "UMASK": {
           "type": "string",
           "description": "Mask applied to newly created files Upstream default when unset: 022."
+        },
+        "DOCKER_MODS": {
+          "type": "string",
+          "description": "Optional trusted LinuxServer image mods; code-executing container extension, not an application setting. Unset by default."
         }
       }
     },
