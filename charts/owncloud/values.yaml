@@ -519,7 +519,7 @@ redis:
   host: ""
   image:
     repository: redis
-    tag: "6"
+    tag: "8.10.2"
     pullPolicy: IfNotPresent
   service:
     port: 6379
@@ -542,9 +542,21 @@ redis:
     type: RollingUpdate
   podManagementPolicy: OrderedReady
   terminationGracePeriodSeconds: 30
+  # Official Redis 8 entrypoint settings, for example SKIP_FIX_PERMS=1 when
+  # volume ownership is managed externally. EnvVar supports Secret references.
   extraEnv: []
   extraVolumes: []
   extraVolumeMounts: []
+  # Allow up to ten minutes to load an existing RDB/AOF before liveness starts.
+  # Set to {} to disable; increase for larger datasets after measuring startup.
+  startupProbe:
+    exec:
+      command:
+        - redis-cli
+        - ping
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 60
   livenessProbe:
     exec:
       command:
