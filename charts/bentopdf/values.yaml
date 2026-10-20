@@ -60,3 +60,11 @@ readinessProbe:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# Set ROBOTS_NOINDEX=true to keep a private instance out of search indexes.
+# The image injects HTML metadata at startup and needs its HTML files writable.
+env:
+  ROBOTS_NOINDEX: "false"
+
+# Additional runtime configuration from existing ConfigMaps or Secrets.
+envFrom: []

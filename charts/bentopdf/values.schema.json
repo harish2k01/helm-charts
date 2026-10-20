@@ -28,7 +28,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "2.8.4"
+          "default": "2.8.10"
         }
       }
     },
@@ -338,6 +338,29 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "env": {
+      "type": "object",
+      "description": "Runtime environment. Build-time static asset options require a custom image.",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "boolean",
+          "number"
+        ]
+      },
+      "default": {
+        "ROBOTS_NOINDEX": "false"
+      }
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Additional environment sources.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
     }
   }
 }
