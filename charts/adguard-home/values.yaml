@@ -25,6 +25,16 @@ securityContext: {}
 
 # Optional non-secret environment variables passed to AdGuard Home.
 env: {}
+# AdGuard Home reads its application settings from persisted AdGuardHome.yaml;
+# do not invent env names such as UPSTREAM_DNS, ADMIN_PASSWORD or FILTERING_*.
+# Optional documented runtime env (unset by default):
+# env:
+#   ADGUARD_HOME_DEFAULT_WEB_PORT: "80" # Wizard's suggested port, not an existing config override.
+#   TZ: UTC # Optional process timezone; does not replace application config.
+# ADGUARD_HOME_TEST_UPDATE_VERSION_URL is development-only and ignored by stable
+# release builds; Docker build/Go/frontend variables do not configure runtime.
+# Secret envFrom entries only help actual process/client environment consumers;
+# AdGuard admin credentials belong in the app's managed config, not an env alias.
 
 # Optional envFrom entries, for example configMapRef or secretRef blocks.
 envFrom: []
@@ -32,6 +42,22 @@ envFrom: []
 # Optional command/args overrides for advanced image customization.
 command: []
 args: []
+# Replacing args replaces the image CMD: retain -c and -w with the mounted paths.
+# Optional example that preserves image directories and fixes the UI listen port:
+# args:
+#   - --no-check-update # Image default; updates are managed by image tags.
+#   - -c
+#   - /opt/adguardhome/conf/AdGuardHome.yaml
+#   - -w
+#   - /opt/adguardhome/work
+#   - --web-addr=0.0.0.0:3000 # Default app address comes from persisted config/setup.
+# Other optional runtime flags, unset by default: --verbose (extra logs),
+# --logfile=/path (default stdout; mount writable path), --pidfile=/path
+# (default none), --glinet (GL-Inet compatibility), --no-permcheck (avoid unless
+# required by storage). --check-config/--version/--help exit and are Job/debug
+# commands; --service/--update are host-service actions, not pod startup flags.
+# Deprecated: --host/--port (use --web-addr), --no-mem-optimization (no effect),
+# --no-etc-hosts (use clients.runtime_sources.hosts/dns.hostsfile_enabled).
 
 # Service exposing the initial setup/admin UI and DNS ports. Use LoadBalancer,
 # MetalLB annotations, or externalTrafficPolicy when clients outside the cluster
@@ -69,7 +95,23 @@ containerPorts:
 
 # Persistent data and query state stored by AdGuard Home in one PVC.
 # AdGuardHome.yaml is writable application state in the conf subdirectory.
-# See README upgrade notes for new filtering.max_http_size and TLS changes.
+# See CHANGELOG.md for filtering.max_http_size and TLS changes.
+# Persisted config examples (edit via app or while the process is stopped;
+# these are AdGuardHome.yaml keys, not Helm values and are not auto-applied):
+# filtering:
+#   max_http_size: 256 MB # New default maximum downloaded rule-list size; nonzero.
+#   filters_update_interval: 24 # Default hours; supported range now 0..8760.
+# http:
+#   address: 0.0.0.0:3000 # Setup listener; align Service and probes if changed.
+# dns:
+#   port: 53 # Default DNS listener; add encrypted-DNS ports explicitly if enabled.
+#   upstream_dns: [] # Site-selected upstreams, managed by the UI/config.
+# tls:
+#   certificate_path: /etc/adguard-tls/tls.crt # Optional mounted TLS certificate.
+#   private_key_path: /etc/adguard-tls/tls.key # Secret volume, not literal key text.
+# tls.strict_sni_check is deprecated upstream; review it in existing config.
+# Existing DNS clients, upstreams, filters, DHCP, rewrites and auth settings stay
+# application-owned so upgrades do not overwrite the active configuration.
 persistence:
   existingClaim: ""
   accessModes:
@@ -85,6 +127,15 @@ persistence:
 
 # Advanced volume hooks for custom certificates, config files, or host mounts.
 extraVolumes: []
+# Optional certificate Secret (unset by default):
+# extraVolumes:
+#   - name: adguard-tls
+#     secret:
+#       secretName: adguard-tls
+# extraVolumeMounts:
+#   - name: adguard-tls
+#     mountPath: /etc/adguard-tls
+#     readOnly: true
 extraVolumeMounts: []
 
 # Optional Kubernetes Ingress for the setup/admin UI. Ingress only covers HTTP;
