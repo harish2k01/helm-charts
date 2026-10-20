@@ -8,7 +8,7 @@ This chart deploys [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr),
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install flaresolverr harish2k01/flaresolverr
 ```
@@ -18,7 +18,7 @@ helm install flaresolverr harish2k01/flaresolverr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install flaresolverr oci://ghcr.io/harish2k01/helm-charts/flaresolverr --version 0.1.2
+helm install flaresolverr oci://ghcr.io/harish2k01/helm-charts/flaresolverr --version 0.1.3
 ```
 
 By default, this chart creates only an internal ClusterIP Service.
@@ -58,12 +58,14 @@ httpRoute:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of FlareSolverr replicas |
 | `image.repository` | string | `ghcr.io/flaresolverr/flaresolverr` | Container image repository |
-| `image.tag` | string | `v3.4.6` | Container image tag |
+| `image.tag` | string | `v3.5.2` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.LOG_LEVEL` | string | `info` | FlareSolverr log level |
 | `env.LOG_HTML` | string | `false` | Log HTML responses |
 | `env.CAPTCHA_SOLVER` | string | `none` | Captcha solver backend |
+| `env.BROWSER_WAIT_TIMEOUT` | string/int | `1` | Seconds per browser state/challenge wait attempt; increase on slow hosts or sites |
 | `env.TZ` | string | `Asia/Kolkata` | Container timezone |
+| `envFrom` | list | `[]` | Secret/ConfigMap environment sources, including proxy credentials |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.port` | int | `8191` | Kubernetes Service port |
 | `service.targetPort` | int | `8191` | FlareSolverr container port |
@@ -74,3 +76,7 @@ httpRoute:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.

@@ -58,8 +58,8 @@
       "name": "Flaresolverr",
       "slug": "flaresolverr",
       "category": "Media",
-      "version": "0.1.2",
-      "appVersion": "v3.4.6",
+      "version": "0.1.3",
+      "appVersion": "v3.5.2",
       "description": "Deploys FlareSolverr on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/flaresolverr.png"
     },

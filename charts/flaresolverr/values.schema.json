@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "v3.4.6"
+          "default": "v3.5.2"
         },
         "pullPolicy": {
           "type": "string",
@@ -96,6 +96,16 @@
           "type": "string",
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
+        },
+        "BROWSER_WAIT_TIMEOUT": {
+          "type": [
+            "string",
+            "integer"
+          ],
+          "pattern": "^[0-9]+$",
+          "description": "Seconds per browser state/challenge wait attempt. Increase for slow hosts or websites.",
+          "default": "1",
+          "minimum": 0
         }
       }
     },
@@ -496,6 +506,15 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Secret or ConfigMap environment sources, for example proxy credentials.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
