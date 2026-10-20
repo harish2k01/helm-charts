@@ -18,7 +18,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.1.2
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.3
 ```
 
 ## Database Configuration
@@ -215,3 +215,44 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Social Web (ActivityPub)
+
+Enable `activityPub.enabled` with `httpRoute.enabled` to route
+`/.ghost/activitypub/`, `/.well-known/webfinger`, and `/.well-known/nodeinfo`
+through a small Caddy proxy. The upstream defaults to Ghost's hosted service
+(`https://ap.ghost.org`); `activityPub.target` may point to a separately managed
+ActivityPub service. The public Host header and request paths are retained.
+The proxy does not deploy an ActivityPub database or server.
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: public-gateway
+  hostnames: [blog.example.com]
+activityPub:
+  enabled: true
+```
+
+Hosted ActivityPub is subject to [Ghost's usage limits](https://docs.ghost.org/hosting/).
+Network operations are processed by the configured upstream. The proxy needs
+DNS and outbound HTTPS access; restrictive cluster policies must allow both.
+This option currently supports Gateway API HTTPRoute, not Ingress.
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `activityPub.enabled` | bool | `false` | Enable the optional Social Web proxy and routes. |
+| `activityPub.target` | string | `https://ap.ghost.org` | ActivityPub upstream URL. |
+| `activityPub.image` | string | `caddy:2.10.2-alpine` | Proxy container image. |
+| `activityPub.resources` | object | See values.yaml | Proxy resource requests and limits. |
+
+The official Caddy image marks its executable with `NET_BIND_SERVICE`. The
+proxy drops all capabilities and adds only this capability, which is allowed
+by Kubernetes Restricted Pod Security. Removing it prevents the binary from
+starting, including when it is configured to listen on port 8080.
+
+The proxy strips trailing slashes internally before forwarding requests. This
+prevents redirect loops between cached Ghost slash-adding redirects and the
+ActivityPub upstream's slash-removing redirects. The deployment configuration
+checksum also rolls out this normalization change to existing proxy pods.

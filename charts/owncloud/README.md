@@ -18,7 +18,7 @@ helm install owncloud harish2k01/owncloud
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.1.0
+helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.1.1
 ```
 
 ## Initial Configuration
@@ -168,7 +168,7 @@ Use `extraInitContainers`, `sidecars`, `extraEnv`, `extraVolumes`, `extraVolumeM
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of ownCloud replicas |
 | `image.repository` | string | `owncloud/server` | Container image repository |
-| `image.tag` | string | `10.16.2` | Container image tag |
+| `image.tag` | string | `10.16.6` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for ownCloud |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the ownCloud pod |

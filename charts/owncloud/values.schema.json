@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "10.16.2"
+          "default": "10.16.6"
         },
         "pullPolicy": {
           "type": "string",
