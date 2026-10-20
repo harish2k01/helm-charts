@@ -502,6 +502,15 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Secret or ConfigMap environment sources, for example proxy credentials.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
