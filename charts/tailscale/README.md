@@ -10,7 +10,7 @@ The chart follows the standard Tailscale container environment variables documen
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install tailscale harish2k01/tailscale
 ```
@@ -20,7 +20,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.2
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.3
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -99,10 +99,11 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of independent Tailscale router pods |
 | `image.repository` | string | `tailscale/tailscale` | Container image repository |
-| `image.tag` | string | `v1.96.5` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `v1.104.1` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `securityContext.privileged` | bool | `true` | Enables privileges required for tun/kernel networking |
 | `sysctl.enabled` | bool | `true` | Runs an init container to enable IP forwarding |
+| `authKey.enabled` | bool | `true` | Inject auth-key Secret; disable for OAuth/workload identity through extraEnv/envFrom |
 | `authKey.existingSecret` | string | `""` | Existing Secret containing the Tailscale auth key |
 | `authKey.existingSecretKey` | string | `TS_AUTHKEY` | Secret key name for the auth key |
 | `authKey.create` | bool | `false` | Create an auth Secret from `authKey.value` |
@@ -116,6 +117,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `tailscale.acceptDns` | bool | `false` | Accept DNS settings from the tailnet |
 | `tailscale.authOnce` | bool | `true` | Authenticate only when state is not already present |
 | `tailscale.advertiseExitNode` | bool | `true` | Add `--advertise-exit-node` to `TS_EXTRA_ARGS` |
+| `tailscale.bootTimeout` | string | `""` | Optional initial control-plane connection timeout, such as `90s` or `3m`; empty keeps the upstream `60s` default |
 | `tailscale.routes` | list | `[192.168.0.0/24]` | Subnet routes advertised to the tailnet through `TS_ROUTES` |
 | `tailscale.extraArgs` | list | `[]` | Additional flags appended to `TS_EXTRA_ARGS` |
 | `tailscale.tailscaledExtraArgs` | list | `[]` | Additional flags passed through `TS_TAILSCALED_EXTRA_ARGS` |
@@ -131,3 +133,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 | `topologySpreadConstraints` | list | `[]` | Pod topology spread constraints for separating replicas across zones or nodes |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.

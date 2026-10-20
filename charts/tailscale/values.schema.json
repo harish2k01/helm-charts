@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "v1.96.5"
+          "default": "v1.104.1"
         },
         "pullPolicy": {
           "type": "string",
@@ -178,6 +178,11 @@
           "type": "string",
           "description": "Plain Tailscale auth key used only when authKey.create is true. Avoid committing real keys.",
           "default": ""
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Inject the auth-key Secret. Disable when using OAuth/workload identity through extraEnv/envFrom.",
+          "default": true
         }
       }
     },
@@ -281,6 +286,11 @@
           "description": "List of envFrom entries.",
           "default": [],
           "items": {}
+        },
+        "bootTimeout": {
+          "type": "string",
+          "description": "Initial control-plane connection timeout as a Go duration, for example 90s or 3m. Empty uses the upstream 60s default.",
+          "default": ""
         }
       }
     },
