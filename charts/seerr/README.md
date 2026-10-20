@@ -18,7 +18,7 @@ helm install seerr harish2k01/seerr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.1.2
+helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.2.0
 ```
 
 ## Install With Gateway API HTTPRoute
@@ -52,7 +52,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Seerr replicas |
 | `image.repository` | string | `ghcr.io/seerr-team/seerr` | Container image repository |
-| `image.tag` | string | `v3.2.0` | Container image tag |
+| `image.tag` | string | `v3.5.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.TZ` | string | `Asia/Kolkata` | Container timezone |
 | `env.PORT` | string | `5055` | Seerr HTTP port |
@@ -69,3 +69,21 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional upgrade controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `envFrom` | list | `[]` | Existing Secret or ConfigMap environment sources; explicit `env` takes precedence. |
+
+## Upgrading from v3.2.0 to v3.5.0
+
+3.3 introduces optional `DB_POOL_SIZE` (upstream default `10`) for external PostgreSQL; set it under `env` and inject database credentials from an existing Secret with `envFrom`. Default SQLite storage remains `/app/config`. IPv6 literal `HOST` values are now accepted. Existing probes at `/api/v1/settings/public` remain valid. Back up `/app/config` and any external database before automatic migrations.
+
+**API consumers:** 3.5 makes `GET /settings/plex/library` and `GET /settings/jellyfin/library` read-only; `sync`/`enable` query parameters no longer work. Use `POST /settings/{plex|jellyfin}/library/sync` and `PUT /settings/{plex|jellyfin}/library/{libraryId}`. Update direct integrations before upgrading.
+
+**Webhook consumers:** 3.3 changes `discordID` (string) to `discordIDs` (array of strings). Update custom consumers accordingly. Discord thread IDs, ntfy tags, Gotify poster embeds, user sync and override rules are configured within Seerr; no additional Service ports or enabled-by-default integration is needed. 3.4.1 fixes an ImageProxy path-traversal/RCE vulnerability; 3.5 also fixes migrated Overseerr status handling. Do not enable the upstream demo environment option in a production deployment.
+
+Reviewed upstream release sequence: [v3.3.0](https://github.com/seerr-team/seerr/releases/tag/v3.3.0), [v3.4.0](https://github.com/seerr-team/seerr/releases/tag/v3.4.0), [v3.4.1](https://github.com/seerr-team/seerr/releases/tag/v3.4.1), [v3.5.0](https://github.com/seerr-team/seerr/releases/tag/v3.5.0).
+
+Configuration/source review: [full comparison](https://github.com/seerr-team/seerr/compare/v3.2.0...v3.5.0). Helm lint, default rendering, opt-in configuration rendering and catalog consistency are checked locally; this does not verify a live upgraded workload.

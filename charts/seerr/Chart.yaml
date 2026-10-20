@@ -3,8 +3,8 @@ name: seerr
 description: Deploys Seerr media request manager on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/jellyseerr.png
-version: 0.1.2
-appVersion: "v3.2.0"
+version: 0.2.0
+appVersion: "v3.5.0"
 home: https://docs.seerr.dev
 sources:
   - https://github.com/seerr-team/seerr
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: seerr
-      image: ghcr.io/seerr-team/seerr:v3.2.0
+      image: ghcr.io/seerr-team/seerr:v3.5.0
 maintainers:
   - name: harish2k01

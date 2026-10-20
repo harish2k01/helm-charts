@@ -17,9 +17,15 @@ podSecurityContext: {}
 securityContext: {}
 
 # Non-secret application environment variables.
+# Optional PostgreSQL connection-pool size, newly supported in Seerr 3.3.
+# DB_POOL_SIZE: "10"
+# HOST supports IPv6 literals; leave unset for the image default.
 env:
   TZ: Asia/Kolkata
   PORT: "5055"
+
+# Load credentials from existing Secrets or shared ConfigMaps. Explicit env wins.
+envFrom: []
 
 # Main HTTP service for the Seerr web UI/API.
 service:
