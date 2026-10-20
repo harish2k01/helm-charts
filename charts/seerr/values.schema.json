@@ -86,6 +86,98 @@
           "type": "string",
           "description": "Environment variable PORT passed to the application container.",
           "default": "5055"
+        },
+        "HOST": {
+          "type": "string",
+          "description": "HTTP bind address, IPv6 literals supported Upstream default when unset: unset (listen on all interfaces)."
+        },
+        "CONFIG_DIRECTORY": {
+          "type": "string",
+          "description": "Database/settings/log/cache path; mount persistent storage before changing Upstream default when unset: config relative to /app."
+        },
+        "LOG_LEVEL": {
+          "type": "string",
+          "description": "Application log threshold Upstream default when unset: debug."
+        },
+        "API_KEY": {
+          "type": "string",
+          "description": "API key override; use an existing Secret Upstream default when unset: generated/persisted."
+        },
+        "DB_TYPE": {
+          "type": "string",
+          "description": "Database engine; postgres is external Upstream default when unset: sqlite."
+        },
+        "DB_HOST": {
+          "type": "string",
+          "description": "External PostgreSQL hostname Upstream default when unset: localhost (driver default)."
+        },
+        "DB_PORT": {
+          "type": "string",
+          "description": "External PostgreSQL TCP port Upstream default when unset: 5432."
+        },
+        "DB_SOCKET_PATH": {
+          "type": "string",
+          "description": "Mounted Unix socket directory, takes precedence over host/port Upstream default when unset: unset."
+        },
+        "DB_USER": {
+          "type": "string",
+          "description": "External database username from Secret Upstream default when unset: unset."
+        },
+        "DB_PASS": {
+          "type": "string",
+          "description": "External database password from Secret Upstream default when unset: unset."
+        },
+        "DB_NAME": {
+          "type": "string",
+          "description": "Database name Upstream default when unset: seerr."
+        },
+        "DB_POOL_SIZE": {
+          "type": "string",
+          "description": "Maximum PostgreSQL pool connections Upstream default when unset: 10 (driver default)."
+        },
+        "DB_CONNECT_TIMEOUT_MS": {
+          "type": "string",
+          "description": "Pool acquisition timeout milliseconds; 0 means indefinite Upstream default when unset: 30000."
+        },
+        "DB_LOG_QUERIES": {
+          "type": "string",
+          "description": "Query diagnostics; may expose sensitive data Upstream default when unset: false."
+        },
+        "DB_USE_SSL": {
+          "type": "string",
+          "description": "Enable PostgreSQL TLS Upstream default when unset: false."
+        },
+        "DB_SSL_REJECT_UNAUTHORIZED": {
+          "type": "string",
+          "description": "Verify database certificate trust; keep enabled Upstream default when unset: true."
+        },
+        "DB_SSL_CA": {
+          "type": "string",
+          "description": "Database TLS CA material (inline takes precedence over _FILE) Upstream default when unset: unset."
+        },
+        "DB_SSL_CA_FILE": {
+          "type": "string",
+          "description": "Mounted database TLS CA file Upstream default when unset: unset."
+        },
+        "DB_SSL_KEY": {
+          "type": "string",
+          "description": "Database TLS KEY material (inline takes precedence over _FILE) Upstream default when unset: unset."
+        },
+        "DB_SSL_KEY_FILE": {
+          "type": "string",
+          "description": "Mounted database TLS KEY file Upstream default when unset: unset."
+        },
+        "DB_SSL_CERT": {
+          "type": "string",
+          "description": "Database TLS CERT material (inline takes precedence over _FILE) Upstream default when unset: unset."
+        },
+        "DB_SSL_CERT_FILE": {
+          "type": "string",
+          "description": "Mounted database TLS CERT file Upstream default when unset: unset."
+        },
+        "JELLYFIN_TYPE": {
+          "type": "string",
+          "description": "Legacy one-time Jellyseerr migration selector; emby only when migrating Upstream default when unset: unset."
         }
       }
     },
