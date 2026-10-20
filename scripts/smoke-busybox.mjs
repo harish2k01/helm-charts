@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, mkdirSync, rmSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import assert from 'node:assert/strict';
@@ -16,6 +16,9 @@ try {
   const mounts=['--network','none','-v',`${resolve(cfg)}:/config-template:ro`,'-v',`${resolve(out)}:/opt/scrutiny/config`];
   run([...mounts,scrutiny.image,...scrutiny.command]);
   assert.equal(readFileSync(join(out,'scrutiny.yaml'),'utf8'),'version: 1\n');
+  // The root init container created this file; recreate via our owned directory
+  // to simulate an operator-provided config without writing a root-owned file.
+  unlinkSync(join(out,'scrutiny.yaml'));
   writeFileSync(join(out,'scrutiny.yaml'),'preserve-existing: true\n');
   run([...mounts,scrutiny.image,...scrutiny.command]);
   assert.equal(readFileSync(join(out,'scrutiny.yaml'),'utf8'),'preserve-existing: true\n');
