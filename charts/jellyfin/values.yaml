@@ -24,6 +24,42 @@ env:
   TZ: Asia/Kolkata
 
 # Main HTTP service for the Jellyfin web UI.
+# Existing Secret/ConfigMap sources; explicit env entries take precedence.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+  # URL advertised by discovery; include scheme Upstream default: unset.
+  # JELLYFIN_PublishedServerUrl: "https://jellyfin.example.com"
+  # LinuxServer wrapper binary override; custom path must exist Upstream default: /usr/lib/jellyfin-ffmpeg/ffmpeg.
+  # FFMPEG_PATH: "/usr/lib/jellyfin-ffmpeg/ffmpeg"
+  # Default web redirect path Upstream default: web/.
+  # JELLYFIN_DefaultRedirectPath: "web/"
+  # Serve bundled web client Upstream default: True.
+  # JELLYFIN_hostwebclient: "true"
+  # FFmpeg probing byte budget Upstream default: 1G.
+  # JELLYFIN_FFmpeg__probesize: "1G"
+  # FFmpeg analyze duration budget Upstream default: 200M.
+  # JELLYFIN_FFmpeg__analyzeduration: "200M"
+  # Skip ffmpeg validation; normally leave false Upstream default: False.
+  # JELLYFIN_FFmpeg__novalidation: "false"
+  # Image extraction performance tradeoff Upstream default: False.
+  # JELLYFIN_FFmpeg__imgExtractPerfTradeoff: "false"
+  # Use Unix socket; requires deliberate Service/probe redesign Upstream default: False.
+  # JELLYFIN_kestrel__socket: "false"
+  # Unix listener socket path Upstream default: unset.
+  # JELLYFIN_kestrel__socketPath: "/config/jellyfin.sock"
+  # Unix socket permission mode Upstream default: unset.
+  # JELLYFIN_kestrel__socketPermissions: "660"
+  # SQLite cache size in pages Upstream default: 20000.
+  # JELLYFIN_sqlite__cacheSize: "20000"
+  # React to network interface changes Upstream default: True.
+  # JELLYFIN_DetectNetworkChange: "true"
+
+envFrom: []
+
 service:
   type: ClusterIP
   port: 8096

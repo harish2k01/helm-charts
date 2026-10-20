@@ -140,18 +140,12 @@ hostDevices:
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 
-### Additional upgrade controls
+### Additional configuration controls
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `startupProbe` | object | HTTP `/`, up to 15 minutes | Protect initial database migration from liveness restarts; tune for your library. |
 
-## Upgrading from 10.11.8 to 10.11.11
+## Configuration and releases
 
-10.11.9–10.11.11 include security fixes, normalized-username database migrations/user-manager locking fixes, stale userdata-cache fixes, and AV1 AMF/QSV/HDR10 encoder corrections. No new required container environment variable, config path, Service port or hardware device mount was introduced. Existing `/config`, published URL, media mounts and GPU devices remain supported. Preserve the complete `/config` PVC backup before upgrade; restore the backup together with the previous image if rolling back a migrated database. The startup probe allows 15 minutes for migration before liveness checks begin. Hardware acceleration/tonemapping features are selected in Jellyfin and still require the correct device mount, permissions and compatible drivers; the chart does not enable hardware settings automatically.
-
-Reviewed upstream release sequence: [v10.11.9](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.9), [v10.11.10](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.10), [v10.11.11](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.11).
-
-Container contract: [LinuxServer documentation](https://docs.linuxserver.io/images/docker-jellyfin/).
-
-Configuration/source review: [full comparison](https://github.com/jellyfin/jellyfin/compare/v10.11.8...v10.11.11). Helm lint, default rendering, opt-in configuration rendering and catalog consistency are checked locally; this does not verify a live upgraded workload.
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.

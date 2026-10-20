@@ -91,6 +91,62 @@
           "type": "string",
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
+        },
+        "UMASK": {
+          "type": "string",
+          "description": "Mask applied to newly created files Upstream default when unset: 022."
+        },
+        "JELLYFIN_PublishedServerUrl": {
+          "type": "string",
+          "description": "URL advertised by discovery; include scheme Upstream default when unset: unset."
+        },
+        "FFMPEG_PATH": {
+          "type": "string",
+          "description": "LinuxServer wrapper binary override; custom path must exist Upstream default when unset: /usr/lib/jellyfin-ffmpeg/ffmpeg."
+        },
+        "JELLYFIN_DefaultRedirectPath": {
+          "type": "string",
+          "description": "Default web redirect path Upstream default when unset: web/."
+        },
+        "JELLYFIN_hostwebclient": {
+          "type": "string",
+          "description": "Serve bundled web client Upstream default when unset: True."
+        },
+        "JELLYFIN_FFmpeg__probesize": {
+          "type": "string",
+          "description": "FFmpeg probing byte budget Upstream default when unset: 1G."
+        },
+        "JELLYFIN_FFmpeg__analyzeduration": {
+          "type": "string",
+          "description": "FFmpeg analyze duration budget Upstream default when unset: 200M."
+        },
+        "JELLYFIN_FFmpeg__novalidation": {
+          "type": "string",
+          "description": "Skip ffmpeg validation; normally leave false Upstream default when unset: False."
+        },
+        "JELLYFIN_FFmpeg__imgExtractPerfTradeoff": {
+          "type": "string",
+          "description": "Image extraction performance tradeoff Upstream default when unset: False."
+        },
+        "JELLYFIN_kestrel__socket": {
+          "type": "string",
+          "description": "Use Unix socket; requires deliberate Service/probe redesign Upstream default when unset: False."
+        },
+        "JELLYFIN_kestrel__socketPath": {
+          "type": "string",
+          "description": "Unix listener socket path Upstream default when unset: unset."
+        },
+        "JELLYFIN_kestrel__socketPermissions": {
+          "type": "string",
+          "description": "Unix socket permission mode Upstream default when unset: unset."
+        },
+        "JELLYFIN_sqlite__cacheSize": {
+          "type": "string",
+          "description": "SQLite cache size in pages Upstream default when unset: 20000."
+        },
+        "JELLYFIN_DetectNetworkChange": {
+          "type": "string",
+          "description": "React to network interface changes Upstream default when unset: True."
         }
       }
     },
@@ -496,6 +552,15 @@
       "type": "object",
       "description": "Startup health check; allows up to 15 minutes for database migrations before liveness begins.",
       "additionalProperties": true
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret or ConfigMap sources for application environment variables; explicit env entries win.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
