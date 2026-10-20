@@ -114,6 +114,16 @@ httpRoute:
 
 resources: {}
 
+# Allow database migrations and large-library startup before liveness begins.
+# Increase the budget for large installations; set {} to disable.
+startupProbe:
+  httpGet:
+    path: /rest/noauth/health
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 60
+
 livenessProbe:
   httpGet:
     path: /rest/noauth/health

@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this for repeatable installs.",
-          "default": "2.1.0"
+          "default": "2.1.6"
         },
         "pullPolicy": {
           "type": "string",
@@ -324,6 +324,20 @@
       "description": "Pod affinity and anti-affinity rules.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup probe budget for database migrations and large libraries before liveness begins. Set an empty object to disable.",
+      "additionalProperties": true,
+      "default": {
+        "httpGet": {
+          "path": "/rest/noauth/health",
+          "port": "http"
+        },
+        "periodSeconds": 10,
+        "timeoutSeconds": 5,
+        "failureThreshold": 60
+      }
     }
   },
   "definitions": {
