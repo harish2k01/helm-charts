@@ -63,9 +63,7 @@ env:
   NODE_ENV: production
   # Optional upstream configuration; uncomment only to override app defaults.
   # admin__sessionMaxAgeMs: "15552000000" # Admin session lifetime in milliseconds.
-  # privacy__useUpdateCheck: "false"
   # privacy__useGravatar: "false"
-  # privacy__useRpcPing: "false"
   # mail__transport: SMTP
   # mail__options__host: smtp.example.com
   # mail__options__port: "587"
@@ -73,7 +71,7 @@ env:
   # mail__options__auth__user: user@example.com
   # mail__from: noreply@example.com
   # klipy__contentFilter: off # Tenor has been removed upstream.
-  # paths__adaptersPath: /var/lib/ghost/content/adapters
+  # paths__installedAdaptersPath: /var/lib/ghost/content/adapters
   # adapters__jobs__active: InMemoryJobsBackend
   # adapters__jobs__InMemoryJobsBackend__concurrency: "3"
   # storage__imports__adapter: LocalStorageBase
