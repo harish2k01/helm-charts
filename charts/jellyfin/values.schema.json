@@ -147,6 +147,10 @@
         "JELLYFIN_DetectNetworkChange": {
           "type": "string",
           "description": "React to network interface changes Upstream default when unset: True."
+        },
+        "DOCKER_MODS": {
+          "type": "string",
+          "description": "Optional trusted LinuxServer image mods; code-executing container extension, not an application setting. Unset by default."
         }
       }
     },

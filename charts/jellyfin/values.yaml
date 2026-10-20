@@ -58,6 +58,9 @@ env:
   # React to network interface changes Upstream default: True.
   # JELLYFIN_DetectNetworkChange: "true"
 
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
 envFrom: []
 
 service:
