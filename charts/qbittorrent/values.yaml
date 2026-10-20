@@ -28,6 +28,16 @@ env:
 # Main HTTP service for the qBittorrent web UI. BitTorrent TCP/UDP ports are
 # not exposed by default; add them to service.extraPorts only if you want
 # inbound peer connectivity through Kubernetes.
+# Existing Secret/ConfigMap sources; explicit env entries take precedence.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+
+envFrom: []
+
 service:
   type: ClusterIP
   port: 8080

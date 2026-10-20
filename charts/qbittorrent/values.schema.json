@@ -101,6 +101,10 @@
           "type": "string",
           "description": "Environment variable TORRENTING_PORT passed to the application container.",
           "default": "6881"
+        },
+        "UMASK": {
+          "type": "string",
+          "description": "Mask applied to newly created files Upstream default when unset: 022."
         }
       }
     },
@@ -533,6 +537,15 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret or ConfigMap sources for application environment variables; explicit env entries win.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }

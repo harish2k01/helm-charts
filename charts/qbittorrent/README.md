@@ -18,7 +18,7 @@ helm install qbittorrent harish2k01/qbittorrent
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install qbittorrent oci://ghcr.io/harish2k01/helm-charts/qbittorrent --version 0.1.3
+helm install qbittorrent oci://ghcr.io/harish2k01/helm-charts/qbittorrent --version 0.2.0
 ```
 
 ## Web UI Access
@@ -108,14 +108,6 @@ By default, this chart creates only the Web UI Service port. The BitTorrent TCP/
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 
-## Upgrading from 5.2.0 to 5.2.4
+## Configuration and releases
 
-The 5.2.1–5.2.4 releases repair lockfile handling, migrations, database failures, torrent imports and WebUI/API escaping, and restrict forwarded-host use to explicitly enabled reverse-proxy support. No new required LinuxServer environment variable, persistent path or listening port was introduced in this range. Existing `WEBUI_PORT=8080`, `TORRENTING_PORT=6881`, `/config`, and optional peer TCP/UDP exposure remain valid. When changing ports, change both the matching `env` value and the Service/container port values. Configure reverse proxy support and trusted proxies in qBittorrent rather than disabling CSRF/host validation. Back up `/config`, including resume/session state, before upgrade.
-
-Do not use the unrelated historical LinuxServer `20.04.1` tag as a qBittorrent major upgrade; this chart follows the actual application 5.x release stream.
-
-Reviewed upstream release sequence: [release-5.2.1](https://github.com/qbittorrent/qBittorrent/releases/tag/release-5.2.1), [release-5.2.2](https://github.com/qbittorrent/qBittorrent/releases/tag/release-5.2.2), [release-5.2.3](https://github.com/qbittorrent/qBittorrent/releases/tag/release-5.2.3), [release-5.2.4](https://github.com/qbittorrent/qBittorrent/releases/tag/release-5.2.4).
-
-Container contract: [LinuxServer documentation](https://docs.linuxserver.io/images/docker-qbittorrent/).
-
-Configuration/source review: [full comparison](https://github.com/qbittorrent/qBittorrent/compare/release-5.2.0...release-5.2.4). Helm lint, default rendering, opt-in configuration rendering and catalog consistency are checked locally; this does not verify a live upgraded workload.
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.
