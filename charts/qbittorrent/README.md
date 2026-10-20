@@ -18,7 +18,7 @@ helm install qbittorrent harish2k01/qbittorrent
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install qbittorrent oci://ghcr.io/harish2k01/helm-charts/qbittorrent --version 0.1.2
+helm install qbittorrent oci://ghcr.io/harish2k01/helm-charts/qbittorrent --version 0.2.0
 ```
 
 ## Web UI Access
@@ -81,7 +81,7 @@ By default, this chart creates only the Web UI Service port. The BitTorrent TCP/
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of qBittorrent replicas |
 | `image.repository` | string | `lscr.io/linuxserver/qbittorrent` | Container image repository |
-| `image.tag` | string | `5.2.0` | Container image tag |
+| `image.tag` | string | `5.2.4` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
@@ -107,3 +107,7 @@ By default, this chart creates only the Web UI Service port. The BitTorrent TCP/
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.

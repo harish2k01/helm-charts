@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "5.2.0"
+          "default": "5.2.4"
         },
         "pullPolicy": {
           "type": "string",
@@ -101,6 +101,14 @@
           "type": "string",
           "description": "Environment variable TORRENTING_PORT passed to the application container.",
           "default": "6881"
+        },
+        "UMASK": {
+          "type": "string",
+          "description": "Mask applied to newly created files Upstream default when unset: 022."
+        },
+        "DOCKER_MODS": {
+          "type": "string",
+          "description": "Optional trusted LinuxServer image mods; code-executing container extension, not an application setting. Unset by default."
         }
       }
     },
@@ -533,6 +541,15 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret or ConfigMap sources for application environment variables; explicit env entries win.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
