@@ -18,7 +18,7 @@ helm install bazarr harish2k01/bazarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.1.2
+helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.2.0
 ```
 
 Deploy another Bazarr instance by using a different release name and values file:
@@ -70,7 +70,7 @@ media:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Bazarr replicas |
 | `image.repository` | string | `lscr.io/linuxserver/bazarr` | Container image repository |
-| `image.tag` | string | `1.5.6` | Container image tag |
+| `image.tag` | string | `1.6.2` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
@@ -92,3 +92,21 @@ media:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional upgrade controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `startupProbe` | object | HTTP `/`, up to 15 minutes | Protect initial database migration from liveness restarts; tune for your library. |
+
+## Upgrading from 1.5.6 to 1.6.2
+
+1.6 adds subtitle-table/database migrations and WAL handling, removes custom scoring sections and the obsolete Podnapisi provider, migrates a single Gemini key to the new multi-key list, and adds Jellyfin library refresh, Whisper fallback, language equivalence, subtitle quality checks and provider integrations. Configure these through the app UI or its persisted configuration; no extra Kubernetes Service or port is required. Back up the whole `/config` PVC before upgrade and review custom score workflows because their settings are removed upstream.
+
+The new `BAZARR_CONFIG_BASE_FILE_PATH` environment variable selects the directory containing `config.yaml`/`config.ini` (not a file). It can be set via `env`; leave it unset to retain `/config/config`, or mount an alternative writable persistent directory with `extraVolumes`/`extraVolumeMounts`. The startup probe gives migrations up to 15 minutes. Provider API keys and postprocessing commands stay application-owned. Existing writable media mounts must remain available for subtitle changes.
+
+Reviewed upstream release sequence: [v1.6.0](https://github.com/morpheus65535/bazarr/releases/tag/v1.6.0), [v1.6.1](https://github.com/morpheus65535/bazarr/releases/tag/v1.6.1), [v1.6.2](https://github.com/morpheus65535/bazarr/releases/tag/v1.6.2).
+
+Container contract: [LinuxServer documentation](https://docs.linuxserver.io/images/docker-bazarr/).
+
+Configuration/source review: [full comparison](https://github.com/morpheus65535/bazarr/compare/v1.5.6...v1.6.2). Helm lint, default rendering, opt-in configuration rendering and catalog consistency are checked locally; this does not verify a live upgraded workload.

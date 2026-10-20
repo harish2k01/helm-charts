@@ -18,6 +18,9 @@ securityContext: {}
 
 # LinuxServer.io images use PUID/PGID to choose the user that owns app files.
 # Match these to the permissions on your config and media volumes.
+# Optional 1.6 setting: directory containing config.yaml/config.ini.
+# Keep it on writable persistent storage; default is /config/config.
+# BAZARR_CONFIG_BASE_FILE_PATH: "/config/config"
 env:
   PUID: "3000"
   PGID: "3000"
@@ -85,6 +88,16 @@ httpRoute:
             value: /
 
 resources: {}
+
+# Allow database migrations/scans to finish before liveness starts restarting pods.
+# Increase failureThreshold for large libraries or slow persistent storage.
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 90
 
 livenessProbe:
   httpGet:
