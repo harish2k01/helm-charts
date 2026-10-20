@@ -31,7 +31,68 @@ cloudflared:
     address: 0.0.0.0:2000
     port: 2000
   extraArgs: []
+  # Optional runtime overrides; leave commented to use upstream/remote config.
+  # CLI flags generated above take precedence over equivalent env variables.
+  # Use logLevel/noAutoupdate/metrics values instead of TUNNEL_LOGLEVEL,
+  # NO_AUTOUPDATE or TUNNEL_METRICS to avoid conflicting configuration.
   extraEnv: {}
+  # extraEnv:
+  #   TUNNEL_EDGE_IP_VERSION: "4" # Upstream now auto; 4 retains pre-upgrade IPv4.
+  #   TUNNEL_REGION: "" # Default global edge region; set us for US region.
+  #   TUNNEL_EDGE_BIND_ADDRESS: "" # Default OS choice; bind outgoing edge IP.
+  #   TUNNEL_TRANSPORT_PROTOCOL: auto # Default auto; quic or http2 if needed.
+  #   TUNNEL_POST_QUANTUM: "false" # Default false; require PQ with QUIC.
+  #   TUNNEL_NO_PRECHECKS: "false" # Default false; skip diagnostic prechecks if true.
+  #   TUNNEL_DISABLE_PATH_NORMALIZATION: "false" # Upstream true; false enables Access path canonicalization.
+  #   TUNNEL_RETRIES: "5" # Default 5 connection/protocol retries.
+  #   DIAL_EDGE_TIMEOUT: 15s # Default edge connection setup timeout.
+  #   TUNNEL_GRACE_PERIOD: 30s # Default drain time; align pod termination grace.
+  #   TUNNEL_STREAM_WRITE_TIMEOUT: 0s # Default no stream-write timeout.
+  #   TUNNEL_DISABLE_QUIC_PMTU: "false" # Default discovery enabled.
+  #   TUNNEL_QUIC_CONN_LEVEL_FLOW_CONTROL_LIMIT: "31457280" # Default 30 MiB.
+  #   TUNNEL_QUIC_STREAM_LEVEL_FLOW_CONTROL_LIMIT: "6291456" # Default 6 MiB.
+  #   TUNNEL_COMPRESSION_LEVEL: "0" # Default off; experimental compression quality.
+  #   TUNNEL_USE_RECONNECT_TOKEN: "true" # Default true; reconnect-token flow.
+  #   TUNNEL_MAX_ACTIVE_FLOWS: "0" # Unset/zero keeps remote private-flow limit.
+  #   TUNNEL_DNS_RESOLVER_ADDRS: 1.1.1.1:53 # Unset uses dynamic resolver discovery.
+  #   TUNNEL_ICMPV4_SRC: 0.0.0.0 # Unset derives an ICMP source address.
+  #   TUNNEL_ICMPV6_SRC: "::" # Unset derives an ICMPv6 source/interface.
+  #   TUNNEL_CACERT: /etc/custom-ca/edge.pem # Unset uses default trust; mount file.
+  #   TUNNEL_METRICS_UPDATE_FREQ: 5s # Default metrics refresh interval.
+  #   TUNNEL_TAG: environment=production # Unset no extra origin header tags.
+  #   TUNNEL_LOG_OUTPUT: json # Default stdout format; default/json supported.
+  #   TUNNEL_LOGFILE: /var/log/cloudflared.log # Unset no file; mount writable path.
+  #   TUNNEL_LOGDIRECTORY: /var/log/cloudflared # Unset no log-directory output.
+  #   TUNNEL_TRACE_OUTPUT: /var/log/cloudflared.trace # Unset no diagnostic trace file.
+  #   TUNNEL_MANAGEMENT_DIAGNOSTICS: "true" # Default true; management debug routes.
+  #   TUNNEL_MANAGEMENT_HOSTNAME: region1.v2.argotunnel.com # Default management endpoint.
+  # Origin settings normally belong in the remotely managed tunnel configuration.
+  # Optional locally managed/quick-tunnel overrides (unset unless explicitly needed):
+  #   TUNNEL_URL: http://origin:8080 # Origin URL; not needed for token/remote ingress.
+  #   TUNNEL_HTTP_HOST_HEADER: example.com # Default origin host header unchanged.
+  #   TUNNEL_ORIGIN_SERVER_NAME: example.com # Default origin TLS SNI from URL.
+  #   TUNNEL_ORIGIN_CA_POOL: /etc/custom-ca/origin.pem # Default system CA trust.
+  #   TUNNEL_UNIX_SOCKET: /run/origin.sock # Default no Unix socket.
+  #   TUNNEL_ORIGIN_ENABLE_HTTP2: "false" # Default false; HTTP/2 origin connection.
+  #   TUNNEL_NO_CHUNKED_ENCODING: "false" # Default false; disable HTTP/1.1 chunking.
+  #   NO_TLS_VERIFY: "false" # Default false; retain certificate verification.
+  #   TUNNEL_HELLO_WORLD: "false" # Default false; optional built-in test origin.
+  #   TUNNEL_SOCKS: "false" # Default false; SOCKS5 proxy mode.
+  #   TUNNEL_BASTION: "false" # Default false; jump-host mode.
+  #   TUNNEL_PROXY_ADDRESS: 127.0.0.1 # Default bastion listener address.
+  #   TUNNEL_PROXY_PORT: "0" # Default random bastion listener port.
+  # TUNNEL_TOKEN is already supplied from token.secretName/token.secretKey.
+  # Do not duplicate it in extraEnv or commit literal credentials.
+  # envFrom:
+  #   - secretRef:
+  #       name: cloudflared-runtime-secrets
+  # TUNNEL_TOKEN_FILE/TUNNEL_CRED_FILE/TUNNEL_CRED_CONTENTS are alternate auth
+  # mechanisms and do not override this chart's explicit TUNNEL_TOKEN.
+  # Deprecated/no-op: TUNNEL_PROTO_LOGLEVEL, TUNNEL_TRANSPORT_LOGLEVEL,
+  # TUNNEL_API_KEY, TUNNEL_API_EMAIL and TUNNEL_API_CA_KEY; do not add them.
+  # List/create/info/delete/SSH-server variables are for separate CLI commands,
+  # not this chart's token-backed tunnel run. TUNNEL_EDGE is internal testing.
+  # Docker TARGET_GOOS/TARGET_GOARCH/GOPROXY/CGO_ENABLED are build-time only.
   envFrom: []
 
 token:
