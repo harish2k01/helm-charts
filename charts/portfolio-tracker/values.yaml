@@ -7,7 +7,7 @@ image:
   repository: ghcr.io/harish2k01/portfolio-tracker
   pullPolicy: IfNotPresent
   # Pin this to a semantic release version for repeatable GitOps deployments.
-  tag: "0.1.0"
+  tag: "0.7.0"
 
 # Set when pulling images from a private registry or mirror.
 imagePullSecrets: []
@@ -105,6 +105,9 @@ portfolioTracker:
       NEXTAUTH_SECRET: "replace-me-with-a-long-random-string"
       SMTP_USER: ""
       SMTP_PASS: ""
+      # Optional publishable logo-provider identifiers; leave blank to disable.
+      LOGO_DEV_TOKEN: ""
+      BRANDFETCH_CLIENT_ID: ""
 
   # Non-secret runtime environment. DATABASE_URL and secret values are managed
   # separately by the chart.
@@ -115,6 +118,8 @@ portfolioTracker:
     SMTP_PORT: "587"
     SMTP_FROM: ""
     SMTP_SECURE: "false"
+    # Prefer logo_dev or brandfetch when its corresponding identifier is set.
+    LOGO_PROVIDER: ""
 
   # Additional envFrom entries for ConfigMaps or Secrets managed outside the chart.
   envFrom: []
