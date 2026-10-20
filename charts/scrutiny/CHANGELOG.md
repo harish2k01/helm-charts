@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.4 — BusyBox 1.38.0
+
+### App changes
+
+The init image is pinned to BusyBox 1.38.0 (previously 1.36). [Upstream release notes](https://busybox.net/) explicitly label 1.38.0 **unstable**; review this release status before production use. [Official image metadata](https://github.com/docker-library/official-images/blob/master/library/busybox) confirms the version and architectures. This update does not change the application image beyond the prerequisite app/dependency PR.
+
+Reviewed all intervening 1.37 and 1.38 release notes and the init script: it uses only sh -c, test -f and plain cp. Shell changes include stricter unknown options, heredoc fixes and removal of the nonstandard chdir builtin; none is used here. The cp -aT symlink fix does not affect plain file copy. Existing persisted scrutiny.yaml is intentionally preserved.
+
+### Chart changes
+
+Merge InfluxDB PR #20 before BusyBox PR #19. PR #19 includes both prerequisites and uses distinct chart versions to avoid publishing two different packages under the same version. Its GitHub Actions smoke job runs both charts' actual rendered init scripts in isolated Linux containers, including copy/preserve-existing-file behavior and both forwarding keys. Helm rendering alone does not prove shell behavior; check that job before merging. Existing production data and nodes are not touched by that smoke test.
+
 ## 0.2.3 — InfluxDB 2.9.1
 
 ### App changes

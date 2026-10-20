@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.4 — BusyBox 1.38.0
+
+### App changes
+
+The init image is pinned to BusyBox 1.38.0 (previously 1.37). [Upstream release notes](https://busybox.net/) explicitly label 1.38.0 **unstable**; review this release status before production use. [Official image metadata](https://github.com/docker-library/official-images/blob/master/library/busybox) confirms the version and architectures. This update does not change the application image beyond the prerequisite app/dependency PR.
+
+Reviewed all 1.38 release notes and the init script: it uses sh -ec and sysctl -w for the existing IPv4/IPv6 forwarding keys. No new environment variable or sysctl key is required. The init container retains its existing privilege and enable/disable controls. New ash restrictions do not affect these commands.
+
+### Chart changes
+
+Merge Tailscale PR #47 before BusyBox PR #19. PR #19 includes both prerequisites and uses distinct chart versions to avoid publishing two different packages under the same version. Its GitHub Actions smoke job runs both charts' actual rendered init scripts in isolated Linux containers, including copy/preserve-existing-file behavior and both forwarding keys. Helm rendering alone does not prove shell behavior; check that job before merging. Existing production data and nodes are not touched by that smoke test.
+
 ## 0.1.3
 
 ### Application upgrade from v1.96.5 to v1.104.1
