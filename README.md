@@ -8,6 +8,8 @@ Reliable Helm charts for self-hosted Kubernetes applications. This repository pr
 
 Every chart is published through both the classic Helm repository format and as an OCI chart in GHCR, so users can install through the workflow they already prefer.
 
+Browse the [chart catalog](https://charts.harish2k01.in/) to search applications, filter by category, and copy versioned Helm or OCI installation commands. Charts are created and maintained by [Harish](https://github.com/harish2k01).
+
 ## Highlights
 
 - Dual publishing: GitHub Pages `index.yaml` and GHCR OCI charts.
@@ -20,7 +22,7 @@ Every chart is published through both the classic Helm repository format and as 
 
 | Channel | Location | Best for |
 | --- | --- | --- |
-| Helm repository | `https://harish2k01.github.io/helm-charts` | Classic Helm workflows with `helm repo add`, `helm search repo`, and `index.yaml`. |
+| Helm repository | `https://charts.harish2k01.in` | Classic Helm workflows with `helm repo add`, `helm search repo`, and `index.yaml`. |
 | OCI registry | `oci://ghcr.io/harish2k01/helm-charts/<chart-name>` | Direct registry installs without adding a Helm repository first. |
 | GitHub Releases | Per-chart version tags | Release notes and downloadable `.tgz` chart assets. |
 
@@ -29,7 +31,7 @@ Every chart is published through both the classic Helm repository format and as 
 Install from the Helm repository:
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install bentopdf harish2k01/bentopdf --version 0.1.3
 ```
@@ -65,7 +67,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 
 | Chart | Chart Version | App Version | Category | Description |
 | --- | ---: | ---: | --- | --- |
-| [`adguard-home`](charts/adguard-home) | `0.1.0` | `v0.107.76` | Network | Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports. |
+| [`adguard-home`](charts/adguard-home) | `0.1.2` | `v0.107.76` | Network | Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports. |
 | [`bazarr`](charts/bazarr) | `0.1.2` | `1.5.6` | Media | Deploys Bazarr subtitle automation on Kubernetes. |
 | [`bentopdf`](charts/bentopdf) | `0.1.3` | `2.8.4` | Documents | Deploys BentoPDF document conversion on Kubernetes. |
 | [`cloudflared`](charts/cloudflared) | `0.1.1` | `2026.3.0` | Network | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes. |
@@ -81,6 +83,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`portfolio-next`](charts/portfolio-next) | `0.1.0` | `v0.1.0` | Publishing | Deploys the static Astro portfolio with digest-pinned NGINX and optional Gateway API routing. |
 | [`portfolio-tracker`](charts/portfolio-tracker) | `0.1.0` | `0.1.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
+| [`profilarr`](charts/profilarr) | `0.1.1` | `2.2.0` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
 | [`prowlarr`](charts/prowlarr) | `0.1.2` | `2.3.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`pve-exporter`](charts/pve-exporter) | `0.1.0` | `3.8.2` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
 | [`qbittorrent`](charts/qbittorrent) | `0.1.2` | `5.2.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
@@ -161,8 +164,8 @@ helm uninstall bentopdf
 ## Repository URLs
 
 ```text
-Helm repository: https://harish2k01.github.io/helm-charts
-Index file:      https://harish2k01.github.io/helm-charts/index.yaml
+Helm repository: https://charts.harish2k01.in
+Index file:      https://charts.harish2k01.in/index.yaml
 OCI registry:   oci://ghcr.io/harish2k01/helm-charts/<chart-name>
 ```
 
@@ -171,15 +174,32 @@ OCI registry:   oci://ghcr.io/harish2k01/helm-charts/<chart-name>
 Release builds sign every chart package with Helm provenance. The public key is published at:
 
 ```text
-https://harish2k01.github.io/helm-charts/chart-signing-key.asc
+https://charts.harish2k01.in/chart-signing-key.asc
 ```
 
 To verify a downloaded package:
 
 ```bash
-curl -fsSLO https://harish2k01.github.io/helm-charts/chart-signing-key.asc
-curl -fsSLO https://harish2k01.github.io/helm-charts/bentopdf-0.1.3.tgz
-curl -fsSLO https://harish2k01.github.io/helm-charts/bentopdf-0.1.3.tgz.prov
+curl -fsSLO https://charts.harish2k01.in/chart-signing-key.asc
+curl -fsSLO https://charts.harish2k01.in/bentopdf-0.1.3.tgz
+curl -fsSLO https://charts.harish2k01.in/bentopdf-0.1.3.tgz.prov
 gpg --dearmor < chart-signing-key.asc > chart-signing-key.gpg
 helm verify bentopdf-0.1.3.tgz --keyring ./chart-signing-key.gpg
 ```
+
+## Catalog Website
+
+The catalog is a static website served by GitHub Pages at `https://charts.harish2k01.in`. It includes app logos from chart metadata, light and dark themes, search/category filters, and installation details for every chart in one scrolling list. The H/home/server mark identifies Harish's homelab and serves as the favicon.
+
+Application logos come from the [selfh.st icon collection](https://github.com/selfhst/icons) where available, using the `icon` URL in each chart's metadata. Charts without a suitable logo display app initials.
+
+`docs/catalog.json` is generated from chart metadata in `charts/*/Chart.yaml` and categories in the chart table above. To refresh it locally with Node.js 24:
+
+```bash
+npm ci --ignore-scripts
+npm run build:catalog
+npm run check:catalog
+npm run test:catalog
+```
+
+Serve `docs/` with a local HTTP server to preview the site; the catalog loads its JSON over HTTP. CI checks that the committed catalog matches the charts, and the release workflow regenerates it before publishing the Pages artifact. The website itself needs no Node.js server or frontend framework.
