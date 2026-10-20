@@ -1,0 +1,72 @@
+# Increase for redundancy; the application has no persistent state.
+replicaCount: 1
+image:
+  repository: ghcr.io/harish2k01/portfolio-next
+  # Use a published release or immutable content tag; blank uses appVersion.
+  tag: ""
+  # When set, digest takes precedence over tag. A digest change rolls out new pods.
+  digest: ""
+  pullPolicy: IfNotPresent
+# Add an existing registry Secret when the GHCR package is private.
+imagePullSecrets: []
+# Override resource naming only when integrating with existing services.
+nameOverride: ""
+fullnameOverride: ""
+# Monitoring annotations and additional workload labels.
+podAnnotations: {}
+podLabels: {}
+# No Kubernetes API access is needed by a static web server.
+automountServiceAccountToken: false
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  runAsGroup: 101
+  fsGroup: 101
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+  readOnlyRootFilesystem: true
+service:
+  type: ClusterIP
+  port: 80
+# Use either Ingress or Gateway API for external routing.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: portfolio.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+httpRoute:
+  enabled: false
+  annotations: {}
+  # Supply your Gateway's name, namespace, and optional listener sectionName.
+  parentRefs: []
+  hostnames: []
+# NGINX is small; tune these after measuring traffic.
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+  initialDelaySeconds: 5
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+# Optional scheduling constraints for dedicated nodes or topology placement.
+nodeSelector: {}
+tolerations: []
+affinity: {}
