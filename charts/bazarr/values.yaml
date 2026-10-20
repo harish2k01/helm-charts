@@ -58,6 +58,9 @@ env:
   # Disables CLI parsing; leave unset with the LinuxServer startup command Upstream default: false.
   # NO_CLI: "false"
 
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
 envFrom: []
 
 service:

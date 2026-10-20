@@ -135,6 +135,10 @@
         "NO_CLI": {
           "type": "string",
           "description": "Disables CLI parsing; leave unset with the LinuxServer startup command Upstream default when unset: false."
+        },
+        "DOCKER_MODS": {
+          "type": "string",
+          "description": "Optional trusted LinuxServer image mods; code-executing container extension, not an application setting. Unset by default."
         }
       }
     },
