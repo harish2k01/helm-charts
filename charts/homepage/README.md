@@ -147,3 +147,7 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Optional runtime settings
+
+`env` includes commented logging, proxy and config-directory examples. Use `envFrom` for `HOMEPAGE_VAR_*` Secret values or `HOMEPAGE_FILE_*` paths with `extraVolumes`/`extraVolumeMounts`; placeholders are substituted in Homepage YAML. Keep widget credentials in Secrets. See [CHANGELOG.md](CHANGELOG.md) for release details.

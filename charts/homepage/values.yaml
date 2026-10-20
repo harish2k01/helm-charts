@@ -56,6 +56,15 @@ env:
   TZ: Asia/Kolkata
   PUID: "1000"
   PGID: "1000"
+  # Optional runtime settings; leave commented to inherit upstream behavior.
+  # LOG_LEVEL: info
+  # LOG_TARGETS: stdout # both, stdout, or file.
+  # HOMEPAGE_PROXY_DISABLE_IPV6: "true" # Force IPv4 for widget proxy requests.
+  # HOMEPAGE_CONFIG_DIR: /app/config # Match the mounted configuration directory.
+  # HOMEPAGE_VAR_EXAMPLE: "value" # Substitutes {{HOMEPAGE_VAR_EXAMPLE}} in YAML.
+  # HOMEPAGE_FILE_EXAMPLE: /secrets/example # File contents substituted into YAML.
+  # PORT: "3000" # Match service.targetPort when changing the listener.
+  # HOSTNAME: "::" # Bind address used by the container Next.js server.
 
 # Secret or ConfigMap references for sensitive HOMEPAGE_VAR_ or HOMEPAGE_FILE_
 # values used inside Homepage config files.
