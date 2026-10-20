@@ -28,7 +28,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "1.14.0"
+          "default": "1.15.0"
         }
       }
     },

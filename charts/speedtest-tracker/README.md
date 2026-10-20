@@ -10,7 +10,7 @@ This chart deploys [Speedtest Tracker](https://github.com/alexjustesen/speedtest
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.1.3
+helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.1.4
 ```
 
 ## Database Configuration
