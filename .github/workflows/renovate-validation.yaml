@@ -1,0 +1,31 @@
+name: Validate Renovate Configuration
+
+on:
+  pull_request:
+    paths:
+      - renovate.json
+      - tests/renovate.test.mjs
+      - .github/workflows/renovate-validation.yaml
+  push:
+    branches: [main]
+    paths:
+      - renovate.json
+      - tests/renovate.test.mjs
+      - .github/workflows/renovate-validation.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate against the official Renovate schema and semantic checks
+        run: npx --yes --ignore-scripts --package renovate@44.172.1 -- renovate-config-validator --strict renovate.json
+      - name: Reject historical qBittorrent tags and retain database guards
+        run: node --test tests/renovate.test.mjs
