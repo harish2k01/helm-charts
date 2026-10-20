@@ -56,6 +56,8 @@ args: []
 # (default none), --glinet (GL-Inet compatibility), --no-permcheck (avoid unless
 # required by storage). --check-config/--version/--help exit and are Job/debug
 # commands; --service/--update are host-service actions, not pod startup flags.
+# --local-frontend is for a mounted development frontend, not this release image
+# deployment. --help/--version print information and exit.
 # Deprecated: --host/--port (use --web-addr), --no-mem-optimization (no effect),
 # --no-etc-hosts (use clients.runtime_sources.hosts/dns.hostsfile_enabled).
 
