@@ -68,6 +68,8 @@ containerPorts:
     protocol: UDP
 
 # Persistent data and query state stored by AdGuard Home in one PVC.
+# AdGuardHome.yaml is writable application state in the conf subdirectory.
+# See README upgrade notes for new filtering.max_http_size and TLS changes.
 persistence:
   existingClaim: ""
   accessModes:
