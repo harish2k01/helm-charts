@@ -94,8 +94,8 @@
       "name": "K8s Debug Pod",
       "slug": "k8s-debug-pod",
       "category": "Operations",
-      "version": "0.1.0",
-      "appVersion": "0.1.0",
+      "version": "0.1.1",
+      "appVersion": "0.1.1",
       "description": "Deploys an Ubuntu-based Kubernetes troubleshooting pod",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/ubuntu.png"
     },

@@ -77,7 +77,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`ghost`](charts/ghost) | `0.2.3` | `6.39.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
 | [`homepage`](charts/homepage) | `0.1.1` | `1.13.2` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.2.0` | `10.11.11` | Media | Deploys Jellyfin media server with library mount support. |
-| [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.0` | `0.1.0` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
+| [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.1` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`owncloud`](charts/owncloud) | `0.2.0` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
