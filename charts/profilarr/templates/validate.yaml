@@ -1,0 +1,9 @@
+{{- if and .Values.ingress.enabled .Values.httpRoute.enabled }}
+{{- fail "Enable only one of ingress.enabled and httpRoute.enabled" }}
+{{- end }}
+{{- if and .Values.httpRoute.enabled (not .Values.httpRoute.parentRefs) }}
+{{- fail "httpRoute.parentRefs is required when httpRoute.enabled=true" }}
+{{- end }}
+{{- if and .Values.parser.enabled (eq (int .Values.service.targetPort) (int .Values.parser.port)) }}
+{{- fail "parser.port must differ from service.targetPort because containers share a pod" }}
+{{- end }}

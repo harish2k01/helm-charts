@@ -1,0 +1,13 @@
+{
+  "name": "homelab-helm-catalog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:catalog": "node scripts/build-catalog.mjs",
+    "check:catalog": "node scripts/build-catalog.mjs --check",
+    "test:catalog": "node --test tests/catalog.test.mjs"
+  },
+  "devDependencies": {
+    "yaml": "2.9.1"
+  }
+}
