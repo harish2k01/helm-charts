@@ -42,12 +42,29 @@ spec:
         - name: scrutiny-web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if or .Values.env .Values.extraEnv }}
+          env:
+            {{- range $name, $value := .Values.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
           volumeMounts:
             - name: scrutiny-config
               mountPath: /opt/scrutiny/config
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
@@ -74,11 +91,14 @@ spec:
           args:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.influxdb.env }}
+          {{- if or .Values.influxdb.env .Values.influxdb.extraEnv }}
           env:
-            {{- range $name, $value := . }}
+            {{- range $name, $value := .Values.influxdb.env }}
             - name: {{ $name }}
               value: {{ $value | quote }}
+            {{- end }}
+            {{- with .Values.influxdb.extraEnv }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
           {{- with .Values.influxdb.envFrom }}
@@ -91,6 +111,9 @@ spec:
           volumeMounts:
             - name: influxdb-data
               mountPath: /var/lib/influxdb2
+            {{- with .Values.influxdb.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.influxdb.resources | nindent 12 }}
           securityContext:
@@ -114,3 +137,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+
+      {{- with .Values.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

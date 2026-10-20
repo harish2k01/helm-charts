@@ -88,6 +88,24 @@
             "type": "string"
           },
           "default": []
+        },
+        "extraEnv": {
+          "type": "array",
+          "description": "Individual InfluxDB EnvVars including Secret key references.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "description": "Additional InfluxDB config/Secret mounts.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
         }
       }
     },
@@ -386,6 +404,48 @@
       "default": {
         "type": "Recreate"
       }
+    },
+    "env": {
+      "type": "object",
+      "description": "Scrutiny runtime environment overrides; env supersedes persisted file configuration.",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Secret or ConfigMap environment sources for Scrutiny.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Individual Scrutiny EnvVars including Secret key references.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional mounts for Scrutiny.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional volumes shared by the pod.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
     }
   }
 }
