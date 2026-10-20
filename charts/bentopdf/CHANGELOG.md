@@ -9,3 +9,7 @@ Added env and envFrom hooks so the new runtime ROBOTS_NOINDEX=true setting can b
 The recommended bentopdf-simple image, port8080, upstream security headers and canonical handling remain intact. If a reverse proxy overrides headers, preserve the image's cross-origin isolation headers for SharedArrayBuffer tools. The upstream default canonical site is now bentopdf.com; custom public canonicals require a custom SITE_URL build.
 
 Validation: Helm lint, default and ROBOTS_NOINDEX/envFrom/Ingress/HTTPRoute renders, catalog regeneration/check and catalog tests. Browser PDF processing and indexing behavior were not tested live.
+
+### Runtime configuration audit
+
+Reviewed exact target Dockerfile, Dockerfile.puid, nginx-ipv6.sh, nginx-noindex.sh and PUID entrypoint. Runtime controls PORT, DISABLE_IPV6, ROBOTS_NOINDEX, NOINDEX_HTML_ROOT and NGINX_ENTRYPOINT_QUIET_LOGS are exposed through env; PORT must match service.targetPort. PUID/PGID affect only the optional PUID image variant. All static asset/branding/WASM/OCR/canonical variables are classified as image-build settings in values.yaml, not misleading runtime options. This browser-only application has no database requirement. Tool settings are stored in the browser; no chart-side UI state is forced.
