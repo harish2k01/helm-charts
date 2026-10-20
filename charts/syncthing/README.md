@@ -102,7 +102,7 @@ For access from devices outside the cluster, expose TCP/UDP `22000` and UDP `210
 | `syncFolders.mounts` | list | `[]` | Paths and optional subPaths mounted from the sync folders PVC |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress for the Web UI |
 | `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute for the Web UI |
-| `startupProbe` | object | HTTP `/rest/noauth/health`, up to 600s | Allows database startup/migration before liveness starts; set `{}` to disable |
+| `startupProbe` | object | HTTP `/rest/noauth/health`, up to 600s | Allows database startup/migration before liveness starts; set `null` to disable |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |

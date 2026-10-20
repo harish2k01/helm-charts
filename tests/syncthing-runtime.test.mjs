@@ -12,7 +12,7 @@ test('database startup gets its own probe budget before liveness begins', () => 
 });
 test('operators can extend or disable startup checks without losing liveness', () => {
   assert.equal(container('--set','startupProbe.failureThreshold=120').startupProbe.failureThreshold,120);
-  const c = container('--set-json','startupProbe={}');
+  const c = container('--set-json','startupProbe=null');
   assert.equal(c.startupProbe,undefined);
   assert.ok(c.livenessProbe);
 });

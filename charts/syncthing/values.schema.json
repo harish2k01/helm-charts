@@ -326,8 +326,11 @@
       "properties": {}
     },
     "startupProbe": {
-      "type": "object",
-      "description": "Startup probe budget for database migrations and large libraries before liveness begins. Set an empty object to disable.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Startup probe budget for database migrations and large libraries before liveness begins. Set null to disable.",
       "additionalProperties": true,
       "default": {
         "httpGet": {
