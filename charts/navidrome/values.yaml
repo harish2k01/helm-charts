@@ -32,19 +32,19 @@ env:
   # default. Leave unset to retain the app/config-file setting. Values are strings.
   # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
   # Load configurations from an external config file Upstream default: "./navidrome.toml".
-  # ND_CONFIGFILE: "./navidrome.toml"
+  # ND_CONFIGFILE: "/data/navidrome.toml"
   # Folder where your music library is stored. Can be read-only. This becomes the default library when using multi-library setup Upstream default: "./music".
-  # ND_MUSICFOLDER: "./music"
+  # ND_MUSICFOLDER: "/music"
   # Folder to store application data (DB) Upstream default: "./data".
-  # ND_DATAFOLDER: "./data"
+  # ND_DATAFOLDER: "/data"
   # Folder to store cache data (transcoding, images...) Upstream default: "dynamic/cache".
-  # ND_CACHEFOLDER: ""
+  # ND_CACHEFOLDER: "/data/cache"
   # Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace Upstream default: "info".
   # ND_LOGLEVEL: "info"
   # Path to log file for output. When specified, logs will be written to this file instead of stderr Upstream default: _Empty_ (log to stderr).
   # ND_LOGFILE: ""
   # Address the server will bind to. Can be an IPv4, IPv6 or a UNIX socket file (unix:/path/to/file) Upstream default: 0.0.0.0 and :: (all IPs).
-  # ND_ADDRESS: ""
+  # ND_ADDRESS: "0.0.0.0"
   # Base URL to configure Navidrome behind a proxy (examples: /music, https://music.example.com) Upstream default: _Empty_.
   # ND_BASEURL: ""
   # HTTP port Navidrome will listen to Upstream default: 4533.

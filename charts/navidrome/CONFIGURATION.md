@@ -6,9 +6,9 @@ Sources: [target-version configuration](https://github.com/navidrome/navidrome/b
 
 | Environment variable | Upstream default when unset | Purpose |
 | --- | --- | --- |
-| `ND_CONFIGFILE` | "./navidrome.toml" | Load configurations from an external config file |
-| `ND_MUSICFOLDER` | "./music" | Folder where your music library is stored. Can be read-only. This becomes the default library when using multi-library setup |
-| `ND_DATAFOLDER` | "./data" | Folder to store application data (DB) |
+| `ND_CONFIGFILE` | image: /data/navidrome.toml | Load configurations from an external config file |
+| `ND_MUSICFOLDER` | image: /music | Folder where your music library is stored. Can be read-only. This becomes the default library when using multi-library setup |
+| `ND_DATAFOLDER` | image: /data | Folder to store application data (DB) |
 | `ND_CACHEFOLDER` | "dynamic/cache" | Folder to store cache data (transcoding, images...) |
 | `ND_LOGLEVEL` | "info" | Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace |
 | `ND_LOGFILE` | _Empty_ (log to stderr) | Path to log file for output. When specified, logs will be written to this file instead of stderr |
@@ -174,3 +174,5 @@ Config-file-only options remain supported by the application UI and its existing
 The [public configuration reference](https://www.navidrome.org/docs/usage/configuration/options/) was checked against target-version `configOptions` and nested structs. Nested names use `_` separators (`ND_SCANNER_SCHEDULE`, not `ND_SCANSCHEDULE`). `ND_CONFIGFILE` can select a mounted TOML file; default image paths are `/data`, `/music`, `/data/navidrome.toml`. Complex `Tags`, custom `HTTPHeaders`, `DevLogLevels` maps and plugin manifests are file-based structures; use the persisted TOML/mounted files rather than inventing JSON-in-env formats. `Dev*` flags, computed BasePath/BaseHost/BaseScheme and computed language lists are internal/debug fields, not supported production configuration examples. Deprecated aliases remain accepted upstream but are not new chart defaults: use ExtAuth.TrustedSources/UserHeader, HTTPHeaders.FrameOptions, CoverArtQuality, Matcher.FuzzyThreshold and Transcoding.EnableCancellation replacements. Removed Spotify.ID/Secret settings should be deleted.
 
 All application state uses embedded SQLite under `/data`; there is no supported external PostgreSQL/MySQL setting or database image to bump. Upstream 0.63 makes sharing default-on when unset. This chart leaves it unset to preserve explicit persisted choices; set `env.ND_ENABLESHARING: "false"` to retain the old default behavior. `ND_JELLYFIN_ENABLED` stays optional/off upstream. UDP discovery remains optional and requires network/Service exposure in addition to its env setting.
+
+The source also contains an advanced `DbPath` SQLite DSN override (`ND_DBPATH`), defaulting to `<DataFolder>/navidrome.db` with its WAL/timeout/foreign-key parameters. It is not a database-engine switch and should normally remain unset. The deprecated `ND_SCANNER_GENRESEPARATORS` and `ND_SCANNER_GROUPALBUMRELEASES` are ignored in this target; migrate to `Tags.genre.Split` and `PID.Album` in TOML. Complex Jukebox.Devices definitions also require a config file.
