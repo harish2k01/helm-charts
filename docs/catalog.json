@@ -85,8 +85,8 @@
       "name": "Jellyfin",
       "slug": "jellyfin",
       "category": "Media",
-      "version": "0.1.2",
-      "appVersion": "10.11.8",
+      "version": "0.2.0",
+      "appVersion": "10.11.11",
       "description": "Deploys Jellyfin media server on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/jellyfin.png"
     },
