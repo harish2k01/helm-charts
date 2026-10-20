@@ -4,15 +4,27 @@ on:
   pull_request:
     paths:
       - charts/**
+      - docs/**
+      - scripts/build-catalog.mjs
+      - package.json
+      - package-lock.json
+      - README.md
       - .github/workflows/lint.yaml
-      - tests/portfolio-next.test.mjs
+      - .github/workflows/release.yaml
+      - tests/*.test.mjs
   push:
     branches:
       - main
     paths:
       - charts/**
+      - docs/**
+      - scripts/build-catalog.mjs
+      - package.json
+      - package-lock.json
+      - README.md
       - .github/workflows/lint.yaml
-      - tests/portfolio-next.test.mjs
+      - .github/workflows/release.yaml
+      - tests/*.test.mjs
 
 jobs:
   lint:
@@ -29,5 +41,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-      - name: Verify portfolio image identity and routing
-        run: node --test tests/portfolio-next.test.mjs
+      - name: Install catalog tooling
+        run: npm ci --ignore-scripts
+      - name: Check generated catalog
+        run: npm run check:catalog
+      - name: Verify chart rendering and catalog
+        run: node --test tests/*.test.mjs
