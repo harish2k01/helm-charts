@@ -265,8 +265,8 @@
       "name": "Umami",
       "slug": "umami",
       "category": "Analytics",
-      "version": "0.1.0",
-      "appVersion": "3.1.0",
+      "version": "0.2.0",
+      "appVersion": "3.4.0",
       "description": "A Helm chart for Umami, a privacy-focused web analytics platform",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/umami.png"
     },

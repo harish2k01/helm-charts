@@ -3,8 +3,8 @@ name: umami
 description: A Helm chart for Umami, a privacy-focused web analytics platform
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/umami.png
-version: 0.1.0
-appVersion: "3.1.0"
+version: 0.2.0
+appVersion: "3.4.0"
 keywords:
   - analytics
   - privacy
@@ -17,7 +17,7 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: umami
-      image: ghcr.io/umami-software/umami:3.1.0
+      image: ghcr.io/umami-software/umami:3.4.0
     - name: postgresql
       image: postgres:17-alpine
 maintainers:
