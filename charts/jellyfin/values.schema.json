@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "10.11.8"
+          "default": "10.11.11"
         },
         "pullPolicy": {
           "type": "string",
@@ -491,6 +491,11 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup health check; allows up to 15 minutes for database migrations before liveness begins.",
+      "additionalProperties": true
     }
   }
 }

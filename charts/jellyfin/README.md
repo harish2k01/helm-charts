@@ -18,7 +18,7 @@ helm install jellyfin harish2k01/jellyfin
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install jellyfin oci://ghcr.io/harish2k01/helm-charts/jellyfin --version 0.1.2
+helm install jellyfin oci://ghcr.io/harish2k01/helm-charts/jellyfin --version 0.2.0
 ```
 
 ## Install With Gateway API HTTPRoute
@@ -114,7 +114,7 @@ hostDevices:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Jellyfin replicas |
 | `image.repository` | string | `lscr.io/linuxserver/jellyfin` | Container image repository |
-| `image.tag` | string | `10.11.8` | Container image tag |
+| `image.tag` | string | `10.11.11` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
@@ -139,3 +139,19 @@ hostDevices:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional upgrade controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `startupProbe` | object | HTTP `/`, up to 15 minutes | Protect initial database migration from liveness restarts; tune for your library. |
+
+## Upgrading from 10.11.8 to 10.11.11
+
+10.11.9–10.11.11 include security fixes, normalized-username database migrations/user-manager locking fixes, stale userdata-cache fixes, and AV1 AMF/QSV/HDR10 encoder corrections. No new required container environment variable, config path, Service port or hardware device mount was introduced. Existing `/config`, published URL, media mounts and GPU devices remain supported. Preserve the complete `/config` PVC backup before upgrade; restore the backup together with the previous image if rolling back a migrated database. The startup probe allows 15 minutes for migration before liveness checks begin. Hardware acceleration/tonemapping features are selected in Jellyfin and still require the correct device mount, permissions and compatible drivers; the chart does not enable hardware settings automatically.
+
+Reviewed upstream release sequence: [v10.11.9](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.9), [v10.11.10](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.10), [v10.11.11](https://github.com/jellyfin/jellyfin/releases/tag/v10.11.11).
+
+Container contract: [LinuxServer documentation](https://docs.linuxserver.io/images/docker-jellyfin/).
+
+Configuration/source review: [full comparison](https://github.com/jellyfin/jellyfin/compare/v10.11.8...v10.11.11). Helm lint, default rendering, opt-in configuration rendering and catalog consistency are checked locally; this does not verify a live upgraded workload.
