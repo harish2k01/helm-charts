@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFileSync} from 'node:fs';
+import YAML from 'yaml';
+const chart='charts/feishin';
+const values=YAML.parse(readFileSync(chart+'/values.yaml','utf8'));
+const render=(args=[])=>YAML.parseAllDocuments(execFileSync('helm',['template','upgrade',chart,'--namespace','upgrade',...args],{encoding:'utf8'})).map(d=>d.toJSON()).find(d=>d?.kind==='Deployment').spec.template.spec.containers[0];
+test('feishin configuration stays opt-in and metadata matches the deployable image',()=>{const pod=render();const meta=YAML.parse(readFileSync(chart+'/Chart.yaml','utf8'));assert.equal(values.image.tag,String(meta.appVersion));assert(pod.image.endsWith(':'+values.image.tag));const schema=JSON.parse(readFileSync(chart+'/values.schema.json','utf8'));assert.equal(schema.properties.image.properties.tag.default,values.image.tag);});
+test('web settings can be configured without adding server-side credentials',()=>{const pod=render(['--set-string','env.FS_GENERAL_THEME=defaultDark']);assert(pod.env.some(e=>e.name==='FS_GENERAL_THEME'&&e.value==='defaultDark'));});

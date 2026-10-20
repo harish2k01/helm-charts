@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/jeffvli/feishin
   pullPolicy: IfNotPresent
-  tag: "1.11.0"
+  tag: "1.17.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -16,6 +16,10 @@ securityContext: {}
 
 # Feishin server preconfiguration. Leave SERVER_URL empty to let users
 # configure their music server from the UI.
+# New web first-run settings: supply any documented FS_* key here, e.g.
+# FS_GENERAL_THEME: "defaultDark"
+# FS_GENERAL_LANGUAGE: "en"
+# FS_GENERAL_FOLLOW_SYSTEM_THEME: "true"
 env:
   SERVER_NAME: ""
   SERVER_LOCK: "false"
@@ -25,6 +29,201 @@ env:
   LEGACY_AUTHENTICATION: "false"
   ANALYTICS_DISABLED: "false"
   PUBLIC_PATH: "/"
+
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # general.accent: CSS rgb(r, g, b) string (e.g. rgb(53, 116, 252)). Invalid values are ignored. Upstream default: rgb(53, 116, 252).
+  # FS_GENERAL_ACCENT: "rgb(53, 116, 252)"
+  # general.albumBackground: true / false — Show album background image. Upstream default: false.
+  # FS_GENERAL_ALBUM_BACKGROUND: "false"
+  # general.albumBackgroundBlur: Blur amount for album background (number). Upstream default: 3.
+  # FS_GENERAL_ALBUM_BACKGROUND_BLUR: "3"
+  # general.artistBackground: true / false — Show artist background image. Upstream default: true.
+  # FS_GENERAL_ARTIST_BACKGROUND: "true"
+  # general.artistBackgroundBlur: Blur amount for artist background (number). Upstream default: 3.
+  # FS_GENERAL_ARTIST_BACKGROUND_BLUR: "3"
+  # general.blurExplicitImages: true / false — Blur explicit images. Upstream default: false.
+  # FS_GENERAL_BLUR_EXPLICIT_IMAGES: "false"
+  # general.combinedLyricsAndVisualizer: true / false — Combine lyrics and visualizer panel. Upstream default: false.
+  # FS_GENERAL_COMBINED_LYRICS_AND_VISUALIZER: "false"
+  # general.enableGridMultiSelect: true / false — Enable multi-select in grid views. Upstream default: false.
+  # FS_GENERAL_ENABLE_GRID_MULTI_SELECT: "false"
+  # general.externalLinks: true / false — Show external links in UI. Upstream default: true.
+  # FS_GENERAL_EXTERNAL_LINKS: "true"
+  # general.followCurrentSong: true / false — Follow current song in list. Upstream default: true.
+  # FS_GENERAL_FOLLOW_CURRENT_SONG: "true"
+  # general.followSystemTheme: true / false — Use OS light/dark preference. Upstream default: false.
+  # FS_GENERAL_FOLLOW_SYSTEM_THEME: "false"
+  # general.homeFeature: true / false — Show home featured carousel. Upstream default: true.
+  # FS_GENERAL_HOME_FEATURE: "true"
+  # general.homeFeatureStyle: multiple / single - Home featured carousel style. Upstream default: single.
+  # FS_GENERAL_HOME_FEATURE_STYLE: "single"
+  # general.imagePlaceholderPriority: thumbhash / blurhash / dominantColor / off - Which image placeholder shows first while art loads; off disables placeholders. Upstream default: thumbhash.
+  # FS_GENERAL_IMAGE_PLACEHOLDER_PRIORITY: "thumbhash"
+  # general.language: UI language code (e.g. en, de, fr). Upstream default: en.
+  # FS_GENERAL_LANGUAGE: "en"
+  # general.theme: One of: ayuDark, ayuLight, catppuccinLatte, catppuccinMocha, defaultDark, defaultLight, dracula, githubDark, githubLight, glassyDark, gruvboxDark Upstream default: defaultDark.
+  # FS_GENERAL_THEME: "defaultDark"
+  # general.themeDark: Same as theme (used when system is dark). Upstream default: defaultDark.
+  # FS_GENERAL_THEME_DARK: "defaultDark"
+  # general.themeLight: Same as theme (used when system is light). Upstream default: defaultLight.
+  # FS_GENERAL_THEME_LIGHT: "defaultLight"
+  # general.lastfmApiKey: Last.fm API key. Upstream default: *(empty)*.
+  # FS_GENERAL_LASTFM_API_KEY: ""
+  # general.lastFM: true / false — Enable Last.fm. Upstream default: true.
+  # FS_GENERAL_LAST_FM: "true"
+  # general.listenBrainz: true / false — ListenBrainz links. Upstream default: true.
+  # FS_GENERAL_LISTEN_BRAINZ: "true"
+  # general.musicBrainz: true / false — MusicBrainz links. Upstream default: true.
+  # FS_GENERAL_MUSIC_BRAINZ: "true"
+  # general.nativeAspectRatio: true / false — Use native cover art aspect ratio. Upstream default: false.
+  # FS_GENERAL_NATIVE_ASPECT_RATIO: "false"
+  # general.pathReplace: Path pattern to replace (e.g. server path in Docker). Upstream default: *(empty)*.
+  # FS_GENERAL_PATH_REPLACE: ""
+  # general.pathReplaceWith: Replacement path. Upstream default: *(empty)*.
+  # FS_GENERAL_PATH_REPLACE_WITH: ""
+  # general.playerbarOpenDrawer: true / false — Open queue/lyrics as drawer from player bar. Upstream default: false.
+  # FS_GENERAL_PLAYERBAR_OPEN_DRAWER: "false"
+  # general.primaryShade: Mantine primary shade 0–9 (number). Upstream default: 6.
+  # FS_GENERAL_PRIMARY_SHADE: "6"
+  # general.qobuz: true / false — Qobuz links. Upstream default: true.
+  # FS_GENERAL_QOBUZ: "true"
+  # general.resume: true / false — Resume playback on load. Upstream default: true.
+  # FS_GENERAL_RESUME: "true"
+  # general.showLyricsInSidebar: true / false — Show lyrics in sidebar. Upstream default: true.
+  # FS_GENERAL_SHOW_LYRICS_IN_SIDEBAR: "true"
+  # general.showRatings: true / false — Show star ratings. Upstream default: true.
+  # FS_GENERAL_SHOW_RATINGS: "true"
+  # general.showVisualizerInSidebar: true / false — Show visualizer in sidebar. Upstream default: true.
+  # FS_GENERAL_SHOW_VISUALIZER_IN_SIDEBAR: "true"
+  # general.sidebarCollapsedNavigation: true / false — Start with collapsed sidebar nav. Upstream default: true.
+  # FS_GENERAL_SIDEBAR_COLLAPSED_NAVIGATION: "true"
+  # general.sidebarCollapseShared: true / false — Share sidebar collapse state. Upstream default: false.
+  # FS_GENERAL_SIDEBAR_COLLAPSE_SHARED: "false"
+  # general.sidebarImageExpand: true / false — Show the player-bar album-art button that expands art into the sidebar. Upstream default: false.
+  # FS_GENERAL_SIDEBAR_IMAGE_EXPAND: "false"
+  # general.sidebarPlaylistFolders: true / false — Group playlists into folders by name separator. Upstream default: true.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_FOLDERS: "true"
+  # general.sidebarPlaylistFolderSeparator: Character or string that separates folder levels in a playlist name. Empty = use default. Upstream default: /.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_SEPARATOR: "/"
+  # general.sidebarPlaylistFolderTreeIndent: Pixels each tree level is indented (0–64). Upstream default: 16.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_TREE_INDENT: "16"
+  # general.sidebarPlaylistFolderTreeLineColor: CSS color for tree connecting lines. Empty = theme default. Upstream default: *(empty)*.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_TREE_LINE_COLOR: ""
+  # general.sidebarPlaylistFolderView: single / tree / navigation — How folders are displayed in the sidebar. Upstream default: tree.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_VIEW: "tree"
+  # general.sidebarPlaylistList: true / false — Show playlist list in sidebar. Upstream default: true.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_LIST: "true"
+  # general.sidebarPlaylistMode: compact / expanded — Sidebar playlist row layout. Upstream default: expanded.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_MODE: "expanded"
+  # general.sidebarPlaylistSorting: true / false — Enable playlist sorting in sidebar. Upstream default: false.
+  # FS_GENERAL_SIDEBAR_PLAYLIST_SORTING: "false"
+  # general.sideQueueType: sideDrawerQueue / sideQueue — Side play queue style. Upstream default: sideQueue.
+  # FS_GENERAL_SIDE_QUEUE_TYPE: "sideQueue"
+  # general.sideQueueLayout: horizontal / vertical — Attached side queue layout orientation. Upstream default: horizontal.
+  # FS_GENERAL_SIDE_QUEUE_LAYOUT: "horizontal"
+  # general.useThemeAccentColor: true / false — Use theme’s accent color instead of custom. Upstream default: false.
+  # FS_GENERAL_USE_THEME_ACCENT_COLOR: "false"
+  # general.useThemePrimaryShade: true / false — Use theme’s primary shade. Upstream default: true.
+  # FS_GENERAL_USE_THEME_PRIMARY_SHADE: "true"
+  # general.zoomFactor: UI zoom percentage (number). Upstream default: 100.
+  # FS_GENERAL_ZOOM_FACTOR: "100"
+  # playback.mediaSession: true / false — Media Session API (e.g. browser/media keys). Upstream default: false.
+  # FS_PLAYBACK_MEDIA_SESSION: "false"
+  # playback.webAudio: true / false — Use Web Audio for playback. Upstream default: true.
+  # FS_PLAYBACK_WEB_AUDIO: "true"
+  # playback.audioFadeOnStatusChange: true / false — Fade on play/pause. Upstream default: true.
+  # FS_PLAYBACK_AUDIO_FADE_ON_STATUS_CHANGE: "true"
+  # playback.preservePitch: true / false — Preserve pitch when changing speed. Upstream default: true.
+  # FS_PLAYBACK_PRESERVE_PITCH: "true"
+  # playback.scrobble.enabled: true / false — Enable scrobbling. Upstream default: true.
+  # FS_PLAYBACK_SCROBBLE_ENABLED: "true"
+  # playback.scrobble.notify: true / false — Scrobble notifications. Upstream default: false.
+  # FS_PLAYBACK_SCROBBLE_NOTIFY: "false"
+  # playback.scrobble.scrobbleAtDuration: Seconds of playback before scrobble. Upstream default: 240.
+  # FS_PLAYBACK_SCROBBLE_AT_DURATION: "240"
+  # playback.scrobble.scrobbleAtPercentage: Percentage of track before scrobble. Upstream default: 75.
+  # FS_PLAYBACK_SCROBBLE_AT_PERCENTAGE: "75"
+  # playback.transcode.enabled: true / false — Enable transcoding. Upstream default: false.
+  # FS_PLAYBACK_TRANSCODE_ENABLED: "false"
+  # playback.transcode.format: Transcode format string (codec/container), e.g. server-specific value. Empty = use default. Upstream default: *(unset)*.
+  # FS_PLAYBACK_TRANSCODE_FORMAT: ""
+  # playback.transcode.bitrate: Transcode bitrate (number, kbps or as defined by server). Upstream default: *(unset)*.
+  # FS_PLAYBACK_TRANSCODE_BITRATE: ""
+  # playback.filters: JSON array of player filters: each object needs id, field, operator, value; optional isEnabled. Invalid JSON or shape is ignored. Upstream default: [].
+  # FS_PLAYBACK_FILTERS: "[]"
+  # discord.enabled: true / false — Discord rich presence. Upstream default: false.
+  # FS_DISCORD_ENABLED: "false"
+  # discord.clientId: Custom Discord application ID. Upstream default: *(built-in)*.
+  # FS_DISCORD_CLIENT_ID: ""
+  # discord.displayType: artist / feishin / song. Upstream default: feishin.
+  # FS_DISCORD_DISPLAY_TYPE: "feishin"
+  # discord.linkType: last_fm / musicbrainz / musicbrainz_last_fm / none. Upstream default: none.
+  # FS_DISCORD_LINK_TYPE: "none"
+  # discord.showAsListening: true / false. Upstream default: false.
+  # FS_DISCORD_SHOW_AS_LISTENING: "false"
+  # discord.showPaused: true / false — Show paused state. Upstream default: true.
+  # FS_DISCORD_SHOW_PAUSED: "true"
+  # discord.showServerImage: true / false. Upstream default: false.
+  # FS_DISCORD_SHOW_SERVER_IMAGE: "false"
+  # discord.showStateIcon: true / false. Upstream default: true.
+  # FS_DISCORD_SHOW_STATE_ICON: "true"
+  # lyrics.fetch: true / false — Fetch lyrics. Upstream default: true.
+  # FS_LYRICS_FETCH: "true"
+  # lyrics.follow: true / false — Follow current line. Upstream default: true.
+  # FS_LYRICS_FOLLOW: "true"
+  # lyrics.delayMs: Sync delay in milliseconds. Upstream default: 0.
+  # FS_LYRICS_DELAY_MS: "0"
+  # lyrics.lineLeadTimeMs: Milliseconds before a line becomes active while following. Upstream default: 800.
+  # FS_LYRICS_LINE_LEAD_TIME_MS: "800"
+  # lyrics.followScrollAlignment: Vertical follow position. 0 centers the active line; negative moves it higher, positive moves it lower (-50 to 50). Upstream default: 0.
+  # FS_LYRICS_FOLLOW_SCROLL_ALIGNMENT: "0"
+  # lyrics.preferLocalLyrics: true / false — Prefer local lyric files. Upstream default: true.
+  # FS_LYRICS_PREFER_LOCAL: "true"
+  # lyrics.showMatch: true / false. Upstream default: true.
+  # FS_LYRICS_SHOW_MATCH: "true"
+  # lyrics.showProvider: true / false. Upstream default: true.
+  # FS_LYRICS_SHOW_PROVIDER: "true"
+  # lyrics.enableAutoTranslation: true / false. Upstream default: false.
+  # FS_LYRICS_ENABLE_AUTO_TRANSLATION: "false"
+  # lyrics.translationApiKey: API key for lyric translation. Upstream default: *(empty)*.
+  # FS_LYRICS_TRANSLATION_API_KEY: ""
+  # lyrics.translationTargetLanguage: Target language code. Upstream default: en.
+  # FS_LYRICS_TRANSLATION_TARGET_LANGUAGE: "en"
+  # lyrics.alignment: center / left / right. Upstream default: center.
+  # FS_LYRICS_ALIGNMENT: "center"
+  # lyricsDisplay.default.paddingLeft: Left content padding as a percentage (0–20). Upstream default: 0.
+  # FS_LYRICS_PADDING_LEFT: "0"
+  # lyricsDisplay.default.paddingRight: Right content padding as a percentage (0–20). Upstream default: 0.
+  # FS_LYRICS_PADDING_RIGHT: "0"
+  # autoDJ.albumStrategy: similar / library_random. Upstream default: similar.
+  # FS_AUTO_DJ_ALBUM_STRATEGY: "similar"
+  # autoDJ.allowDuplicates: true / false — Allow songs or albums already in the queue to be added again. Upstream default: false.
+  # FS_AUTO_DJ_ALLOW_DUPLICATES: "false"
+  # autoDJ.enabled: true / false. Upstream default: false.
+  # FS_AUTO_DJ_ENABLED: "false"
+  # autoDJ.itemCount: Number of items to add. Upstream default: 5.
+  # FS_AUTO_DJ_ITEM_COUNT: "5"
+  # autoDJ.mode: songs / albums. Upstream default: songs.
+  # FS_AUTO_DJ_MODE: "songs"
+  # autoDJ.onlySimilar: true / false — Treat item count as a maximum; use the first non-empty source (similar, then genre, artist, or random) and do not fill from l Upstream default: false.
+  # FS_AUTO_DJ_ONLY_SIMILAR: "false"
+  # autoDJ.songStrategy: similar / library_random. Upstream default: similar.
+  # FS_AUTO_DJ_SONG_STRATEGY: "similar"
+  # autoDJ.timing: Timing value (number). Upstream default: 1.
+  # FS_AUTO_DJ_TIMING: "1"
+  # css.content: Custom CSS string (sanitized like in-app custom CSS). Set FS_CSS_ENABLED=true to apply. Upstream default: *(empty)*.
+  # FS_CSS_CONTENT: ""
+  # css.enabled: true / false — Enable custom CSS. Upstream default: false.
+  # FS_CSS_ENABLED: "false"
+  # font.type: builtIn / system / custom. Upstream default: builtIn.
+  # FS_FONT_TYPE: "builtIn"
+  # font.builtIn: Built-in font name. Upstream default: Inter.
+  # FS_FONT_BUILT_IN: "Inter"
+  # font.system: System font name (when type is system). Upstream default: *(empty)*.
+  # FS_FONT_SYSTEM: ""
 
 service:
   type: ClusterIP

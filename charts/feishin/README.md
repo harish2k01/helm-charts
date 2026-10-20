@@ -18,7 +18,7 @@ helm install feishin harish2k01/feishin
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install feishin oci://ghcr.io/harish2k01/helm-charts/feishin --version 0.1.0
+helm install feishin oci://ghcr.io/harish2k01/helm-charts/feishin --version 0.1.1
 ```
 
 ## Server Preconfiguration
@@ -77,7 +77,7 @@ httpRoute:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Feishin replicas |
 | `image.repository` | string | `ghcr.io/jeffvli/feishin` | Container image repository |
-| `image.tag` | string | `1.11.0` | Container image tag |
+| `image.tag` | string | `1.17.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.SERVER_NAME` | string | `""` | Preconfigured server display name |
 | `env.SERVER_LOCK` | string | `false` | Lock Feishin to the configured server |
@@ -96,3 +96,7 @@ httpRoute:
 | `nodeSelector` | object | `{}` | Node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.
