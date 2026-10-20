@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "5.2.0"
+          "default": "5.2.4"
         },
         "pullPolicy": {
           "type": "string",
