@@ -21,6 +21,8 @@ env:
   LOG_LEVEL: info
   LOG_HTML: "false"
   CAPTCHA_SOLVER: none
+  # Seconds per browser state/challenge wait; increase on slow hosts or sites.
+  BROWSER_WAIT_TIMEOUT: "1"
   TZ: Asia/Kolkata
 
 # Main HTTP service. FlareSolverr is commonly kept internal and referenced by
