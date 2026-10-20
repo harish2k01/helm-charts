@@ -83,3 +83,5 @@ The default database is image-bundled SQLite in `/config`; this chart embeds no 
 ## Verified container build
 
 The 4.0.20 amd64 image manifest identifies [wrapper source aee277b39f8f](https://github.com/linuxserver/docker-sonarr/tree/aee277b39f8f8e34eec5ccc9cb5a51a5d22d7bcf) and build `Linuxserver.io version:- 4.0.20.3014-ls329 Build-date:- 2026-10-15T18:57:33+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.
+
+The [official sonarr PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/sonarr/postgres-setup.md) explicitly lists PostgreSQL 14–18 as supported and identifies PostgreSQL 13 as end-of-life. This is the application's published guidance, not an inference from the driver. Its SQLite-to-PostgreSQL loader steps were written against PostgreSQL 14 and may require changes on newer majors; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server or certify your existing dataset.
