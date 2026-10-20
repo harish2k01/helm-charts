@@ -7,6 +7,8 @@ metadata:
     {{- include "scrutiny.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    {{- toYaml .Values.deploymentStrategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "scrutiny.selectorLabels" . | nindent 6 }}
@@ -68,6 +70,21 @@ spec:
         - name: influxdb
           image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
           imagePullPolicy: {{ .Values.influxdb.image.pullPolicy }}
+          {{- with .Values.influxdb.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.influxdb.env }}
+          env:
+            {{- range $name, $value := . }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.influxdb.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: influxdb
               containerPort: 8086

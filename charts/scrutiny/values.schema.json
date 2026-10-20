@@ -45,7 +45,7 @@
             "tag": {
               "type": "string",
               "description": "Container image tag.",
-              "default": "2.8"
+              "default": "2.9.1"
             },
             "pullPolicy": {
               "type": "string",
@@ -59,6 +59,35 @@
           "description": "CPU and memory requests and limits.",
           "additionalProperties": true,
           "properties": {}
+        },
+        "env": {
+          "type": "object",
+          "description": "Additional INFLUXD environment variables. See upgrade notes for token hashing.",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          },
+          "default": {}
+        },
+        "envFrom": {
+          "type": "array",
+          "description": "Secret and ConfigMap environment sources for InfluxDB.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
+        },
+        "args": {
+          "type": "array",
+          "description": "Extra influxd flags; empty preserves upstream defaults.",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       }
     },
@@ -338,6 +367,24 @@
           "description": "Enable or disable this feature or generated resource.",
           "default": true
         }
+      }
+    },
+    "deploymentStrategy": {
+      "type": "object",
+      "description": "Deployment strategy. Recreate prevents overlapping database writers on persistent volumes.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Recreate",
+            "RollingUpdate"
+          ],
+          "default": "Recreate"
+        }
+      },
+      "default": {
+        "type": "Recreate"
       }
     }
   }

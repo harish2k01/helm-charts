@@ -8,7 +8,7 @@ This chart deploys [Scrutiny](https://github.com/AnalogJ/scrutiny) web/API with 
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install scrutiny harish2k01/scrutiny
 ```
@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.2
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.3
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -109,7 +109,7 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | `image.tag` | string | `v0.9.2-web` | Scrutiny container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Scrutiny image pull policy |
 | `influxdb.image.repository` | string | `influxdb` | InfluxDB image repository |
-| `influxdb.image.tag` | string | `2.8` | InfluxDB image tag |
+| `influxdb.image.tag` | string | `2.9.1` | InfluxDB image tag |
 | `initContainer.image.repository` | string | `busybox` | Config seed init container image repository |
 | `service.port` | int | `8080` | Kubernetes Service port |
 | `scrutiny.web.basepath` | string | `""` | Optional Scrutiny web base path |
@@ -128,3 +128,30 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | `resources` | object | `{}` | Scrutiny container resource requests and limits |
 | `influxdb.resources` | object | `{}` | InfluxDB container resource requests and limits |
 | `probes.enabled` | bool | `true` | Enable Scrutiny HTTP liveness and readiness probes |
+
+## Upgrade to chart 0.2.3 (InfluxDB 2.9.1)
+
+The InfluxDB sidecar moves from 2.8 to the verified 2.9.1 patch release. Scrutiny stays at v0.9.2-web; its HTTP API and sidecar port 8086 are unchanged. Back up both PVCs and export any API tokens you need before upgrading.
+
+InfluxDB 2.9 enables token hashing by default and automatically migrates stored raw tokens to hashes. Existing client token strings remain valid, but the server can no longer reveal them. Preserve token strings securely outside the database. Rolling back to pre-2.8 requires a manual database downgrade and token recreation; restoring a pre-upgrade backup is the recovery route. Disabling hashing later does not recover plaintext tokens. To explicitly retain raw token storage during a planned compatibility window, set:
+
+```yaml
+influxdb:
+  env:
+    INFLUXD_USE_HASHED_TOKENS: "false"
+```
+
+The new `influxdb.env`, `influxdb.envFrom` and `influxdb.args` hooks expose upstream configuration without replacing the image entrypoint. For example, use `INFLUXD_STORAGE_AGGRESSIVE_POINTS_PER_BLOCK` for the new storage compaction setting, or `args: ["--log-level=debug"]`. Leave these empty to use upstream defaults. The 2.9 release also improves environment override handling and backup gzip compression configuration; backup command flags belong in your backup job, not the long-running server arguments. The 2.9.1 patch fixes compaction queue behavior.
+
+The Deployment now defaults to `deploymentStrategy.type: Recreate` so old and new database processes cannot share a writable PVC during rollout. Expect brief downtime. The existing first-start-only Scrutiny config seeding is retained: edits to the ConfigMap do not overwrite an existing PVC configuration.
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `influxdb.env` | object | `{}` | Additional InfluxDB environment settings |
+| `influxdb.envFrom` | list | `[]` | Secret/ConfigMap environment sources |
+| `influxdb.args` | list | `[]` | influxd command-line flags |
+| `deploymentStrategy.type` | string | `Recreate` | Stop old database writers before starting a replacement |
+
+Sources reviewed: [2.9.0 release notes](https://github.com/influxdata/influxdb/releases/tag/v2.9.0), [2.9.1 release notes](https://github.com/influxdata/influxdb/releases/tag/v2.9.1), [2.8.0 to 2.9.1 source comparison](https://github.com/influxdata/influxdb/compare/v2.8.0...v2.9.1), [token storage compatibility](https://github.com/influxdata/influxdb/blob/v2.9.1/authorization/storage.go), [container entrypoint](https://github.com/influxdata/influxdata-docker/blob/master/influxdb/2.9/entrypoint.sh), and [official image tags](https://github.com/docker-library/official-images/blob/master/library/influxdb).
+
+Helm rendering verifies chart wiring; it does not validate a migration of your production database. Test a restored backup before production rollout.

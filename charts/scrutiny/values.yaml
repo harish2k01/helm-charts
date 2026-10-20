@@ -6,9 +6,20 @@ image:
 influxdb:
   image:
     repository: influxdb
-    tag: "2.8"
+    tag: "2.9.1"
     pullPolicy: IfNotPresent
   resources: {}
+  # Additional INFLUXD_* settings, including storage compaction tuning.
+  # InfluxDB 2.9 hashes tokens by default. See README before opting out.
+  env: {}
+  # Use Secrets/ConfigMaps for bootstrap credentials or shared settings.
+  envFrom: []
+  # Extra influxd flags. Leave empty to retain upstream defaults.
+  args: []
+
+# Stop both writers before mounting their database volumes in a new pod.
+deploymentStrategy:
+  type: Recreate
 
 initContainer:
   image:
