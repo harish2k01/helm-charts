@@ -119,6 +119,11 @@
               "type": "string",
               "description": "Container path where the exporter config is mounted.",
               "default": "/etc/prometheus/pve.yml"
+            },
+            "enabled": {
+              "type": "boolean",
+              "description": "Mount Secret-backed YAML config. Disable when PVE_USER and credentials are supplied through env/envFrom.",
+              "default": true
             }
           }
         }
