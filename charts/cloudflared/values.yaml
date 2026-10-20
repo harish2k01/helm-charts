@@ -90,6 +90,25 @@ cloudflared:
   # mechanisms and do not override this chart's explicit TUNNEL_TOKEN.
   # Deprecated/no-op: TUNNEL_PROTO_LOGLEVEL, TUNNEL_TRANSPORT_LOGLEVEL,
   # TUNNEL_API_KEY, TUNNEL_API_EMAIL and TUNNEL_API_CA_KEY; do not add them.
+  # Additional optional runtime settings (unset unless shown):
+  # extraEnv:
+  #   TUNNEL_PIDFILE: /tmp/cloudflared.pid # Default none; optional PID output file.
+  #   TUNNEL_API_URL: https://api.cloudflare.com/client/v4 # Default API endpoint.
+  #   TUNNEL_SERVICE_OP_IP: 198.41.200.113:80 # Default management fallback address.
+  # TUNNEL_MANAGEMENT_OUTPUT aliases TUNNEL_LOG_OUTPUT (default format: default).
+  # Alternate/local tunnel credentials: TUNNEL_ORIGIN_CERT (default certificate
+  # discovery path), TUNNEL_HOSTNAME/TUNNEL_ID/TUNNEL_LB_POOL/TUNNEL_NAME (unset);
+  # these are not needed to operate an existing remotely managed token tunnel.
+  # Separate administrative command settings, not long-running connector inputs:
+  # TUNNEL_LIST_SORT_BY (name), TUNNEL_LIST_INVERT_SORT (false),
+  # TUNNEL_INFO_SORT_BY (createdAt), TUNNEL_INFO_INVERT_SORT (false),
+  # TUNNEL_CLEANUP_CONNECTOR (unset), TUNNEL_RUN_FORCE_OVERWRITE (false),
+  # TUNNEL_FORCE_PROVISIONING_DNS (false), TUNNEL_CREATE_SECRET (generated),
+  # TUNNEL_MAX_FETCH_SIZE (0/unset). Do not enable admin actions in the pod.
+  # Separate embedded SSH-server settings, all unset/disabled unless chosen:
+  # TUNNEL_SSH_SERVER, LOCAL_SSH_PORT, SSH_IDLE_TIMEOUT, SSH_MAX_TIMEOUT,
+  # BUCKET_ID, REGION_ID, SECRET_ID, ACCESS_CLIENT_ID, SESSION_TOKEN_ID,
+  # S3_URL and HOST_KEY_PATH. Credentials for those modes belong in Secrets.
   # List/create/info/delete/SSH-server variables are for separate CLI commands,
   # not this chart's token-backed tunnel run. TUNNEL_EDGE is internal testing.
   # Docker TARGET_GOOS/TARGET_GOARCH/GOPROXY/CGO_ENABLED are build-time only.
