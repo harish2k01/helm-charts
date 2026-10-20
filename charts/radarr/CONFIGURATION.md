@@ -85,3 +85,7 @@ The default database is image-bundled SQLite in `/config`; this chart embeds no 
 ## Verified container build
 
 The 6.4.4 amd64 image manifest identifies [wrapper source 8a9a0640b16e](https://github.com/linuxserver/docker-radarr/tree/8a9a0640b16e8db5895f51cd95260702888593c4) and build `Linuxserver.io version:- 6.4.4.10685-ls322 Build-date:- 2026-10-19T02:20:12+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.
+
+The [official radarr PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/radarr/postgres-setup.md) explicitly lists PostgreSQL 14–18 as supported and identifies PostgreSQL 13 as end-of-life. This is the application's published guidance, not an inference from the driver. Its SQLite-to-PostgreSQL loader steps were written against PostgreSQL 14 and may require changes on newer majors; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server or certify your existing dataset.
+
+When enabling app-native HTTPS, set RADARR__SERVER__SSLPORT explicitly: the target startup bootstrap falls back to 8787 before config is loaded, while ConfigFileProvider uses 9898. Keeping the port explicit avoids this upstream fallback discrepancy; the normal HTTP Service is unaffected.
