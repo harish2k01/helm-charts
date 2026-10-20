@@ -10,7 +10,7 @@ The chart follows the standard Tailscale container environment variables documen
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install tailscale harish2k01/tailscale
 ```
@@ -103,6 +103,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `securityContext.privileged` | bool | `true` | Enables privileges required for tun/kernel networking |
 | `sysctl.enabled` | bool | `true` | Runs an init container to enable IP forwarding |
+| `authKey.enabled` | bool | `true` | Inject auth-key Secret; disable for OAuth/workload identity through extraEnv/envFrom |
 | `authKey.existingSecret` | string | `""` | Existing Secret containing the Tailscale auth key |
 | `authKey.existingSecretKey` | string | `TS_AUTHKEY` | Secret key name for the auth key |
 | `authKey.create` | bool | `false` | Create an auth Secret from `authKey.value` |
@@ -133,18 +134,6 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `affinity` | object | `{}` | Pod affinity |
 | `topologySpreadConstraints` | list | `[]` | Pod topology spread constraints for separating replicas across zones or nodes |
 
-## Upgrading from v1.96.5 to v1.104.1
+## Upgrade history
 
-The intervening client and container releases include routing, DNS, security, connection recovery, and memory improvements. The container now supports `TS_BOOT_TIMEOUT`; set `tailscale.bootTimeout: "90s"` for slow control-plane connections and increase probe delays when necessary. Leave it empty to retain the upstream 60-second timeout. Do not also set `TS_BOOT_TIMEOUT` in `tailscale.extraEnv`.
-
-The chart keeps PVC-backed state and explicitly renders an empty `TS_KUBE_SECRET`, which the target image still supports as disabling Kubernetes Secret state storage. Existing auth, routing, health (`/healthz`), metrics, and kernel-networking settings remain supported. No operator CRDs are installed by this chart; upstream operator-only features need the separate Tailscale operator. For custom Serve configurations, review the target release's interface-binding behavior and use `tailscale.extraEnv` for supported optional container variables.
-
-Sources: [client/container changelog](https://tailscale.com/changelog), [complete source comparison](https://github.com/tailscale/tailscale/compare/v1.96.5...v1.104.1), and [container environment parsing](https://github.com/tailscale/tailscale/blob/v1.104.1/cmd/containerboot/settings.go).
-
-## BusyBox init image upgrade (0.1.4)
-
-The init image is pinned to BusyBox 1.38.0 (previously 1.37). [Upstream release notes](https://busybox.net/) explicitly label 1.38.0 **unstable**; review this release status before production use. [Official image metadata](https://github.com/docker-library/official-images/blob/master/library/busybox) confirms the version and architectures. This update does not change the application image beyond the prerequisite app/dependency PR.
-
-Reviewed all 1.38 release notes and the init script: it uses sh -ec and sysctl -w for the existing IPv4/IPv6 forwarding keys. No new environment variable or sysctl key is required. The init container retains its existing privilege and enable/disable controls. New ash restrictions do not affect these commands.
-
-Merge Tailscale PR #47 before BusyBox PR #19. PR #19 includes both prerequisites and uses distinct chart versions to avoid publishing two different packages under the same version. Its GitHub Actions smoke job runs both charts' actual rendered init scripts in isolated Linux containers, including copy/preserve-existing-file behavior and both forwarding keys. Helm rendering alone does not prove shell behavior; check that job before merging. Existing production data and nodes are not touched by that smoke test.
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
