@@ -8,7 +8,7 @@ This chart deploys [Scrutiny](https://github.com/AnalogJ/scrutiny) web/API with 
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install scrutiny harish2k01/scrutiny
 ```
@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.2
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.3
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -109,7 +109,7 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | `image.tag` | string | `v0.9.2-web` | Scrutiny container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Scrutiny image pull policy |
 | `influxdb.image.repository` | string | `influxdb` | InfluxDB image repository |
-| `influxdb.image.tag` | string | `2.8` | InfluxDB image tag |
+| `influxdb.image.tag` | string | `2.9.1` | InfluxDB image tag |
 | `initContainer.image.repository` | string | `busybox` | Config seed init container image repository |
 | `service.port` | int | `8080` | Kubernetes Service port |
 | `scrutiny.web.basepath` | string | `""` | Optional Scrutiny web base path |
@@ -128,3 +128,9 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | `resources` | object | `{}` | Scrutiny container resource requests and limits |
 | `influxdb.resources` | object | `{}` | InfluxDB container resource requests and limits |
 | `probes.enabled` | bool | `true` | Enable Scrutiny HTTP liveness and readiness probes |
+
+## Configuration and upgrades
+
+See [CHANGELOG.md](CHANGELOG.md) before upgrading persistent databases. The commented runtime reference in [values.yaml](values.yaml) lists Scrutiny and InfluxDB configuration, including Secret-backed token/password examples. Optional overrides are omitted by default to preserve existing file configuration.
+
+The `env`, `envFrom`, `extraEnv` and `extraVolumeMounts` hooks configure Scrutiny. Their `influxdb.*` equivalents configure the database sidecar; `influxdb.args` adds influxd flags. Use `extraVolumes` to define mounted Secret/config files. `deploymentStrategy.type` defaults to `Recreate` to avoid overlapping database writers.

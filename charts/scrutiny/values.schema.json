@@ -45,7 +45,7 @@
             "tag": {
               "type": "string",
               "description": "Container image tag.",
-              "default": "2.8"
+              "default": "2.9.1"
             },
             "pullPolicy": {
               "type": "string",
@@ -59,6 +59,53 @@
           "description": "CPU and memory requests and limits.",
           "additionalProperties": true,
           "properties": {}
+        },
+        "env": {
+          "type": "object",
+          "description": "Additional INFLUXD environment variables. See upgrade notes for token hashing.",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          },
+          "default": {}
+        },
+        "envFrom": {
+          "type": "array",
+          "description": "Secret and ConfigMap environment sources for InfluxDB.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
+        },
+        "args": {
+          "type": "array",
+          "description": "Extra influxd flags; empty preserves upstream defaults.",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "extraEnv": {
+          "type": "array",
+          "description": "Individual InfluxDB EnvVars including Secret key references.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
+        },
+        "extraVolumeMounts": {
+          "type": "array",
+          "description": "Additional InfluxDB config/Secret mounts.",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "default": []
         }
       }
     },
@@ -339,6 +386,66 @@
           "default": true
         }
       }
+    },
+    "deploymentStrategy": {
+      "type": "object",
+      "description": "Deployment strategy. Recreate prevents overlapping database writers on persistent volumes.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Recreate",
+            "RollingUpdate"
+          ],
+          "default": "Recreate"
+        }
+      },
+      "default": {
+        "type": "Recreate"
+      }
+    },
+    "env": {
+      "type": "object",
+      "description": "Scrutiny runtime environment overrides; env supersedes persisted file configuration.",
+      "additionalProperties": true,
+      "default": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Secret or ConfigMap environment sources for Scrutiny.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Individual Scrutiny EnvVars including Secret key references.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional mounts for Scrutiny.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional volumes shared by the pod.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
     }
   }
 }

@@ -1,0 +1,30 @@
+name: Scrutiny Database Upgrade Smoke
+
+on:
+  pull_request:
+    paths:
+      - charts/scrutiny/**
+      - scripts/smoke-scrutiny-influx.mjs
+      - .github/workflows/scrutiny-database-smoke.yaml
+  push:
+    branches: [main]
+    paths:
+      - charts/scrutiny/**
+      - scripts/smoke-scrutiny-influx.mjs
+      - .github/workflows/scrutiny-database-smoke.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+      - name: Test disposable InfluxDB upgrade with the actual Scrutiny image
+        run: node scripts/smoke-scrutiny-influx.mjs
