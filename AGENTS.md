@@ -39,7 +39,11 @@ Use existing charts as the primary pattern before inventing a new structure. Pre
 - `annotations.artifacthub.io/images`
 - `icon` when a relevant stable upstream icon exists
 
-For icons, prefer stable project icons such as `https://raw.githubusercontent.com/selfhst/icons/main/png/<name>.png` when available. If there is no trustworthy icon for the chart, either omit `icon` or choose a durable upstream project asset. Do not add random or fragile image URLs.
+For every new chart, check the [selfh.st icon collection](https://github.com/selfhst/icons) for the application's logo before choosing an icon. Use a matching selfh.st icon when it exists, following the existing URL pattern `https://raw.githubusercontent.com/selfhst/icons/main/png/<icon-name>.png`.
+
+Check the actual collection filename rather than assuming it matches the chart name; a connector or exporter may use its upstream application's logo. Verify that the exact URL returns a successful HTTP response and an image before adding it to `Chart.yaml`. Do this lookup during chart authoring, not as a network dependency in the catalog generator or release checks.
+
+If selfh.st has no matching icon, use a verified, durable upstream project logo when available; otherwise omit `icon` so the catalog displays app initials. Do not use an unrelated logo or invent an icon URL. After adding the icon, run `npm run build:catalog` so the website inherits the same URL from chart metadata.
 
 Keep `version` as the Helm chart version. Keep `appVersion` as the application or image version. Bump chart versions intentionally when chart behavior, defaults, templates, or documentation change.
 
@@ -87,7 +91,7 @@ Include, as applicable:
 
 - title in the form `# <Chart Name> Helm Chart`
 - short description of what the chart deploys
-- unofficial community chart note
+- unofficial chart note naming the maintainer
 - install from the Helm repository
 - install from OCI
 - important usage examples such as Ingress, Gateway API, persistence, secrets, media mounts, debug access, or RBAC
@@ -96,7 +100,7 @@ Include, as applicable:
 Use this install pattern:
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install <release-name> harish2k01/<chart-name>
 ```
@@ -111,7 +115,7 @@ For unofficial chart notes, use language similar to existing charts:
 
 ```markdown
 > [!NOTE]
-> This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
+> This is an unofficial Helm chart maintained by [Harish](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
 ```
 
 Adjust the upstream project wording when the chart is first-party or maintained in another repo.
@@ -152,18 +156,24 @@ The catalog row should include:
 
 Keep the catalog sorted consistently with the surrounding table.
 
-## docs/index.html
+## Catalog website
 
-When adding, removing, or renaming a chart, update `docs/index.html`.
+The site in `docs/` uses `docs/index.html`, `docs/assets/catalog.css`, and `docs/assets/catalog.js`. `docs/assets/homelab-mark.svg` is Harish's H/home/server mark and favicon.
 
-Update:
+After adding, removing, renaming, or updating a chart, update the root README catalog row and run:
 
-- chart count in the release flow panel
-- chart count in the overview stat
-- category wording if the new chart introduces a new category
-- chart catalog card with chart name, chart version, description, app version pill, category pill, and link to chart docs
+```bash
+npm ci --ignore-scripts
+npm run build:catalog
+npm run check:catalog
+npm run test:catalog
+```
 
-Match the existing static HTML structure. Do not redesign the page for catalog-only changes.
+Commit the generated `docs/catalog.json`. The generator reads versions, descriptions, and original app icon URLs from `charts/*/Chart.yaml`, and categories from the root README. Do not hand-edit generated JSON or duplicate chart cards/counts in HTML. Use app initials when an icon is absent or fails; do not substitute arbitrary app icons.
+
+Preserve the approved app catalog design for catalog-only updates: all matching charts in normal page flow without pagination, search/category filters, chart detail dialog with Helm and OCI commands, icon-only sun/moon theme control, and GitHub/Artifact Hub/signing-key links beside the hero content. Describe Harish as the maintainer; do not claim community maintenance or support. Keep the canonical repository URL `https://charts.harish2k01.in` consistent with the release workflow and installation examples.
+
+For website changes, verify desktop/mobile layouts, light/dark appearance including the first paint, search and empty states, keyboard dialog navigation, both installation sources and copying, plus icon/catalog load failures. Do not redesign the page for catalog-only changes.
 
 ## Validation
 
