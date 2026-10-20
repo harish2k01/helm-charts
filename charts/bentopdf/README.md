@@ -18,7 +18,7 @@ helm install bentopdf harish2k01/bentopdf
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.1.3
+helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.2.0
 ```
 
 ## Install With Ingress
@@ -61,7 +61,7 @@ httpRoute:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of BentoPDF replicas |
 | `image.repository` | string | `ghcr.io/alam00000/bentopdf-simple` | Container image repository |
-| `image.tag` | string | `2.8.4` | Container image tag |
+| `image.tag` | string | `2.8.10` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.port` | int | `80` | Kubernetes Service port |
@@ -72,3 +72,13 @@ httpRoute:
 | `nodeSelector` | object | `{}` | Node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Runtime indexing control
+
+```yaml
+env:
+  ROBOTS_NOINDEX: "true"
+envFrom: []
+```
+
+`env` accepts runtime environment values and `envFrom` accepts Kubernetes Secret/ConfigMap references. `ROBOTS_NOINDEX` defaults to `"false"`; when enabled the image edits bundled HTML at startup, so do not mount its HTML directory read-only. `SITE_URL` and `DISABLE_GITHUB_STARS` are build arguments and require your own image. See [upgrade notes](CHANGELOG.md) for this version.

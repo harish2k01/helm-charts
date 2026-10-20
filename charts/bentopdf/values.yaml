@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/alam00000/bentopdf-simple
   pullPolicy: IfNotPresent
-  tag: "2.8.4"
+  tag: "2.8.10"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -60,3 +60,21 @@ readinessProbe:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# Set ROBOTS_NOINDEX=true to keep a private instance out of search indexes.
+# The image injects HTML metadata at startup and needs its HTML files writable.
+env:
+  ROBOTS_NOINDEX: "false"
+  # Optional Nginx runtime controls; leave commented to use image defaults.
+  # DISABLE_IPV6: "true"
+  # PORT: "8080" # Match service.targetPort when changing the listener.
+  # NGINX_ENTRYPOINT_QUIET_LOGS: "1"
+  # NOINDEX_HTML_ROOT: /usr/share/nginx/html # Only change with a matching HTML mount.
+  # PUID/PGID apply only to a separately selected PUID-capable image variant.
+  # SITE_URL, SIMPLE_MODE, COMPRESSION_MODE, DISABLE_GITHUB_STARS, DISABLE_TOOLS,
+  # BASE_URL, VITE_BRAND_NAME/LOGO, VITE_FOOTER_TEXT, VITE_DEFAULT_LANGUAGE,
+  # VITE_WASM_*, VITE_TESSERACT_*, VITE_OCR_FONT_BASE_URL and VITE_CORS_PROXY_URL
+  # are build settings. Supply them when building your own image, not pod env.
+
+# Additional runtime configuration from existing ConfigMaps or Secrets.
+envFrom: []
