@@ -18,7 +18,7 @@ helm install bazarr harish2k01/bazarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.1.2
+helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.2.0
 ```
 
 Deploy another Bazarr instance by using a different release name and values file:
@@ -70,7 +70,7 @@ media:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Bazarr replicas |
 | `image.repository` | string | `lscr.io/linuxserver/bazarr` | Container image repository |
-| `image.tag` | string | `1.5.6` | Container image tag |
+| `image.tag` | string | `1.6.2` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
@@ -92,3 +92,13 @@ media:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional configuration controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `startupProbe` | object | HTTP `/`, up to 15 minutes | Protect initial database migration from liveness restarts; tune for your library. |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.
