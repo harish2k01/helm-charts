@@ -9,3 +9,9 @@ Added optional LOGO_PROVIDER configuration and Secret-backed LOGO_DEV_TOKEN/BRAN
 0.7.0 adds Asset.logoUrl, logoSource and logoUpdatedAt via a Prisma migration. The image entrypoint still runs prisma migrate deploy before starting the app; preserve NEXTAUTH_SECRET and back up PostgreSQL before upgrading. Port3000, SMTP settings and database URL behavior are unchanged. UI refresh is an application-visible change; no data-reset or database-version change is introduced by the chart.
 
 Validation: Helm lint, default and provider/Secret/Ingress/HTTPRoute rendering, generated catalog consistency and catalog tests. Provider API responses and live database migrations were not tested.
+
+### Runtime and database audit
+
+Inspected every explicit runtime env read in target src/lib and the image Dockerfile/entrypoint. All supported application variables are exposed: DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL, APP_BASE_URL, SMTP_HOST/PORT/FROM/SECURE/USER/PASS, LOGO_PROVIDER, LOGO_DEV_TOKEN and BRANDFETCH_CLIENT_ID. Secrets are supplied through the existing Secret, while public configuration stays in portfolioTracker.env. NODE_ENV is a container/framework runtime control and remains production in the published image.
+
+The target docker-compose.yml explicitly uses PostgreSQL16-alpine, matching the retained bundled database image. Prisma migrations run from the image entrypoint and the new logo cache migration only adds nullable columns. No server-major upgrade is required. Application UI settings/investment data remain database-managed rather than chart defaults. No image-build variables are advertised as runtime configuration.
