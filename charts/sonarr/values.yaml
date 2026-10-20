@@ -28,6 +28,94 @@ env:
   TZ: Asia/Kolkata
 
 # Load credentials from existing Secrets or shared ConfigMaps. Explicit env wins.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+  # App identity and UI: InstanceName Upstream default: Sonarr.
+  # SONARR__APP__INSTANCENAME: "Sonarr"
+  # App identity and UI: Theme Upstream default: auto.
+  # SONARR__APP__THEME: "auto"
+  # App identity and UI: LaunchBrowser Upstream default: true.
+  # SONARR__APP__LAUNCHBROWSER: "true"
+  # Authentication: ApiKey Upstream default: generated/persisted.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # SONARR__AUTH__APIKEY: ""
+  # Authentication: Enabled Upstream default: false.
+  # SONARR__AUTH__ENABLED: "false"
+  # Authentication: Method Upstream default: None (first-run setup required).
+  # SONARR__AUTH__METHOD: "Forms"
+  # Authentication: Required Upstream default: Enabled.
+  # SONARR__AUTH__REQUIRED: "Enabled"
+  # Authentication: TrustCgnatIpAddresses Upstream default: false.
+  # SONARR__AUTH__TRUSTCGNATIPADDRESSES: "false"
+  # Logging: Level Upstream default: debug.
+  # SONARR__LOG__LEVEL: "debug"
+  # Logging: FilterSentryEvents Upstream default: true.
+  # SONARR__LOG__FILTERSENTRYEVENTS: "true"
+  # Logging: Rotate Upstream default: 50.
+  # SONARR__LOG__ROTATE: "50"
+  # Logging: SizeLimit Upstream default: 1.
+  # SONARR__LOG__SIZELIMIT: "1"
+  # Logging: Sql Upstream default: false.
+  # SONARR__LOG__SQL: "false"
+  # Logging: ConsoleLevel Upstream default: empty.
+  # SONARR__LOG__CONSOLELEVEL: ""
+  # Logging: ConsoleFormat Upstream default: Standard.
+  # SONARR__LOG__CONSOLEFORMAT: "Standard"
+  # Logging: AnalyticsEnabled Upstream default: true.
+  # SONARR__LOG__ANALYTICSENABLED: "true"
+  # Logging: SyslogServer Upstream default: empty.
+  # SONARR__LOG__SYSLOGSERVER: ""
+  # Logging: SyslogPort Upstream default: 514.
+  # SONARR__LOG__SYSLOGPORT: "514"
+  # Logging: SyslogLevel Upstream default: inherits Log.Level.
+  # SONARR__LOG__SYSLOGLEVEL: ""
+  # Logging: DbEnabled Upstream default: true.
+  # SONARR__LOG__DBENABLED: "true"
+  # External PostgreSQL: Host Upstream default: empty (SQLite).
+  # SONARR__POSTGRES__HOST: "postgresql.database.svc"
+  # External PostgreSQL: Port Upstream default: 5432.
+  # SONARR__POSTGRES__PORT: "5432"
+  # External PostgreSQL: User Upstream default: empty.
+  # SONARR__POSTGRES__USER: ""
+  # External PostgreSQL: Password Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # SONARR__POSTGRES__PASSWORD: ""
+  # External PostgreSQL: MainDb Upstream default: sonarr-main.
+  # SONARR__POSTGRES__MAINDB: "sonarr-main"
+  # External PostgreSQL: LogDb Upstream default: sonarr-log.
+  # SONARR__POSTGRES__LOGDB: "sonarr-log"
+  # Listener/proxy/TLS: UrlBase Upstream default: empty.
+  # SONARR__SERVER__URLBASE: ""
+  # Listener/proxy/TLS: BindAddress Upstream default: *.
+  # SONARR__SERVER__BINDADDRESS: "*"
+  # Listener/proxy/TLS: AllowedHosts Upstream default: empty (any host).
+  # SONARR__SERVER__ALLOWEDHOSTS: "sonarr.example.com"
+  # Listener/proxy/TLS: Port Upstream default: 8989.
+  # SONARR__SERVER__PORT: "8989"
+  # Listener/proxy/TLS: EnableSsl Upstream default: false.
+  # SONARR__SERVER__ENABLESSL: "false"
+  # Listener/proxy/TLS: SslPort Upstream default: 9898.
+  # SONARR__SERVER__SSLPORT: "9898"
+  # Listener/proxy/TLS: SslCertPath Upstream default: empty.
+  # SONARR__SERVER__SSLCERTPATH: ""
+  # Listener/proxy/TLS: SslCertPassword Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # SONARR__SERVER__SSLCERTPASSWORD: ""
+  # Listener/proxy/TLS: TrustedNetworks Upstream default: empty (loopback only).
+  # SONARR__SERVER__TRUSTEDNETWORKS: "192.0.2.0/24"
+  # Binary updater (keep image-managed): Mechanism Upstream default: BuiltIn.
+  # SONARR__UPDATE__MECHANISM: "BuiltIn"
+  # Binary updater (keep image-managed): Automatically Upstream default: false on Linux.
+  # SONARR__UPDATE__AUTOMATICALLY: "false"
+  # Binary updater (keep image-managed): ScriptPath Upstream default: empty.
+  # SONARR__UPDATE__SCRIPTPATH: ""
+  # Binary updater (keep image-managed): Branch Upstream default: main.
+  # SONARR__UPDATE__BRANCH: "main"
+
 envFrom: []
 
 # Main HTTP service for the Sonarr web UI/API.
