@@ -36,6 +36,15 @@ async function awaitHealth() {
 }
 async function start(image){
   docker('run','-d','--name',db,'--network',network,'--network-alias','influx','-v',`${data}:/var/lib/influxdb2`,image);
+  // Wait for migration/listener readiness before starting the app; unlike a Pod,
+  // a bare docker run has no kubelet to restart an app after a startup race.
+  let ready=false;
+  for(let attempt=0;attempt<120;attempt++){
+    const ping=spawnSync('docker',['exec',db,'influx','ping','--host','http://127.0.0.1:8086'],{stdio:'ignore',timeout:5000});
+    if(ping.status===0){ready=true;break;}
+    await wait(1000);
+  }
+  assert.ok(ready,'InfluxDB listener must become ready');
   // The actual app image onboards a new database and tests its authenticated v2 APIs.
   docker('run','-d','--name',app,'--network',network,'-p','127.0.0.1::8080','-v',`${config}:/opt/scrutiny/config`,
     '-e','SCRUTINY_WEB_INFLUXDB_HOST=influx','-e',`SCRUTINY_WEB_INFLUXDB_TOKEN=${token}`,
