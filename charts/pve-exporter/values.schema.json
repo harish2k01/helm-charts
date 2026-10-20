@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag.",
-          "default": "3.8.2"
+          "default": "3.10.1"
         },
         "pullPolicy": {
           "type": "string",
@@ -265,6 +265,26 @@
       "description": "Pod affinity and anti-affinity rules.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "collectors": {
+      "type": "object",
+      "description": "Optional exporter collectors.",
+      "additionalProperties": true,
+      "properties": {
+        "qdevice": {
+          "type": "boolean",
+          "description": "Collect QDevice connection state on cluster scrapes. Disable if the Proxmox endpoint or API credentials cannot provide it.",
+          "default": true
+        }
+      }
+    },
+    "extraArgs": {
+      "type": "array",
+      "description": "Additional exporter CLI arguments.",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

@@ -166,8 +166,8 @@
       "name": "Proxmox VE Exporter",
       "slug": "pve-exporter",
       "category": "Monitoring",
-      "version": "0.1.0",
-      "appVersion": "3.8.2",
+      "version": "0.2.0",
+      "appVersion": "3.10.1",
       "description": "Deploys the prometheus-pve-exporter for scraping Proxmox VE metrics",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/proxmox.png"
     },

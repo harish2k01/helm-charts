@@ -81,6 +81,12 @@ readinessProbe:
   failureThreshold: 3
 
 extraContainerPorts: []
+# QDevice collection is enabled by upstream and requires cluster=1 scrapes.
+collectors:
+  qdevice: true
+
+# Additional exporter CLI flags, for example --no-collector.replication.
+extraArgs: []
 extraEnv: {}
 envFrom: []
 extraVolumes: []
