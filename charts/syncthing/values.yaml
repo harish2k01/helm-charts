@@ -29,6 +29,7 @@ env:
 #   PGID: "1000" # Image/chart default group when entrypoint starts as root.
 #   UMASK: "002" # Unset by image; optional file-creation permission mask.
 #   PCAP: cap_net_bind_service=+ep # Default unset; optional binary capabilities.
+#   HOME: /var/syncthing # Image default writable home; keep on persistent storage.
 #   STHOMEDIR: /var/syncthing/config # Image default; config/data must stay persistent.
 #   STCONFDIR: /var/syncthing/config # Default derived from home; config/key location.
 #   STDATADIR: /var/syncthing/config # Default derived from home; database/log location.
@@ -61,6 +62,9 @@ env:
 #   STCPUPROFILE: "false" # Write CPU profile on exit.
 #   STHEAPPROFILE: "false" # Write heap profiles.
 #   STPROFILER: 127.0.0.1:9090 # Optional private profiling listener.
+#   GOMAXPROCS: "2" # Default available CPUs; optional Go scheduler CPU limit.
+#   GOGC: "100" # Default GC heap-growth percentage; trade memory for CPU.
+# LOGGER_DISCARD is developer benchmark-only (any nonempty value drops logs).
 #   STLOCKTHRESHOLD: 100ms # Optional mutex diagnostics; unset uses upstream default.
 # envFrom:
 #   - secretRef:
