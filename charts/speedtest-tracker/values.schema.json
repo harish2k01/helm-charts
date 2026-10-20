@@ -1099,6 +1099,558 @@
               "type": "string",
               "description": "Default sender display name.",
               "default": "Speedtest Tracker"
+            },
+            "FORCE_HTTPS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/app.php. Leave unset to inherit its default."
+            },
+            "APP_FAKER_LOCALE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/app.php. Leave unset to inherit its default."
+            },
+            "APP_PREVIOUS_KEYS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/app.php. Leave unset to inherit its default."
+            },
+            "APP_MAINTENANCE_DRIVER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/app.php. Leave unset to inherit its default."
+            },
+            "APP_MAINTENANCE_STORE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/app.php. Leave unset to inherit its default."
+            },
+            "DB_DATABASE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_FOREIGN_KEYS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_HOST": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_PORT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_USERNAME": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_SOCKET": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_CHARSET": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_COLLATION": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "MYSQL_ATTR_SSL_CA": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_SEARCH_PATH": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_ENCRYPT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "DB_TRUST_SERVER_CERTIFICATE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_CLIENT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_CLUSTER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_PREFIX": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_PERSISTENT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_HOST": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_USERNAME": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_PORT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_DB": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "REDIS_CACHE_DB": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/database.php. Leave unset to inherit its default."
+            },
+            "VITE_PUSHER_APP_CLUSTER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/filament.php. Leave unset to inherit its default."
+            },
+            "VITE_PUSHER_HOST": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/filament.php. Leave unset to inherit its default."
+            },
+            "VITE_PUSHER_PORT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/filament.php. Leave unset to inherit its default."
+            },
+            "FILESYSTEM_DISK": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/filament.php. Leave unset to inherit its default."
+            },
+            "LOG_CHANNEL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_DEPRECATIONS_CHANNEL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_DEPRECATIONS_TRACE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_STACK": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_LEVEL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_DAILY_DAYS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_SLACK_WEBHOOK_URL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_SLACK_USERNAME": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_SLACK_EMOJI": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_PAPERTRAIL_HANDLER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "PAPERTRAIL_URL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "PAPERTRAIL_PORT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_STDERR_FORMATTER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "LOG_SYSLOG_FACILITY": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/logging.php. Leave unset to inherit its default."
+            },
+            "MAIL_URL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/mail.php. Leave unset to inherit its default."
+            },
+            "MAIL_EHLO_DOMAIN": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/mail.php. Leave unset to inherit its default."
+            },
+            "MAIL_VERIFY_SSL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/mail.php. Leave unset to inherit its default."
+            },
+            "SANCTUM_STATEFUL_DOMAINS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/sanctum.php. Leave unset to inherit its default."
+            },
+            "SESSION_DRIVER": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_LIFETIME": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_EXPIRE_ON_CLOSE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_ENCRYPT": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_CONNECTION": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_TABLE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_STORE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_COOKIE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_PATH": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_DOMAIN": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_SECURE_COOKIE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_HTTP_ONLY": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_SAME_SITE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SESSION_PARTITIONED_COOKIE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/session.php. Leave unset to inherit its default."
+            },
+            "SETTINGS_CACHE_ENABLED": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/settings.php. Leave unset to inherit its default."
+            },
+            "CACHE_STORE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/settings.php. Leave unset to inherit its default."
+            },
+            "SPEEDTEST_CHECKINTERNET_URL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/speedtest.php. Leave unset to inherit its default."
+            },
+            "WEBHOOK_TIMEOUT_IN_SECONDS": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/webhook-server.php. Leave unset to inherit its default."
+            },
+            "WEBHOOK_TRIES": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/webhook-server.php. Leave unset to inherit its default."
+            },
+            "WEBHOOK_VERIFY_SSL": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/webhook-server.php. Leave unset to inherit its default."
+            },
+            "WEBHOOK_THROW_EXCEPTION_ON_FAILURE": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ],
+              "description": "Optional runtime setting from upstream config/webhook-server.php. Leave unset to inherit its default."
             }
           }
         }
@@ -1215,6 +1767,20 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Budget for LinuxServer initialization and automatic migrations before liveness begins.",
+      "additionalProperties": true,
+      "default": {
+        "httpGet": {
+          "path": "/",
+          "port": "http"
+        },
+        "periodSeconds": 10,
+        "timeoutSeconds": 5,
+        "failureThreshold": 120
+      }
     }
   }
 }

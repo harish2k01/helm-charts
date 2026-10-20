@@ -287,6 +287,101 @@ speedtestTracker:
     # MAIL_USERNAME is set via secrets
     # MAIL_PASSWORD is set via secrets
 
+    # === OPTIONAL LARAVEL / APPLICATION RUNTIME SETTINGS ===
+    # Examples only: uncomment only settings required for your installation.
+    # Exact defaults and accepted options are in the linked target config files.
+    # config/app.php
+    # FORCE_HTTPS: "false"
+    # APP_FAKER_LOCALE: "en_US"
+    # APP_PREVIOUS_KEYS: ""
+    # APP_MAINTENANCE_DRIVER: "file"
+    # APP_MAINTENANCE_STORE: "database"
+    # config/database.php
+    # DB_DATABASE: ""
+    # DB_FOREIGN_KEYS: "true"
+    # DB_HOST: "127.0.0.1"
+    # DB_PORT: "3306"
+    # DB_USERNAME: "root"
+    # DB_SOCKET: ""
+    # DB_CHARSET: "utf8mb4"
+    # DB_COLLATION: "utf8mb4_unicode_ci"
+    # MYSQL_ATTR_SSL_CA: ""
+    # DB_SEARCH_PATH: "public"
+    # DB_ENCRYPT: "yes"
+    # DB_TRUST_SERVER_CERTIFICATE: "false"
+    # REDIS_CLIENT: "phpredis"
+    # REDIS_CLUSTER: "redis"
+    # REDIS_PREFIX: ""
+    # REDIS_PERSISTENT: "false"
+    # REDIS_HOST: "127.0.0.1"
+    # REDIS_USERNAME: ""
+    # REDIS_PORT: "6379"
+    # REDIS_DB: "0"
+    # REDIS_CACHE_DB: "1"
+    # config/filament.php
+    # VITE_PUSHER_APP_CLUSTER: ""
+    # VITE_PUSHER_HOST: ""
+    # VITE_PUSHER_PORT: ""
+    # FILESYSTEM_DISK: "local"
+    # config/logging.php
+    # LOG_CHANNEL: "stderr"
+    # LOG_DEPRECATIONS_CHANNEL: "null"
+    # LOG_DEPRECATIONS_TRACE: "false"
+    # LOG_STACK: "single"
+    # LOG_LEVEL: "debug"
+    # LOG_DAILY_DAYS: "14"
+    # LOG_SLACK_WEBHOOK_URL: ""
+    # LOG_SLACK_USERNAME: "Laravel Log"
+    # LOG_SLACK_EMOJI: ":boom:"
+    # LOG_PAPERTRAIL_HANDLER: ""
+    # PAPERTRAIL_URL: ""
+    # PAPERTRAIL_PORT: ""
+    # LOG_STDERR_FORMATTER: ""
+    # LOG_SYSLOG_FACILITY: ""
+    # config/mail.php
+    # MAIL_URL: ""
+    # MAIL_EHLO_DOMAIN: ""
+    # MAIL_VERIFY_SSL: "true"
+    # config/sanctum.php
+    # SANCTUM_STATEFUL_DOMAINS: ""
+    # config/session.php
+    # SESSION_DRIVER: "database"
+    # SESSION_LIFETIME: "10800"
+    # SESSION_EXPIRE_ON_CLOSE: "false"
+    # SESSION_ENCRYPT: "false"
+    # SESSION_CONNECTION: ""
+    # SESSION_TABLE: "sessions"
+    # SESSION_STORE: ""
+    # SESSION_COOKIE: ""
+    # SESSION_PATH: "/"
+    # SESSION_DOMAIN: ""
+    # SESSION_SECURE_COOKIE: ""
+    # SESSION_HTTP_ONLY: "true"
+    # SESSION_SAME_SITE: "lax"
+    # SESSION_PARTITIONED_COOKIE: "false"
+    # config/settings.php
+    # SETTINGS_CACHE_ENABLED: "false"
+    # CACHE_STORE: "database"
+    # config/speedtest.php
+    # SPEEDTEST_CHECKINTERNET_URL: ""
+    # config/webhook-server.php
+    # WEBHOOK_TIMEOUT_IN_SECONDS: "3"
+    # WEBHOOK_TRIES: "3"
+    # WEBHOOK_VERIFY_SSL: "true"
+    # WEBHOOK_THROW_EXCEPTION_ON_FAILURE: "false"
+    # Credentials from config files belong in secrets.inline or existingSecret,
+    # not in the env map: APP_KEY, ADMIN_PASSWORD, DB_URL, DB_PASSWORD, REDIS_URL, REDIS_PASSWORD, VITE_PUSHER_APP_KEY, MAIL_USERNAME, MAIL_PASSWORD, SANCTUM_TOKEN_PREFIX, TELEGRAM_BOT_TOKEN.
+    # LinuxServer wrapper FILE__KEY=/run/secrets/file reads a mounted secret.
+    # Additional optional wrapper knobs: UMASK, DOCKER_MODS and S6_VERBOSITY.
+
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 120
+
 livenessProbe:
   httpGet:
     path: /
