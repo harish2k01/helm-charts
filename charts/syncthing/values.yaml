@@ -23,6 +23,56 @@ env:
   TZ: Asia/Kolkata
   STGUIADDRESS: 0.0.0.0:8384
 
+# Optional target runtime settings. Keep commented to preserve persisted config.
+# env:
+#   PUID: "1000" # Image/chart default owner when entrypoint starts as root.
+#   PGID: "1000" # Image/chart default group when entrypoint starts as root.
+#   UMASK: "002" # Unset by image; optional file-creation permission mask.
+#   PCAP: cap_net_bind_service=+ep # Default unset; optional binary capabilities.
+#   STHOMEDIR: /var/syncthing/config # Image default; config/data must stay persistent.
+#   STCONFDIR: /var/syncthing/config # Default derived from home; config/key location.
+#   STDATADIR: /var/syncthing/config # Default derived from home; database/log location.
+#   STGUIADDRESS: 0.0.0.0:8384 # Image/chart default; align probes/Service if changed.
+#   STALLOWNEWERCONFIG: "false" # Default false; do not use to force unsafe downgrade.
+#   STAUDIT: "false" # Default false; write audit events when enabled.
+#   STAUDITFILE: "-" # Default timestamped audit file; '-' sends to stdout.
+#   STDBMAINTENANCEINTERVAL: 8h # Default SQLite maintenance interval.
+#   STDBDELETERETENTIONINTERVAL: 10920h # Default deleted-item retention.
+#   STLOGFILE: "-" # Linux image default stdout; mount storage for file logging.
+#   STLOGLEVEL: INFO # Default INFO; DEBUG/WARN/ERROR also supported.
+#   STLOGMAXOLDFILES: "3" # Default rotated files plus current file.
+#   STLOGMAXSIZE: "10485760" # Default 10 MiB file rotation limit; 0 disables.
+#   STLOGFORMATTIMESTAMP: "" # Default upstream timestamp format; empty disables.
+#   STLOGFORMATLEVELSTRING: "true" # Default upstream line format; include level text.
+#   STLOGFORMATLEVELSYSLOG: "false" # Default upstream line format; optional syslog prefix.
+#   STNOBROWSER: "true" # Binary default false; avoid browser launch in container.
+#   STNOPORTPROBING: "true" # Binary default false; don't choose random initial ports.
+#   STNORESTART: "false" # Default false; monitor handles restart requests.
+#   STNOUPGRADE: "true" # Official image is built with binary self-upgrade disabled.
+#   STPAUSED: "false" # Default false; startup with all devices/folders paused.
+#   STUNPAUSED: "false" # Default false; mutually exclusive with STPAUSED.
+#   ALL_PROXY: https://proxy.example.com:3128 # Default none; uppercase wins over all_proxy.
+#   STTRACE: model=DEBUG # Default none; per-package trace/log overrides.
+#   STVERSIONEXTRA: diagnostic # Default none; extra displayed version information.
+# Debug only (all unset/disabled by default; don't expose profiler publicly):
+#   STGUIASSETS: /debug/gui # Alternate mounted GUI assets.
+#   STPERFSTATS: "false" # Write performance-statistics CSV.
+#   STBLOCKPROFILE: "false" # Write blocking profiles.
+#   STCPUPROFILE: "false" # Write CPU profile on exit.
+#   STHEAPPROFILE: "false" # Write heap profiles.
+#   STPROFILER: 127.0.0.1:9090 # Optional private profiling listener.
+#   STLOCKTHRESHOLD: 100ms # Optional mutex diagnostics; unset uses upstream default.
+# envFrom:
+#   - secretRef:
+#       name: syncthing-api-credentials
+# Put STGUIAPIKEY (default persisted/generated) or authenticated proxy URLs in
+# the Secret; don't commit literal API keys. No external SQL server is used.
+# STRESTART/STMONITORED are internal process markers, not deployment inputs.
+# STNOCONSOLE is Windows-only. GOVERSION/BUILD_USER/BUILD_HOST/TARGETARCH/
+# CGO_ENABLED are build-only and cannot select a runtime binary through Helm.
+# GUI sessionCookieDurationS (default 604800), sessionCookiePath (default /),
+# folder group (default empty), and blockIndexing (default true) are persisted
+# config.xml fields, available via GUI/API; do not invent equivalent env names.
 envFrom: []
 command: []
 args: []

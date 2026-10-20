@@ -8,7 +8,7 @@ This chart deploys [Syncthing](https://syncthing.net) using the official `syncth
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install syncthing harish2k01/syncthing
 ```
@@ -108,12 +108,6 @@ For access from devices outside the cluster, expose TCP/UDP `22000` and UDP `210
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 
-## Upgrading from 2.1.0 to 2.1.6
+## Upgrade history
 
-The intervening patch releases fix protocol validation, symlink handling, permissions, folder health checks, SQLite connection/migration behavior, introducer authorization, and HTTP/network handling. 2.1.5 has no separate detailed release notes and there is no GitHub release entry for 2.1.4; the complete tag-to-tag source comparison covers those commits. The grouping, proxy, block-indexing, and GUI-session options repeated in 2.1.6 release notes were already available in 2.1.0. They are configured in Syncthing rather than new chart defaults.
-
-The target includes a SQLite migration that sets directory/non-file sizes to zero. Back up the persistent Syncthing home and configuration with the process stopped before upgrading. The default startup probe allows up to ten minutes for startup before liveness checks begin; increase `startupProbe.failureThreshold` for a larger library. Restore a consistent pre-upgrade snapshot if rollback is required rather than assuming a binary downgrade reverses database changes.
-
-The official container entrypoint, PUID/PGID ownership settings, `/var/syncthing` storage, HTTP health path, and sync/discovery ports remain compatible. Deprecated `cacheIgnoredFiles` and `urPostInsecurely` configuration fields are removed upstream; review externally managed configuration using these fields. Keep one writer per Syncthing home/PVC.
-
-Sources: [release history](https://github.com/syncthing/syncthing/releases), [complete source comparison](https://github.com/syncthing/syncthing/compare/v2.1.0...v2.1.6), [SQLite migration](https://github.com/syncthing/syncthing/blob/v2.1.6/internal/db/sqlite/sql/migrations/folder/06-zero-size-dirs.sql), and [configuration source](https://github.com/syncthing/syncthing/blob/v2.1.6/lib/config/optionsconfiguration.go).
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
