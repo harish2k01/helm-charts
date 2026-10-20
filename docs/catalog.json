@@ -40,8 +40,8 @@
       "name": "Feishin",
       "slug": "feishin",
       "category": "Media",
-      "version": "0.1.0",
-      "appVersion": "1.11.0",
+      "version": "0.1.1",
+      "appVersion": "1.17.0",
       "description": "Deploys Feishin music streaming client on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/feishin.png"
     },
