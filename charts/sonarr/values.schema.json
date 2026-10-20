@@ -251,6 +251,10 @@
         "SONARR__UPDATE__BRANCH": {
           "type": "string",
           "description": "Binary updater (keep image-managed): Branch Upstream default when unset: main."
+        },
+        "DOCKER_MODS": {
+          "type": "string",
+          "description": "Optional trusted LinuxServer image mods; code-executing container extension, not an application setting. Unset by default."
         }
       }
     },

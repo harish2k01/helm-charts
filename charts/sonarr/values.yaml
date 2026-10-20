@@ -116,6 +116,9 @@ env:
   # Binary updater (keep image-managed): Branch Upstream default: main.
   # SONARR__UPDATE__BRANCH: "main"
 
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
 envFrom: []
 
 # Main HTTP service for the Sonarr web UI/API.
