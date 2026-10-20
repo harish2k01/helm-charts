@@ -122,6 +122,9 @@ env:
   # Binary updater (keep image-managed): Branch Upstream default: master.
   # PROWLARR__UPDATE__BRANCH: "master"
 
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
 envFrom: []
 
 # Main HTTP service for the Prowlarr web UI/API.
