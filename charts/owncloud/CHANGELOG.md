@@ -4,7 +4,7 @@
 
 Merge the ownCloud app update [PR #75](https://github.com/harish2k01/helm-charts/pull/75) before this dependency update [PR #90](https://github.com/harish2k01/helm-charts/pull/90). This branch includes the app update so its chart metadata stays at ownCloud 10.16.6 and uses a distinct chart version. The chart's default Redis image moves from floating 6 to pinned 8.10.2, the version resolved by the proposed floating 8 tag at review time.
 
-### Compatibility and preparation
+### Chart changes and migration preparation
 
 - ownCloud 10.16 documents Redis >=6; Redis 8 preserves the Redis protocol, database 0 and port 6379 used by this chart. The existing --databases 1 remains valid. The chart does not use cluster, streams, functions, Redis Stack data structures or custom modules by default. No mandatory ownCloud environment rename was found.
 - Back up the Redis PVC as well as the ownCloud data and MariaDB database before upgrading. Redis 7 introduced multipart AOF storage; newer RDB versions and AOF manifests must not be opened with the old image as a rollback strategy. Restore the pre-upgrade snapshot into a separate recovery volume. Do not delete or flush live Redis to simplify this upgrade: it holds file locks and cache state.
@@ -13,7 +13,7 @@ Merge the ownCloud app update [PR #75](https://github.com/harish2k01/helm-charts
 - As in the old official image, Docker builds disable protected-mode by default. The Redis Service stays ClusterIP, unauthenticated and internal. Existing networkPolicy settings can restrict access. If adding authentication or ACLs, configure ownCloud credentials and authenticated probes together; this change does not silently enable incompatible authentication.
 - Redis 8 changes the upstream license options to AGPLv3 / RSALv2 / SSPLv1. The Helm chart's MIT license describes chart source, not Redis.
 
-### Intervening release review
+### App changes and intervening release review
 
 Reviewed the 6.2, 7.0, 7.2, 7.4, 8.0, 8.2, 8.4, 8.6, 8.8 and 8.10 release-note lines, redis.conf changes and the exact 8.10.2 container entrypoint/Dockerfile. The old 6 tag floats, so the exact patch running in a deployment must be recorded from its image digest before rollout.
 
@@ -21,7 +21,7 @@ Redis 7 adds multipart AOF, ACL selectors, functions, safer Lua behavior and com
 
 Sources: [ownCloud 10.16 requirements](https://doc.owncloud.com/server/10.16/admin_manual/installation/system_requirements.html), [Redis 6.2 notes](https://github.com/redis/redis/blob/6.2/00-RELEASENOTES), [7.0](https://github.com/redis/redis/blob/7.0/00-RELEASENOTES), [7.2](https://github.com/redis/redis/blob/7.2/00-RELEASENOTES), [7.4](https://github.com/redis/redis/blob/7.4/00-RELEASENOTES), [8.0](https://github.com/redis/redis/blob/8.0/00-RELEASENOTES), [8.2](https://github.com/redis/redis/blob/8.2/00-RELEASENOTES), [8.4](https://github.com/redis/redis/blob/8.4/00-RELEASENOTES), [8.6](https://github.com/redis/redis/blob/8.6/00-RELEASENOTES), [8.8](https://github.com/redis/redis/blob/8.8/00-RELEASENOTES), [8.10.2](https://github.com/redis/redis/blob/8.10.2/00-RELEASENOTES), [default config](https://github.com/redis/redis/blob/8.10.2/redis.conf), [8.10.2 entrypoint](https://github.com/redis/docker-library-redis/blob/v8.10.2/debian/docker-entrypoint.sh), [Dockerfile](https://github.com/redis/docker-library-redis/blob/v8.10.2/debian/Dockerfile), [official image tags](https://github.com/docker-library/official-images/blob/master/library/redis).
 
-Validation covers Helm lint, default rendering, startup-probe overrides, external Redis and disabled Redis branches, plus catalog checks. A real ownCloud/Redis data migration has not been exercised by these static checks. Test a restored copy before production upgrade.
+Validation covers Helm lint, default rendering, startup-probe overrides, external Redis and disabled Redis branches, plus catalog checks. A dedicated GitHub Actions job uses the actual ownCloud 10.16.6 PHPRedis extension to exercise JSON cache, locking, counters, TTL, WATCH/MULTI transactions and SCAN before and after Redis 6.2.21 to 8.10.2, with both RDB and AOF persistence and a second Redis 8 restart. Review that job before merging. It does not run a complete ownCloud/MariaDB instance or migrate production data; test a restored copy before production rollout.
 
 ## 0.1.1 — 10.16.6
 
