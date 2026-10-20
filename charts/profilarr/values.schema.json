@@ -1,0 +1,516 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "profilarr values",
+  "description": "Configurable Helm values for Profilarr and its optional parser sidecar.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": {
+      "type": "integer",
+      "const": 1,
+      "default": 1,
+      "description": "Single application replica; SQLite and Git state require a single writer."
+    },
+    "image": {
+      "type": "object",
+      "description": "Container image settings for the main application container.",
+      "additionalProperties": true,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Container image repository used for the main application container.",
+          "default": "ghcr.io/dictionarry-hub/profilarr"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+          "default": "2.2.0"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "description": "Kubernetes image pull policy for the container.",
+          "default": "IfNotPresent",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        }
+      }
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "description": "Optional list of image pull secrets used when the container image is stored in a private registry.",
+      "default": [],
+      "items": {}
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name portion used when generating Kubernetes resource names.",
+      "default": ""
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Override the full generated Kubernetes resource name.",
+      "default": ""
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels applied to application pods.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod-level security context applied to all containers in the pod.",
+      "additionalProperties": true,
+      "properties": {},
+      "default": {
+        "runAsNonRoot": true,
+        "runAsUser": 1000,
+        "runAsGroup": 1000,
+        "fsGroup": 1000,
+        "seccompProfile": {
+          "type": "RuntimeDefault"
+        }
+      }
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container-level security context for the main application container.",
+      "additionalProperties": true,
+      "properties": {},
+      "default": {
+        "allowPrivilegeEscalation": false,
+        "capabilities": {
+          "drop": [
+            "ALL"
+          ]
+        }
+      }
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Non-secret environment variables; quote values. PORT follows service.targetPort; sidecar parser connection settings are generated.",
+      "default": {
+        "TZ": "Etc/UTC",
+        "HOST": "0.0.0.0",
+        "AUTH": "on",
+        "UMASK": "022"
+      }
+    },
+    "service": {
+      "type": "object",
+      "description": "Kubernetes Service configuration for exposing the application inside the cluster.",
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer"
+          ],
+          "default": "ClusterIP",
+          "description": "Service exposure type."
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 6868,
+          "description": "Service HTTP port."
+        },
+        "targetPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 6868,
+          "description": "Application listener port; also sets PORT."
+        },
+        "portName": {
+          "type": "string",
+          "const": "http",
+          "default": "http",
+          "description": "Named HTTP port used by the Service and default probes."
+        },
+        "extraPorts": {
+          "type": "array",
+          "description": "Additional Service ports to expose beside the primary application port.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "persistence": {
+      "type": "object",
+      "description": "Persistent storage configuration used by the chart.",
+      "additionalProperties": true,
+      "properties": {
+        "config": {
+          "type": "object",
+          "description": "Persistent volume settings for application configuration and state.",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable or disable this feature or generated resource.",
+              "default": true
+            },
+            "mountPath": {
+              "type": "string",
+              "const": "/config",
+              "default": "/config",
+              "description": "Required persistent application data path in the upstream image."
+            },
+            "existingClaim": {
+              "type": "string",
+              "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
+              "default": ""
+            },
+            "accessModes": {
+              "type": "array",
+              "description": "PersistentVolumeClaim access modes.",
+              "default": [
+                "ReadWriteOnce"
+              ],
+              "items": {
+                "type": "string",
+                "description": "PersistentVolumeClaim access mode value.",
+                "default": "ReadWriteOnce"
+              }
+            },
+            "size": {
+              "type": "string",
+              "description": "PersistentVolumeClaim storage request size.",
+              "default": "2Gi"
+            },
+            "storageClassName": {
+              "type": "string",
+              "description": "StorageClass name. Leave empty to use the cluster default.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Additional Kubernetes volumes appended to the pod spec.",
+      "default": [],
+      "items": {}
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Additional volume mounts appended to the main application container.",
+      "default": [],
+      "items": {}
+    },
+    "ingress": {
+      "type": "object",
+      "description": "Kubernetes Ingress configuration for exposing the application through an ingress controller.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create an Ingress resource.",
+          "default": false
+        },
+        "className": {
+          "type": "string",
+          "description": "IngressClass name used by the target ingress controller.",
+          "default": ""
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the Ingress resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "hosts": {
+          "type": "array",
+          "description": "Ingress host and path rules routed to the chart Service.",
+          "default": [],
+          "items": {}
+        },
+        "tls": {
+          "type": "array",
+          "description": "TLS configuration for Ingress hosts and referenced certificate secrets.",
+          "default": [],
+          "items": {}
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "description": "Gateway API HTTPRoute configuration for exposing the application through a Gateway.",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether to create a Gateway API HTTPRoute resource.",
+          "default": false
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations applied to the HTTPRoute resource.",
+          "additionalProperties": true,
+          "properties": {}
+        },
+        "parentRefs": {
+          "type": "array",
+          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
+          "default": [],
+          "items": {}
+        },
+        "hostnames": {
+          "type": "array",
+          "description": "Hostnames matched by the HTTPRoute.",
+          "default": [],
+          "items": {}
+        },
+        "rules": {
+          "type": "array",
+          "description": "HTTPRoute routing rules, including path matches and filters.",
+          "default": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ],
+          "items": {
+            "type": "object",
+            "description": "Gateway API HTTPRoute rule with matches, filters, and backend references.",
+            "additionalProperties": true,
+            "properties": {
+              "matches": {
+                "type": "array",
+                "description": "HTTP match conditions for a route rule.",
+                "default": [
+                  {
+                    "path": {
+                      "type": "PathPrefix",
+                      "value": "/"
+                    }
+                  }
+                ],
+                "items": {
+                  "type": "object",
+                  "description": "HTTP match condition used by an HTTPRoute rule.",
+                  "additionalProperties": true,
+                  "properties": {
+                    "path": {
+                      "type": "object",
+                      "description": "HTTP path match configuration.",
+                      "additionalProperties": true,
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Type value used by this Kubernetes or application setting.",
+                          "default": "PathPrefix"
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Concrete value for this setting.",
+                          "default": "/"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for the main application container.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "livenessProbe": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Listener liveness check; repository health must not cause restart loops.",
+      "default": {
+        "tcpSocket": {
+          "port": "http"
+        },
+        "periodSeconds": 30,
+        "timeoutSeconds": 5
+      }
+    },
+    "readinessProbe": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Public application health check before routing traffic.",
+      "default": {
+        "httpGet": {
+          "path": "/api/v1/health",
+          "port": "http"
+        },
+        "periodSeconds": 10,
+        "timeoutSeconds": 5
+      }
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector constraints for scheduling pods onto matching nodes.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Pod tolerations that allow scheduling onto tainted nodes.",
+      "default": [],
+      "items": {}
+    },
+    "affinity": {
+      "type": "object",
+      "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": [],
+      "description": "Existing Secret or ConfigMap references for environment configuration."
+    },
+    "startupProbe": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Listener startup check; allow migrations before liveness.",
+      "default": {
+        "tcpSocket": {
+          "port": "http"
+        },
+        "periodSeconds": 5,
+        "failureThreshold": 60
+      }
+    },
+    "parser": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional local .NET parser for custom-format tests and profile simulations.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run the parser in the same pod."
+        },
+        "image": {
+          "type": "object",
+          "description": "Parser image; keep its version compatible with Profilarr.",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "Container image repository used for the main application container.",
+              "default": "ghcr.io/dictionarry-hub/profilarr-parser"
+            },
+            "tag": {
+              "type": "string",
+              "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
+              "default": "2.2.0"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "description": "Kubernetes image pull policy for the container.",
+              "default": "IfNotPresent",
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ]
+            }
+          }
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 5000,
+          "description": "Parser listener port; must differ from the application listener."
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Parser container resource requests and limits."
+        },
+        "securityContext": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Parser container security context.",
+          "default": {
+            "allowPrivilegeEscalation": false,
+            "capabilities": {
+              "drop": [
+                "ALL"
+              ]
+            }
+          }
+        },
+        "startupProbe": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Parser startup health check.",
+          "default": {
+            "httpGet": {
+              "path": "/health",
+              "port": "parser"
+            },
+            "periodSeconds": 5,
+            "failureThreshold": 30
+          }
+        },
+        "livenessProbe": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Parser liveness health check.",
+          "default": {
+            "httpGet": {
+              "path": "/health",
+              "port": "parser"
+            },
+            "periodSeconds": 30,
+            "timeoutSeconds": 5
+          }
+        },
+        "readinessProbe": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Parser readiness health check.",
+          "default": {
+            "httpGet": {
+              "path": "/health",
+              "port": "parser"
+            },
+            "periodSeconds": 10,
+            "timeoutSeconds": 5
+          }
+        }
+      }
+    }
+  }
+}
