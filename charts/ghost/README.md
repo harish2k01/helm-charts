@@ -18,7 +18,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.3
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.4
 ```
 
 ## Database Configuration
@@ -163,7 +163,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Ghost replicas |
 | `image.repository` | string | `ghost` | Container image repository |
-| `image.tag` | string | `6.39.0-alpine` | Container image tag |
+| `image.tag` | string | `6.71.0-alpine` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for Ghost |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the Ghost pod |
@@ -256,3 +256,7 @@ The proxy strips trailing slashes internally before forwarding requests. This
 prevents redirect loops between cached Ghost slash-adding redirects and the
 ActivityPub upstream's slash-removing redirects. The deployment configuration
 checksum also rolls out this normalization change to existing proxy pods.
+
+## Additional Ghost configuration
+
+The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.71.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
