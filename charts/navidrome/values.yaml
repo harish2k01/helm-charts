@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: deluan/navidrome
-  tag: "0.61.2"
+  tag: "0.64.2"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -15,11 +15,311 @@ podSecurityContext: {}
 securityContext: {}
 
 # Non-secret Navidrome settings. Add any other ND_* settings here.
+# Optional new settings can be supplied via this map without template changes:
+# ND_JELLYFIN_ENABLED, ND_JELLYFIN_SERVERNAME, ND_JELLYFIN_EXPOSEDPUBLICUSERS,
+# ND_JELLYFIN_MAXCONCURRENTSTREAMS, ND_JELLYFIN_AUTODISCOVERY, ND_JELLYFIN_QUICKCONNECT,
+# ND_SCANNER_ARTISTSPLITEXCEPTIONS, ND_SCANNER_IGNOREDOTFOLDERS,
+# ND_TRANSCODING_MAXCONCURRENT, ND_TRANSCODING_MAXCONCURRENTPERUSER.
 env:
   TZ: Asia/Kolkata
-  ND_SCANSCHEDULE: 1h
+  # Scanner settings use the section separator underscore.
+  ND_SCANNER_SCHEDULE: 1h
 
 # Main HTTP service for the Navidrome web UI.
+# Existing Secret/ConfigMap sources; explicit env entries take precedence.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Load configurations from an external config file Upstream default: "./navidrome.toml".
+  # ND_CONFIGFILE: "/data/navidrome.toml"
+  # Folder where your music library is stored. Can be read-only. This becomes the default library when using multi-library setup Upstream default: "./music".
+  # ND_MUSICFOLDER: "/music"
+  # Folder to store application data (DB) Upstream default: "./data".
+  # ND_DATAFOLDER: "/data"
+  # Folder to store cache data (transcoding, images...) Upstream default: "dynamic/cache".
+  # ND_CACHEFOLDER: "/data/cache"
+  # Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace Upstream default: "info".
+  # ND_LOGLEVEL: "info"
+  # Path to log file for output. When specified, logs will be written to this file instead of stderr Upstream default: _Empty_ (log to stderr).
+  # ND_LOGFILE: ""
+  # Address the server will bind to. Can be an IPv4, IPv6 or a UNIX socket file (unix:/path/to/file) Upstream default: 0.0.0.0 and :: (all IPs).
+  # ND_ADDRESS: "0.0.0.0"
+  # Base URL to configure Navidrome behind a proxy (examples: /music, https://music.example.com) Upstream default: _Empty_.
+  # ND_BASEURL: ""
+  # HTTP port Navidrome will listen to Upstream default: 4533.
+  # ND_PORT: "4533"
+  # Controls whether the server will run its Anonymous Data Collection feature to help improve the project. Upstream default: true.
+  # ND_ENABLEINSIGHTSCOLLECTOR: "true"
+  # Comma-separated list of metadata agents to use for retrieving artist information, biographies, and images. Available agents: lastfm, listenbrainz, and deezer. T Upstream default: "deezer,lastfm,listenbrainz".
+  # ND_AGENTS: "deezer,lastfm,listenbrainz"
+  # Change how album play count is computed. When set to "normalized", album play count will be divided by the number of album tracks Upstream default: "absolute".
+  # ND_ALBUMPLAYCOUNTMODE: "absolute"
+  # How many login requests can be processed from a single IP during the AuthWindowLength. Set to 0 to disable the limit rater Upstream default: 5.
+  # ND_AUTHREQUESTLIMIT: "5"
+  # Window Length for the authentication rate limit Upstream default: "20s".
+  # ND_AUTHWINDOWLENGTH: "20s"
+  # Enable/disable .m3u playlist auto-import Upstream default: true.
+  # ND_AUTOIMPORTPLAYLISTS: "true"
+  # Use the client's transcoding configuration for downloads, if the client does not specify the desired format. If false, the original format will be used, without Upstream default: false.
+  # ND_AUTOTRANSCODEDOWNLOAD: "false"
+  # Set imported playlists as public by default Upstream default: false.
+  # ND_DEFAULTPLAYLISTPUBLICVISIBILITY: "false"
+  # Configure the order to look for artist images. Upstream default: "artist.*, album/artist.*, external".
+  # ND_ARTISTARTPRIORITY: ""
+  # Configure a centralized folder for artist image lookups. When set and image-folder is included in ArtistArtPriority, Navidrome looks for images in this folder n Upstream default: _Empty_.
+  # ND_ARTISTIMAGEFOLDER: ""
+  # Path to store backups. Set to "" to disable backups. Click here for details Upstream default: "" (disabled).
+  # ND_BACKUP_PATH: ""
+  # Schedule for automatic backups. Use Cron syntax Upstream default: "" (disabled).
+  # ND_BACKUP_SCHEDULE: ""
+  # Number of backups to keep Upstream default: 0 (disabled).
+  # ND_BACKUP_COUNT: "0"
+  # Configure the order to look for cover art images. Use special embedded value to get embedded images from the audio files Upstream default: "cover.*, folder.*, front.*, embedded, external".
+  # ND_COVERARTPRIORITY: ""
+  # Set quality percentage for resized cover art images (JPEG and WebP. Does not apply to PNG) Upstream default: 75.
+  # ND_COVERARTQUALITY: "75"
+  # Set this to false to completely disable Deezer integration Upstream default: true.
+  # ND_DEEZER_ENABLED: "true"
+  # Language to be used by Deezer integration Upstream default: "en".
+  # ND_DEEZER_LANGUAGE: "en"
+  # Format to transcode to when client requests downsampling (specify maxBitrate without a format) Upstream default: "opus".
+  # ND_DEFAULTDOWNSAMPLINGFORMAT: "opus"
+  # Sets the default language used by the UI when logging in from a new browser. This value must match one of the file names in the resources/i18n. Ex: for Chinese  Upstream default: "en".
+  # ND_DEFAULTLANGUAGE: "en"
+  # Sets the default theme used by the UI when logging in from a new browser. This value must match one of the options in the UI Upstream default: "Dark".
+  # ND_DEFAULTTHEME: "Dark"
+  # Sets the default expiration time for new shares (public links). Accepts durations like "24h" or "45m". Upstream default: "8760h" (1 year).
+  # ND_DEFAULTSHAREEXPIRATION: ""
+  # Sets the default downloadable state for new shares (public links). When enabled, newly created shares will be downloadable by default Upstream default: false.
+  # ND_DEFAULTDOWNLOADABLESHARE: "false"
+  # Sets the default volume used by the UI when logging in from a new browser. This value must be between 0 and 100 Upstream default: 100.
+  # ND_DEFAULTUIVOLUME: "100"
+  # Configure the priority order for disc-level cover art sources in multi-disc albums. Uses the same pattern format as CoverArtPriority. The special keyword discsu Upstream default: "disc*.*, cd*.*, cover.*, folder.*, front.*, discsubtitle, embedded".
+  # ND_DISCARTPRIORITY: ""
+  # When enabled on Unix-like systems, Navidrome will exit with an error if it detects it's running as root (UID 0). This validation happens early, before any files Upstream default: false.
+  # ND_ENFORCENONROOTUSER: "false"
+  # Enable image pre-caching of new added music Upstream default: true.
+  # ND_ENABLEARTWORKPRECACHE: "true"
+  # Enable artwork upload functionality for playlists, artists, and internet radios via the web UI. Accepted formats: JPEG, PNG, WebP, GIF (max 10 MB). When disable Upstream default: true.
+  # ND_ENABLEARTWORKUPLOAD: "true"
+  # Maximum allowed image upload size in for artwork uploads Upstream default: 10MB.
+  # ND_MAXIMAGEUPLOADSIZE: "10MB"
+  # Largest artwork image Navidrome reads, from your files or from external URLs. Navidrome skips larger images. If set below MaxImageUploadSize, Navidrome raises i Upstream default: 20MB.
+  # ND_MAXIMAGESIZE: "20MB"
+  # Controls whether the player in the UI will animate the album cover (rotation) Upstream default: true.
+  # ND_ENABLECOVERANIMATION: "true"
+  # Enable the option in the UI to download music/albums/artists/playlists from the server Upstream default: true.
+  # ND_ENABLEDOWNLOADS: "true"
+  # Set this to false to completely disable ALL external integrations, including the anonymous data collection and the nice login background images Upstream default: true.
+  # ND_ENABLEEXTERNALSERVICES: "true"
+  # Enable toggling "Heart"/"Loved" for songs/albums/artists in the UI (maps to "Star"/"Starred" in Subsonic Clients) Upstream default: true.
+  # ND_ENABLEFAVOURITES: "true"
+  # Use Gravatar images as the user profile image. Needs the user's email to be filled Upstream default: false.
+  # ND_ENABLEGRAVATAR: "false"
+  # Whether or not sensitive information (like tokens and passwords) should be redacted (hidden) in the logs Upstream default: true.
+  # ND_ENABLELOGREDACTING: "true"
+  # Allow HTTP/HTTPS URLs in M3U #EXTALBUMARTURL directives for playlist artwork. Local file paths are always accepted regardless of this setting Upstream default: false.
+  # ND_ENABLEM3UEXTERNALALBUMART: "false"
+  # If set to false, it will return the album CoverArt when a song CoverArt is requested Upstream default: true.
+  # ND_ENABLEMEDIAFILECOVERART: "true"
+  # Sort names containing numbers in human order (Foo 2 before Foo 10). Off by default because it can slow down large libraries, see #6015 Upstream default: false.
+  # ND_ENABLENATURALSORTING: "false"
+  # Enable/disable the Now Playing feature that tracks what songs users are currently listening to. When disabled, the "Now Playing" functionality and admin panel w Upstream default: true.
+  # ND_ENABLENOWPLAYING: "true"
+  # Enable ReplayGain options in the UI Upstream default: true.
+  # ND_ENABLEREPLAYGAIN: "true"
+  # Every 30 minutes, check if the database query statistics are more than 24 hours old or were marked stale by a database change, and refresh them with SQLite's AN Upstream default: true.
+  # ND_ENABLESCHEDULEDDBANALYZE: "true"
+  # Enable/disable scrobble history Upstream default: true.
+  # ND_ENABLESCROBBLEHISTORY: "true"
+  # Enable the Sharing feature Upstream default: true.
+  # ND_ENABLESHARING: "true"
+  # Enable 5-star ratings in the UI Upstream default: true.
+  # ND_ENABLESTARRATING: "true"
+  # Enables transcoding configuration in the UI Upstream default: false.
+  # ND_ENABLETRANSCODINGCONFIG: "false"
+  # Enable regular users to edit their details and change their password Upstream default: true.
+  # ND_ENABLEUSEREDITING: "true"
+  # Encode resized cover art as WebP instead of JPEG/PNG. Produces smaller images, at the cost of more CPU when resizing. Some older clients may not be able to disp Upstream default: false.
+  # ND_ENABLEWEBPENCODING: "false"
+  # Comma separated list of IP CIDRs (or when listening on a UNIX socket the special value @) which are allowed to use reverse proxy authentication. Empty means "de Upstream default: _Empty_.
+  # ND_EXTAUTH_TRUSTEDSOURCES: ""
+  # HTTP header containing the user name from an authenticating proxy. Click here for details. Upstream default: "Remote-User".
+  # ND_EXTAUTH_USERHEADER: "Remote-User"
+  # URL to redirect users to after logout when using externalized authentication. Allows completing logout from the external auth provider (SSO, OIDC, etc.) Upstream default: _Empty_.
+  # ND_EXTAUTH_LOGOUTURL: ""
+  # Path to ffmpeg executable. Use it when Navidrome cannot find it, or you want to use a specific version Upstream default: _Empty_ (search in the PATH).
+  # ND_FFMPEGPATH: ""
+  # Send basic info to your own Google Analytics account. Must be in the format UA-XXXXXXXX Upstream default: _Empty_ (disabled).
+  # ND_GATRACKINGID: ""
+  # Allows the X-Frame-Options header value to be set with a custom value. Ex: "SAMEORIGIN" Upstream default: "DENY".
+  # ND_HTTPHEADERS_FRAMEOPTIONS: "DENY"
+  # List of ignored articles when sorting/indexing artists Upstream default: "The El La Los Las Le Les Os As O A".
+  # ND_IGNOREDARTICLES: "The El La Los Las Le Les Os As O A"
+  # Size of image (art work) cache. Set to "0" to disable cache Upstream default: "100MB".
+  # ND_IMAGECACHESIZE: "100MB"
+  # Space-separated list of entries used to build the artist/folder index (the alphabetical shortcut list). Each entry is normally a single character, but can be a  Upstream default: "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ) Unknown".
+  # ND_INDEXGROUPS: ""
+  # Backlog limit for inspect request throttling Upstream default: 100.
+  # ND_INSPECT_BACKLOGLIMIT: "100"
+  # Backlog timeout for inspect request throttling Upstream default: "1m".
+  # ND_INSPECT_BACKLOGTIMEOUT: "1m"
+  # Enable/disable inspect endpoints Upstream default: true.
+  # ND_INSPECT_ENABLED: "true"
+  # Maximum concurrent inspect requests Upstream default: 1.
+  # ND_INSPECT_MAXREQUESTS: "1"
+  # Enable the experimental Jellyfin API, so Jellyfin music clients can connect to Navidrome Upstream default: false.
+  # ND_JELLYFIN_ENABLED: "false"
+  # Server name that Jellyfin clients show Upstream default: "Navidrome dynamic".
+  # ND_JELLYFIN_SERVERNAME: ""
+  # Comma-separated list of usernames that Jellyfin clients can show on their login screen. Anyone who can reach the server can see this list Upstream default: _Empty_ (no users shown).
+  # ND_JELLYFIN_EXPOSEDPUBLICUSERS: ""
+  # Answer Jellyfin client searches on the local network (UDP port 7359), so clients can find the server without a typed address Upstream default: false.
+  # ND_JELLYFIN_AUTODISCOVERY: "false"
+  # Let users log in new Jellyfin client devices with a 6-digit code, approved from the web UI or another logged-in client Upstream default: true.
+  # ND_JELLYFIN_QUICKCONNECT: "true"
+  # How many large list responses Navidrome sends to Jellyfin clients at the same time. Each one holds a database connection until it ends. Extra requests wait Upstream default: Half the DB connection pool, at least 2.
+  # ND_JELLYFIN_MAXCONCURRENTSTREAMS: ""
+  # Enable Jukebox mode (play audio on server's hardware) Click here for details Upstream default: false.
+  # ND_JUKEBOX_ENABLED: "false"
+  # By default, Jukebox mode is only available to Admins. Set this option to false to allow any valid user to control it Upstream default: true.
+  # ND_JUKEBOX_ADMINONLY: "true"
+  # Device to use for Jukebox mode, if there are multiple Jukebox.Devices entries. Click here for details Upstream default: _Empty_ (auto detect).
+  # ND_JUKEBOX_DEFAULT: ""
+  # Set this to false to completely disable Last.fm integration Upstream default: true.
+  # ND_LASTFM_ENABLED: "true"
+  # Last.fm API Key Upstream default: _Empty_.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # ND_LASTFM_APIKEY: ""
+  # Last.fm API Secret Upstream default: _Empty_.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # ND_LASTFM_SECRET: ""
+  # Two letter-code for language to be used to retrieve biographies from Last.fm Upstream default: "en".
+  # ND_LASTFM_LANGUAGE: "en"
+  # When enabled, only the first artist will be scrobbled for tracks with multiple artists, instead of the display artist or concatenated list Upstream default: false.
+  # ND_LASTFM_SCROBBLEFIRSTARTISTONLY: "false"
+  # Set this to override the default ListenBrainz base URL (useful with self-hosted solutions like Maloja\* Upstream default: https://api.listenbrainz.org/1/.
+  # ND_LISTENBRAINZ_BASEURL: "https://api.listenbrainz.org/1/"
+  # Set this to false to completely disable ListenBrainz integration Upstream default: true.
+  # ND_LISTENBRAINZ_ENABLED: "true"
+  # Algorithm used when querying the ListenBrainz Labs similar-artists API for similar artists. Only change this if you know what you are doing Upstream default: "session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30".
+  # ND_LISTENBRAINZ_ARTISTALGORITHM: "session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30"
+  # Algorithm used when querying the ListenBrainz Labs similar-recordings API for similar/top songs. Only change this if you know what you are doing Upstream default: "session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30".
+  # ND_LISTENBRAINZ_TRACKALGORITHM: "session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30"
+  # Controls the order and sources for fetching lyrics. Comma-separated list of sources checked in order: embedded (from tags), file extensions like .lrc, .txt, or  Upstream default: ".ttml,.yaml,.yml,.elrc,.lrc,.srt,.txt,embedded".
+  # ND_LYRICSPRIORITY: ".ttml,.yaml,.yml,.elrc,.lrc,.srt,.txt,embedded"
+  # Set the maximum number of playlists shown in the UI's sidebar. Note that a very large number can cause UI performance issues. Upstream default: 100.
+  # ND_MAXSIDEBARPLAYLISTS: "100"
+  # Minimum similarity score (0-100) for the fuzzy matcher when looking up similar songs. Higher values require closer matches Upstream default: 85.
+  # ND_MATCHER_FUZZYTHRESHOLD: "85"
+  # Bias the fuzzy matcher toward starred and highly-rated tracks when scoring similar songs Upstream default: true.
+  # ND_MATCHER_PREFERSTARRED: "true"
+  # Path to mpv executable. Used for Jukebox mode Upstream default: _Empty_ (search in PATH).
+  # ND_MPVPATH: ""
+  # Cmd template used to construct the call of the mpv executable. Used for Jukebox mode Upstream default: mpv --audio-device=%d --no-audio-display %f --input-ipc-server=%s.
+  # ND_MPVCMDTEMPLATE: "mpv --audio-device=%d --no-audio-display %f --input-ipc-server=%s"
+  # Passphrase used to encrypt passwords in the DB. Click here for details Upstream default: -.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # ND_PASSWORDENCRYPTIONKEY: "-"
+  # Set the tag(s) to use as the Album ID. Click here for details Upstream default: albumartistid,album,albumversion,releasedate.
+  # ND_PID_ALBUM: "albumartistid,album,albumversion,releasedate"
+  # Set the tag(s) to use as the Track ID. Click here for details Upstream default: albumid,discnumber,tracknumber,title.
+  # ND_PID_TRACK: "albumid,discnumber,tracknumber,title"
+  # Limit where to search for and import playlists from. Can be a list of folders/globs (separated by : (or ; on Windows). Paths **MUST** be relative to MusicFolder Upstream default: _Empty_ (meaning any playlist files in your library will be imported).
+  # ND_PLAYLISTSPATH: ""
+  # Enable the plugin system Upstream default: true.
+  # ND_PLUGINS_ENABLED: "true"
+  # Folder where your plugins are stored. Place your .ndp files in here Upstream default: "dynamic/plugins".
+  # ND_PLUGINS_FOLDER: ""
+  # Automatically detect when .ndp files in Plugins.Folder are updated and reload plugins immediately Upstream default: false.
+  # ND_PLUGINS_AUTORELOAD: "false"
+  # Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace Upstream default: LogLevel (LogLevel of your Navidrome instance).
+  # ND_PLUGINS_LOGLEVEL: ""
+  # Size of the plugin compilation cache Upstream default: "200MB".
+  # ND_PLUGINS_CACHESIZE: "200MB"
+  # Use Sort\_\* tags to sort columns in the UI. Upstream default: false.
+  # ND_PREFERSORTTAGS: "false"
+  # Enable extra endpoint with Prometheus metrics. Upstream default: false.
+  # ND_PROMETHEUS_ENABLED: "false"
+  # Custom path for Prometheus metrics. Useful for blocking unauthorized metrics requests. Upstream default: "/metrics".
+  # ND_PROMETHEUS_METRICSPATH: "/metrics"
+  # Enables Basic Auth protection for Prometheus endpoint. User will be navidrome. Leave empty to disable Basic Auth protection. Upstream default: _Empty_ (no password/authentication).
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # ND_PROMETHEUS_PASSWORD: ""
+  # Uses music files' modification time when sorting by "Recently Added". Otherwise use import time Upstream default: false.
+  # ND_RECENTLYADDEDBYMODTIME: "false"
+  # Enable/disable the scanner. Set to false to disable automatic scanning of the music library. Upstream default: true.
+  # ND_SCANNER_ENABLED: "true"
+  # Time to wait after a file change is detected before starting a scan. Useful to avoid scanning incomplete files. Set it to 0 to disable the watcher Upstream default: "5s".
+  # ND_SCANNER_WATCHERWAIT: "5s"
+  # Enable/disable scanning the music library on startup. Set to false to disable Upstream default: true.
+  # ND_SCANNER_SCANONSTARTUP: "true"
+  # Character string used to join multiple artists in display. Change this if you prefer a different separator between artist names Upstream default: " • ".
+  # ND_SCANNER_ARTISTJOINER: " • "
+  # Comma-separated list of artist names that must never be split by the artist tag separators. Use this to protect names that legitimately contain a separator char Upstream default: _Empty_.
+  # ND_SCANNER_ARTISTSPLITEXCEPTIONS: ""
+  # Whether to follow symbolic links when scanning directories. When enabled, the scanner will traverse symlinked directories and include their contents in the libr Upstream default: true.
+  # ND_SCANNER_FOLLOWSYMLINKS: "true"
+  # Whether to ignore folders whose name starts with a dot (e.g. .stfolder) when scanning. Set to false to index dot-prefixed folders Upstream default: true.
+  # ND_SCANNER_IGNOREDOTFOLDERS: "true"
+  # Controls when missing files, albums, and artists are purged from the database during scans. Possible values: "never" (default, just mark as missing), "always" ( Upstream default: "never".
+  # ND_SCANNER_PURGEMISSING: "never"
+  # Select the search backend. fts uses FTS5 full-text search with BM25 ranking. legacy uses the previous search implementation Upstream default: "fts".
+  # ND_SEARCH_BACKEND: "fts"
+  # Match query strings anywhere in searchable fields, not only in word boundaries. Useful for languages where words are not space separated Upstream default: false.
+  # ND_SEARCH_FULLSTRING: "false"
+  # How long Navidrome will wait before closing web ui idle sessions Upstream default: "48h".
+  # ND_SESSIONTIMEOUT: "48h"
+  # Base URL for shared links. Useful when your server address is not a public (ex: when using Tailscale). See discussion here Upstream default: _Empty_ (use server address).
+  # ND_SHAREURL: ""
+  # How often to refresh Smart Playlists. Check the smart playlists docs Upstream default: "5s".
+  # ND_SMARTPLAYLISTREFRESHDELAY: "5s"
+  # Append the subtitle tag to the song title in all Subsonic API responses Upstream default: true.
+  # ND_SUBSONIC_APPENDSUBTITLE: "true"
+  # When Subsonic clients request artist's albums, include albums where the artist participates (ex: Various Artists compilations) Upstream default: false.
+  # ND_SUBSONIC_ARTISTPARTICIPATIONS: "false"
+  # Append album version/edition information to album names in Subsonic API responses (e.g., "Album Name (Deluxe Edition)") Upstream default: true.
+  # ND_SUBSONIC_APPENDALBUMVERSION: "true"
+  # Set to true to report the real path of the music files in the API. Can be customized individually for each client/player. This can be a security risk, so it is  Upstream default: false.
+  # ND_SUBSONIC_DEFAULTREPORTREALPATH: "false"
+  # Controls whether the averageRating attribute is included in Subsonic API responses. When disabled, the average rating across all users is not exposed in API res Upstream default: true.
+  # ND_SUBSONIC_ENABLEAVERAGERATING: "true"
+  # List of clients that does not work with the new OpenSubsonic API improvements. Upstream default: "DSub".
+  # ND_SUBSONIC_LEGACYCLIENTS: "DSub"
+  # List of clients that should receive a minimal response for songs and playlists, containing only the bare minimum fields (id, title, etc). Useful for clients tha Upstream default: "SubMusic".
+  # ND_SUBSONIC_MINIMALCLIENTS: "SubMusic"
+  # Path for the TLS certificate file, which should include the signature chain if any Upstream default: _Empty_ (disable TLS).
+  # ND_TLSCERT: ""
+  # Path for the TLS key file Upstream default: _Empty_ (disable TLS).
+  # ND_TLSKEY: ""
+  # Stop the underlying ffmpeg process as soon as a client disconnects mid-stream (e.g. when the user skips, stops, or closes playback). Disabled by default so that Upstream default: false.
+  # ND_TRANSCODING_ENABLECANCELLATION: "false"
+  # Maximum number of concurrent transcodes server-wide. Set to 0 for unlimited. Helps prevent an ffmpeg-based denial of service Upstream default: 0 (unlimited).
+  # ND_TRANSCODING_MAXCONCURRENT: "0"
+  # Maximum number of concurrent transcodes per user. Set to 0 for unlimited Upstream default: 0 (unlimited).
+  # ND_TRANSCODING_MAXCONCURRENTPERUSER: "0"
+  # Size of transcoding cache. Set to "0" to disable cache Upstream default: "100MB".
+  # ND_TRANSCODINGCACHESIZE: "100MB"
+  # Size (in pixels) of the cover art images requested by the web UI. Larger values look sharper on high-DPI displays, but use more bandwidth and cache space. Value Upstream default: 300.
+  # ND_UICOVERARTSIZE: "300"
+  # Change background image used in the Login page Upstream default: _random music image from this Unsplash.com collection_.
+  # ND_UILOGINBACKGROUNDURL: ""
+  # How often the web UI reports playback progress to the server (used by the Now Playing feature and the playbackReport OpenSubsonic extension) Upstream default: "1m".
+  # ND_UIPLAYBACKREPORTINTERVAL: "1m"
+  # Debounce delay in milliseconds for the search input in the UI. Higher values reduce search requests while typing Upstream default: 200.
+  # ND_UISEARCHDEBOUNCEMS: "200"
+  # Add a welcome message to the login screen Upstream default: _Empty_.
+  # ND_UIWELCOMEMESSAGE: ""
+  # Set file permissions for Unix Socket File.\* Upstream default: "0660".
+  # ND_UNIXSOCKETPERM: "0660"
+  # Enable syslog priority prefixes for systemd-journald. Both this variable and the JOURNAL_STREAM environment variable must be set for journal format logging to a Upstream default: _Empty_ (disabled).
+  # ND_SYSTEMD_PRIORITY_LOGGING: ""
+  # Advanced scanner metadata extraction backend; retain the image-supported default unless troubleshooting. Upstream default: taglib (image backend).
+  # ND_SCANNER_EXTRACTOR: "taglib"
+
+envFrom: []
+
 service:
   type: ClusterIP
   port: 4533
@@ -81,6 +381,16 @@ httpRoute:
             value: /
 
 resources: {}
+
+# Allow database migrations/scans to finish before liveness starts restarting pods.
+# Increase failureThreshold for large libraries or slow persistent storage.
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 90
 
 livenessProbe:
   httpGet:

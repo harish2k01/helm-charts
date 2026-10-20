@@ -18,7 +18,7 @@ helm install navidrome harish2k01/navidrome
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install navidrome oci://ghcr.io/harish2k01/helm-charts/navidrome --version 0.1.0
+helm install navidrome oci://ghcr.io/harish2k01/helm-charts/navidrome --version 0.2.0
 ```
 
 ## Web UI Access
@@ -83,10 +83,10 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Navidrome replicas |
 | `image.repository` | string | `deluan/navidrome` | Container image repository |
-| `image.tag` | string | `0.61.2` | Container image tag |
+| `image.tag` | string | `0.64.2` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.TZ` | string | `Asia/Kolkata` | Container timezone |
-| `env.ND_SCANSCHEDULE` | string | `1h` | Music library scan schedule |
+| `env.ND_SCANNER_SCHEDULE` | string | `1h` | Music library scan schedule |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.port` | int | `4533` | Kubernetes Web UI Service port |
 | `service.targetPort` | int | `4533` | Container Web UI port |
@@ -107,3 +107,13 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional configuration controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `startupProbe` | object | HTTP `/`, up to 15 minutes | Protect initial database migration from liveness restarts; tune for your library. |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.

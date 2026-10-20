@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "0.61.2"
+          "default": "0.64.2"
         },
         "pullPolicy": {
           "type": "string",
@@ -82,10 +82,574 @@
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
         },
-        "ND_SCANSCHEDULE": {
+        "ND_SCANNER_SCHEDULE": {
           "type": "string",
-          "description": "Navidrome music library scan schedule.",
+          "description": "Library scan interval or cron schedule; use 0 to disable.",
           "default": "1h"
+        },
+        "ND_CONFIGFILE": {
+          "type": "string",
+          "description": "Load configurations from an external config file Upstream default when unset: \"./navidrome.toml\"."
+        },
+        "ND_MUSICFOLDER": {
+          "type": "string",
+          "description": "Folder where your music library is stored. Can be read-only. This becomes the default library when using multi-library setup Upstream default when unset: \"./music\"."
+        },
+        "ND_DATAFOLDER": {
+          "type": "string",
+          "description": "Folder to store application data (DB) Upstream default when unset: \"./data\"."
+        },
+        "ND_CACHEFOLDER": {
+          "type": "string",
+          "description": "Folder to store cache data (transcoding, images...) Upstream default when unset: \"dynamic/cache\"."
+        },
+        "ND_LOGLEVEL": {
+          "type": "string",
+          "description": "Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace Upstream default when unset: \"info\"."
+        },
+        "ND_LOGFILE": {
+          "type": "string",
+          "description": "Path to log file for output. When specified, logs will be written to this file instead of stderr Upstream default when unset: _Empty_ (log to stderr)."
+        },
+        "ND_ADDRESS": {
+          "type": "string",
+          "description": "Address the server will bind to. Can be an IPv4, IPv6 or a UNIX socket file (unix:/path/to/file) Upstream default when unset: 0.0.0.0 and :: (all IPs)."
+        },
+        "ND_BASEURL": {
+          "type": "string",
+          "description": "Base URL to configure Navidrome behind a proxy (examples: /music, https://music.example.com) Upstream default when unset: _Empty_."
+        },
+        "ND_PORT": {
+          "type": "string",
+          "description": "HTTP port Navidrome will listen to Upstream default when unset: 4533."
+        },
+        "ND_ENABLEINSIGHTSCOLLECTOR": {
+          "type": "string",
+          "description": "Controls whether the server will run its Anonymous Data Collection feature to help improve the project. Upstream default when unset: true."
+        },
+        "ND_AGENTS": {
+          "type": "string",
+          "description": "Comma-separated list of metadata agents to use for retrieving artist information, biographies, and images. Available agents: lastfm, listenbrainz, and deezer. The order determines priority - agents are tried in the specified order until one succeeds. Only enabled and configured agents will be used. Upstream default when unset: \"deezer,lastfm,listenbrainz\"."
+        },
+        "ND_ALBUMPLAYCOUNTMODE": {
+          "type": "string",
+          "description": "Change how album play count is computed. When set to \"normalized\", album play count will be divided by the number of album tracks Upstream default when unset: \"absolute\"."
+        },
+        "ND_AUTHREQUESTLIMIT": {
+          "type": "string",
+          "description": "How many login requests can be processed from a single IP during the AuthWindowLength. Set to 0 to disable the limit rater Upstream default when unset: 5."
+        },
+        "ND_AUTHWINDOWLENGTH": {
+          "type": "string",
+          "description": "Window Length for the authentication rate limit Upstream default when unset: \"20s\"."
+        },
+        "ND_AUTOIMPORTPLAYLISTS": {
+          "type": "string",
+          "description": "Enable/disable .m3u playlist auto-import Upstream default when unset: true."
+        },
+        "ND_AUTOTRANSCODEDOWNLOAD": {
+          "type": "string",
+          "description": "Use the client's transcoding configuration for downloads, if the client does not specify the desired format. If false, the original format will be used, without any transcoding. Upstream default when unset: false."
+        },
+        "ND_DEFAULTPLAYLISTPUBLICVISIBILITY": {
+          "type": "string",
+          "description": "Set imported playlists as public by default Upstream default when unset: false."
+        },
+        "ND_ARTISTARTPRIORITY": {
+          "type": "string",
+          "description": "Configure the order to look for artist images. Upstream default when unset: \"artist.*, album/artist.*, external\"."
+        },
+        "ND_ARTISTIMAGEFOLDER": {
+          "type": "string",
+          "description": "Configure a centralized folder for artist image lookups. When set and image-folder is included in ArtistArtPriority, Navidrome looks for images in this folder named after the artist's MusicBrainz ID or name Upstream default when unset: _Empty_."
+        },
+        "ND_BACKUP_PATH": {
+          "type": "string",
+          "description": "Path to store backups. Set to \"\" to disable backups. Click here for details Upstream default when unset: \"\" (disabled)."
+        },
+        "ND_BACKUP_SCHEDULE": {
+          "type": "string",
+          "description": "Schedule for automatic backups. Use Cron syntax Upstream default when unset: \"\" (disabled)."
+        },
+        "ND_BACKUP_COUNT": {
+          "type": "string",
+          "description": "Number of backups to keep Upstream default when unset: 0 (disabled)."
+        },
+        "ND_COVERARTPRIORITY": {
+          "type": "string",
+          "description": "Configure the order to look for cover art images. Use special embedded value to get embedded images from the audio files Upstream default when unset: \"cover.*, folder.*, front.*, embedded, external\"."
+        },
+        "ND_COVERARTQUALITY": {
+          "type": "string",
+          "description": "Set quality percentage for resized cover art images (JPEG and WebP. Does not apply to PNG) Upstream default when unset: 75."
+        },
+        "ND_DEEZER_ENABLED": {
+          "type": "string",
+          "description": "Set this to false to completely disable Deezer integration Upstream default when unset: true."
+        },
+        "ND_DEEZER_LANGUAGE": {
+          "type": "string",
+          "description": "Language to be used by Deezer integration Upstream default when unset: \"en\"."
+        },
+        "ND_DEFAULTDOWNSAMPLINGFORMAT": {
+          "type": "string",
+          "description": "Format to transcode to when client requests downsampling (specify maxBitrate without a format) Upstream default when unset: \"opus\"."
+        },
+        "ND_DEFAULTLANGUAGE": {
+          "type": "string",
+          "description": "Sets the default language used by the UI when logging in from a new browser. This value must match one of the file names in the resources/i18n. Ex: for Chinese Simplified it has to be zh-Hans (case sensitive) Upstream default when unset: \"en\"."
+        },
+        "ND_DEFAULTTHEME": {
+          "type": "string",
+          "description": "Sets the default theme used by the UI when logging in from a new browser. This value must match one of the options in the UI Upstream default when unset: \"Dark\"."
+        },
+        "ND_DEFAULTSHAREEXPIRATION": {
+          "type": "string",
+          "description": "Sets the default expiration time for new shares (public links). Accepts durations like \"24h\" or \"45m\". Upstream default when unset: \"8760h\" (1 year)."
+        },
+        "ND_DEFAULTDOWNLOADABLESHARE": {
+          "type": "string",
+          "description": "Sets the default downloadable state for new shares (public links). When enabled, newly created shares will be downloadable by default Upstream default when unset: false."
+        },
+        "ND_DEFAULTUIVOLUME": {
+          "type": "string",
+          "description": "Sets the default volume used by the UI when logging in from a new browser. This value must be between 0 and 100 Upstream default when unset: 100."
+        },
+        "ND_DISCARTPRIORITY": {
+          "type": "string",
+          "description": "Configure the priority order for disc-level cover art sources in multi-disc albums. Uses the same pattern format as CoverArtPriority. The special keyword discsubtitle matches image files whose filenames equal the disc's subtitle Upstream default when unset: \"disc*.*, cd*.*, cover.*, folder.*, front.*, discsubtitle, embedded\"."
+        },
+        "ND_ENFORCENONROOTUSER": {
+          "type": "string",
+          "description": "When enabled on Unix-like systems, Navidrome will exit with an error if it detects it's running as root (UID 0). This validation happens early, before any filesystem operations. This option has no effect on Windows systems Upstream default when unset: false."
+        },
+        "ND_ENABLEARTWORKPRECACHE": {
+          "type": "string",
+          "description": "Enable image pre-caching of new added music Upstream default when unset: true."
+        },
+        "ND_ENABLEARTWORKUPLOAD": {
+          "type": "string",
+          "description": "Enable artwork upload functionality for playlists, artists, and internet radios via the web UI. Accepted formats: JPEG, PNG, WebP, GIF (max 10 MB). When disabled, only admins can upload artwork Upstream default when unset: true."
+        },
+        "ND_MAXIMAGEUPLOADSIZE": {
+          "type": "string",
+          "description": "Maximum allowed image upload size in for artwork uploads Upstream default when unset: 10MB."
+        },
+        "ND_MAXIMAGESIZE": {
+          "type": "string",
+          "description": "Largest artwork image Navidrome reads, from your files or from external URLs. Navidrome skips larger images. If set below MaxImageUploadSize, Navidrome raises it to that value Upstream default when unset: 20MB."
+        },
+        "ND_ENABLECOVERANIMATION": {
+          "type": "string",
+          "description": "Controls whether the player in the UI will animate the album cover (rotation) Upstream default when unset: true."
+        },
+        "ND_ENABLEDOWNLOADS": {
+          "type": "string",
+          "description": "Enable the option in the UI to download music/albums/artists/playlists from the server Upstream default when unset: true."
+        },
+        "ND_ENABLEEXTERNALSERVICES": {
+          "type": "string",
+          "description": "Set this to false to completely disable ALL external integrations, including the anonymous data collection and the nice login background images Upstream default when unset: true."
+        },
+        "ND_ENABLEFAVOURITES": {
+          "type": "string",
+          "description": "Enable toggling \"Heart\"/\"Loved\" for songs/albums/artists in the UI (maps to \"Star\"/\"Starred\" in Subsonic Clients) Upstream default when unset: true."
+        },
+        "ND_ENABLEGRAVATAR": {
+          "type": "string",
+          "description": "Use Gravatar images as the user profile image. Needs the user's email to be filled Upstream default when unset: false."
+        },
+        "ND_ENABLELOGREDACTING": {
+          "type": "string",
+          "description": "Whether or not sensitive information (like tokens and passwords) should be redacted (hidden) in the logs Upstream default when unset: true."
+        },
+        "ND_ENABLEM3UEXTERNALALBUMART": {
+          "type": "string",
+          "description": "Allow HTTP/HTTPS URLs in M3U #EXTALBUMARTURL directives for playlist artwork. Local file paths are always accepted regardless of this setting Upstream default when unset: false."
+        },
+        "ND_ENABLEMEDIAFILECOVERART": {
+          "type": "string",
+          "description": "If set to false, it will return the album CoverArt when a song CoverArt is requested Upstream default when unset: true."
+        },
+        "ND_ENABLENATURALSORTING": {
+          "type": "string",
+          "description": "Sort names containing numbers in human order (Foo 2 before Foo 10). Off by default because it can slow down large libraries, see #6015 Upstream default when unset: false."
+        },
+        "ND_ENABLENOWPLAYING": {
+          "type": "string",
+          "description": "Enable/disable the Now Playing feature that tracks what songs users are currently listening to. When disabled, the \"Now Playing\" functionality and admin panel will be unavailable Upstream default when unset: true."
+        },
+        "ND_ENABLEREPLAYGAIN": {
+          "type": "string",
+          "description": "Enable ReplayGain options in the UI Upstream default when unset: true."
+        },
+        "ND_ENABLESCHEDULEDDBANALYZE": {
+          "type": "string",
+          "description": "Every 30 minutes, check if the database query statistics are more than 24 hours old or were marked stale by a database change, and refresh them with SQLite's ANALYZE. Navidrome skips the check while a scan runs. Stale statistics can make queries slow on large libraries Upstream default when unset: true."
+        },
+        "ND_ENABLESCROBBLEHISTORY": {
+          "type": "string",
+          "description": "Enable/disable scrobble history Upstream default when unset: true."
+        },
+        "ND_ENABLESHARING": {
+          "type": "string",
+          "description": "Enable the Sharing feature Upstream default when unset: true."
+        },
+        "ND_ENABLESTARRATING": {
+          "type": "string",
+          "description": "Enable 5-star ratings in the UI Upstream default when unset: true."
+        },
+        "ND_ENABLETRANSCODINGCONFIG": {
+          "type": "string",
+          "description": "Enables transcoding configuration in the UI Upstream default when unset: false."
+        },
+        "ND_ENABLEUSEREDITING": {
+          "type": "string",
+          "description": "Enable regular users to edit their details and change their password Upstream default when unset: true."
+        },
+        "ND_ENABLEWEBPENCODING": {
+          "type": "string",
+          "description": "Encode resized cover art as WebP instead of JPEG/PNG. Produces smaller images, at the cost of more CPU when resizing. Some older clients may not be able to display WebP images Upstream default when unset: false."
+        },
+        "ND_EXTAUTH_TRUSTEDSOURCES": {
+          "type": "string",
+          "description": "Comma separated list of IP CIDRs (or when listening on a UNIX socket the special value @) which are allowed to use reverse proxy authentication. Empty means \"deny all\". Click here for details. Note: This option is unnecessary for most reverse proxy setups, only for _authenticating_ reverse proxies. Upstream default when unset: _Empty_."
+        },
+        "ND_EXTAUTH_USERHEADER": {
+          "type": "string",
+          "description": "HTTP header containing the user name from an authenticating proxy. Click here for details. Upstream default when unset: \"Remote-User\"."
+        },
+        "ND_EXTAUTH_LOGOUTURL": {
+          "type": "string",
+          "description": "URL to redirect users to after logout when using externalized authentication. Allows completing logout from the external auth provider (SSO, OIDC, etc.) Upstream default when unset: _Empty_."
+        },
+        "ND_FFMPEGPATH": {
+          "type": "string",
+          "description": "Path to ffmpeg executable. Use it when Navidrome cannot find it, or you want to use a specific version Upstream default when unset: _Empty_ (search in the PATH)."
+        },
+        "ND_GATRACKINGID": {
+          "type": "string",
+          "description": "Send basic info to your own Google Analytics account. Must be in the format UA-XXXXXXXX Upstream default when unset: _Empty_ (disabled)."
+        },
+        "ND_HTTPHEADERS_FRAMEOPTIONS": {
+          "type": "string",
+          "description": "Allows the X-Frame-Options header value to be set with a custom value. Ex: \"SAMEORIGIN\" Upstream default when unset: \"DENY\"."
+        },
+        "ND_IGNOREDARTICLES": {
+          "type": "string",
+          "description": "List of ignored articles when sorting/indexing artists Upstream default when unset: \"The El La Los Las Le Les Os As O A\"."
+        },
+        "ND_IMAGECACHESIZE": {
+          "type": "string",
+          "description": "Size of image (art work) cache. Set to \"0\" to disable cache Upstream default when unset: \"100MB\"."
+        },
+        "ND_INDEXGROUPS": {
+          "type": "string",
+          "description": "Space-separated list of entries used to build the artist/folder index (the alphabetical shortcut list). Each entry is normally a single character, but can be a multi-character label (e.g. The) or a group like X-Z(XYZ), which displays as X-Z and links anything starting with X, Y or Z. Anything not covered is placed under # Upstream default when unset: \"A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ) Unknown\"."
+        },
+        "ND_INSPECT_BACKLOGLIMIT": {
+          "type": "string",
+          "description": "Backlog limit for inspect request throttling Upstream default when unset: 100."
+        },
+        "ND_INSPECT_BACKLOGTIMEOUT": {
+          "type": "string",
+          "description": "Backlog timeout for inspect request throttling Upstream default when unset: \"1m\"."
+        },
+        "ND_INSPECT_ENABLED": {
+          "type": "string",
+          "description": "Enable/disable inspect endpoints Upstream default when unset: true."
+        },
+        "ND_INSPECT_MAXREQUESTS": {
+          "type": "string",
+          "description": "Maximum concurrent inspect requests Upstream default when unset: 1."
+        },
+        "ND_JELLYFIN_ENABLED": {
+          "type": "string",
+          "description": "Enable the experimental Jellyfin API, so Jellyfin music clients can connect to Navidrome Upstream default when unset: false."
+        },
+        "ND_JELLYFIN_SERVERNAME": {
+          "type": "string",
+          "description": "Server name that Jellyfin clients show Upstream default when unset: \"Navidrome dynamic\"."
+        },
+        "ND_JELLYFIN_EXPOSEDPUBLICUSERS": {
+          "type": "string",
+          "description": "Comma-separated list of usernames that Jellyfin clients can show on their login screen. Anyone who can reach the server can see this list Upstream default when unset: _Empty_ (no users shown)."
+        },
+        "ND_JELLYFIN_AUTODISCOVERY": {
+          "type": "string",
+          "description": "Answer Jellyfin client searches on the local network (UDP port 7359), so clients can find the server without a typed address Upstream default when unset: false."
+        },
+        "ND_JELLYFIN_QUICKCONNECT": {
+          "type": "string",
+          "description": "Let users log in new Jellyfin client devices with a 6-digit code, approved from the web UI or another logged-in client Upstream default when unset: true."
+        },
+        "ND_JELLYFIN_MAXCONCURRENTSTREAMS": {
+          "type": "string",
+          "description": "How many large list responses Navidrome sends to Jellyfin clients at the same time. Each one holds a database connection until it ends. Extra requests wait Upstream default when unset: Half the DB connection pool, at least 2."
+        },
+        "ND_JUKEBOX_ENABLED": {
+          "type": "string",
+          "description": "Enable Jukebox mode (play audio on server's hardware) Click here for details Upstream default when unset: false."
+        },
+        "ND_JUKEBOX_ADMINONLY": {
+          "type": "string",
+          "description": "By default, Jukebox mode is only available to Admins. Set this option to false to allow any valid user to control it Upstream default when unset: true."
+        },
+        "ND_JUKEBOX_DEFAULT": {
+          "type": "string",
+          "description": "Device to use for Jukebox mode, if there are multiple Jukebox.Devices entries. Click here for details Upstream default when unset: _Empty_ (auto detect)."
+        },
+        "ND_LASTFM_ENABLED": {
+          "type": "string",
+          "description": "Set this to false to completely disable Last.fm integration Upstream default when unset: true."
+        },
+        "ND_LASTFM_APIKEY": {
+          "type": "string",
+          "description": "Last.fm API Key Upstream default when unset: _Empty_."
+        },
+        "ND_LASTFM_SECRET": {
+          "type": "string",
+          "description": "Last.fm API Secret Upstream default when unset: _Empty_."
+        },
+        "ND_LASTFM_LANGUAGE": {
+          "type": "string",
+          "description": "Two letter-code for language to be used to retrieve biographies from Last.fm Upstream default when unset: \"en\"."
+        },
+        "ND_LASTFM_SCROBBLEFIRSTARTISTONLY": {
+          "type": "string",
+          "description": "When enabled, only the first artist will be scrobbled for tracks with multiple artists, instead of the display artist or concatenated list Upstream default when unset: false."
+        },
+        "ND_LISTENBRAINZ_BASEURL": {
+          "type": "string",
+          "description": "Set this to override the default ListenBrainz base URL (useful with self-hosted solutions like Maloja\\* Upstream default when unset: https://api.listenbrainz.org/1/."
+        },
+        "ND_LISTENBRAINZ_ENABLED": {
+          "type": "string",
+          "description": "Set this to false to completely disable ListenBrainz integration Upstream default when unset: true."
+        },
+        "ND_LISTENBRAINZ_ARTISTALGORITHM": {
+          "type": "string",
+          "description": "Algorithm used when querying the ListenBrainz Labs similar-artists API for similar artists. Only change this if you know what you are doing Upstream default when unset: \"session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30\"."
+        },
+        "ND_LISTENBRAINZ_TRACKALGORITHM": {
+          "type": "string",
+          "description": "Algorithm used when querying the ListenBrainz Labs similar-recordings API for similar/top songs. Only change this if you know what you are doing Upstream default when unset: \"session_based_days_9000_session_300_contribution_5_threshold_15_limit_50_skip_30\"."
+        },
+        "ND_LYRICSPRIORITY": {
+          "type": "string",
+          "description": "Controls the order and sources for fetching lyrics. Comma-separated list of sources checked in order: embedded (from tags), file extensions like .lrc, .txt, or any custom extension. Navidrome will search for lyrics files with the same name as the audio file but with the specified extension. Upstream default when unset: \".ttml,.yaml,.yml,.elrc,.lrc,.srt,.txt,embedded\"."
+        },
+        "ND_MAXSIDEBARPLAYLISTS": {
+          "type": "string",
+          "description": "Set the maximum number of playlists shown in the UI's sidebar. Note that a very large number can cause UI performance issues. Upstream default when unset: 100."
+        },
+        "ND_MATCHER_FUZZYTHRESHOLD": {
+          "type": "string",
+          "description": "Minimum similarity score (0-100) for the fuzzy matcher when looking up similar songs. Higher values require closer matches Upstream default when unset: 85."
+        },
+        "ND_MATCHER_PREFERSTARRED": {
+          "type": "string",
+          "description": "Bias the fuzzy matcher toward starred and highly-rated tracks when scoring similar songs Upstream default when unset: true."
+        },
+        "ND_MPVPATH": {
+          "type": "string",
+          "description": "Path to mpv executable. Used for Jukebox mode Upstream default when unset: _Empty_ (search in PATH)."
+        },
+        "ND_MPVCMDTEMPLATE": {
+          "type": "string",
+          "description": "Cmd template used to construct the call of the mpv executable. Used for Jukebox mode Upstream default when unset: mpv --audio-device=%d --no-audio-display %f --input-ipc-server=%s."
+        },
+        "ND_PASSWORDENCRYPTIONKEY": {
+          "type": "string",
+          "description": "Passphrase used to encrypt passwords in the DB. Click here for details Upstream default when unset: -."
+        },
+        "ND_PID_ALBUM": {
+          "type": "string",
+          "description": "Set the tag(s) to use as the Album ID. Click here for details Upstream default when unset: albumartistid,album,albumversion,releasedate."
+        },
+        "ND_PID_TRACK": {
+          "type": "string",
+          "description": "Set the tag(s) to use as the Track ID. Click here for details Upstream default when unset: albumid,discnumber,tracknumber,title."
+        },
+        "ND_PLAYLISTSPATH": {
+          "type": "string",
+          "description": "Limit where to search for and import playlists from. Can be a list of folders/globs (separated by : (or ; on Windows). Paths **MUST** be relative to MusicFolder Upstream default when unset: _Empty_ (meaning any playlist files in your library will be imported)."
+        },
+        "ND_PLUGINS_ENABLED": {
+          "type": "string",
+          "description": "Enable the plugin system Upstream default when unset: true."
+        },
+        "ND_PLUGINS_FOLDER": {
+          "type": "string",
+          "description": "Folder where your plugins are stored. Place your .ndp files in here Upstream default when unset: \"dynamic/plugins\"."
+        },
+        "ND_PLUGINS_AUTORELOAD": {
+          "type": "string",
+          "description": "Automatically detect when .ndp files in Plugins.Folder are updated and reload plugins immediately Upstream default when unset: false."
+        },
+        "ND_PLUGINS_LOGLEVEL": {
+          "type": "string",
+          "description": "Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace Upstream default when unset: LogLevel (LogLevel of your Navidrome instance)."
+        },
+        "ND_PLUGINS_CACHESIZE": {
+          "type": "string",
+          "description": "Size of the plugin compilation cache Upstream default when unset: \"200MB\"."
+        },
+        "ND_PREFERSORTTAGS": {
+          "type": "string",
+          "description": "Use Sort\\_\\* tags to sort columns in the UI. Upstream default when unset: false."
+        },
+        "ND_PROMETHEUS_ENABLED": {
+          "type": "string",
+          "description": "Enable extra endpoint with Prometheus metrics. Upstream default when unset: false."
+        },
+        "ND_PROMETHEUS_METRICSPATH": {
+          "type": "string",
+          "description": "Custom path for Prometheus metrics. Useful for blocking unauthorized metrics requests. Upstream default when unset: \"/metrics\"."
+        },
+        "ND_PROMETHEUS_PASSWORD": {
+          "type": "string",
+          "description": "Enables Basic Auth protection for Prometheus endpoint. User will be navidrome. Leave empty to disable Basic Auth protection. Upstream default when unset: _Empty_ (no password/authentication)."
+        },
+        "ND_RECENTLYADDEDBYMODTIME": {
+          "type": "string",
+          "description": "Uses music files' modification time when sorting by \"Recently Added\". Otherwise use import time Upstream default when unset: false."
+        },
+        "ND_SCANNER_ENABLED": {
+          "type": "string",
+          "description": "Enable/disable the scanner. Set to false to disable automatic scanning of the music library. Upstream default when unset: true."
+        },
+        "ND_SCANNER_WATCHERWAIT": {
+          "type": "string",
+          "description": "Time to wait after a file change is detected before starting a scan. Useful to avoid scanning incomplete files. Set it to 0 to disable the watcher Upstream default when unset: \"5s\"."
+        },
+        "ND_SCANNER_SCANONSTARTUP": {
+          "type": "string",
+          "description": "Enable/disable scanning the music library on startup. Set to false to disable Upstream default when unset: true."
+        },
+        "ND_SCANNER_ARTISTJOINER": {
+          "type": "string",
+          "description": "Character string used to join multiple artists in display. Change this if you prefer a different separator between artist names Upstream default when unset: \" • \"."
+        },
+        "ND_SCANNER_ARTISTSPLITEXCEPTIONS": {
+          "type": "string",
+          "description": "Comma-separated list of artist names that must never be split by the artist tag separators. Use this to protect names that legitimately contain a separator character (e.g. AC/DC) Upstream default when unset: _Empty_."
+        },
+        "ND_SCANNER_FOLLOWSYMLINKS": {
+          "type": "string",
+          "description": "Whether to follow symbolic links when scanning directories. When enabled, the scanner will traverse symlinked directories and include their contents in the library. When disabled, symlinked directories are ignored during scanning Upstream default when unset: true."
+        },
+        "ND_SCANNER_IGNOREDOTFOLDERS": {
+          "type": "string",
+          "description": "Whether to ignore folders whose name starts with a dot (e.g. .stfolder) when scanning. Set to false to index dot-prefixed folders Upstream default when unset: true."
+        },
+        "ND_SCANNER_PURGEMISSING": {
+          "type": "string",
+          "description": "Controls when missing files, albums, and artists are purged from the database during scans. Possible values: \"never\" (default, just mark as missing), \"always\" (purge after every scan), \"full\" (purge only after a full scan). Upstream default when unset: \"never\"."
+        },
+        "ND_SEARCH_BACKEND": {
+          "type": "string",
+          "description": "Select the search backend. fts uses FTS5 full-text search with BM25 ranking. legacy uses the previous search implementation Upstream default when unset: \"fts\"."
+        },
+        "ND_SEARCH_FULLSTRING": {
+          "type": "string",
+          "description": "Match query strings anywhere in searchable fields, not only in word boundaries. Useful for languages where words are not space separated Upstream default when unset: false."
+        },
+        "ND_SESSIONTIMEOUT": {
+          "type": "string",
+          "description": "How long Navidrome will wait before closing web ui idle sessions Upstream default when unset: \"48h\"."
+        },
+        "ND_SHAREURL": {
+          "type": "string",
+          "description": "Base URL for shared links. Useful when your server address is not a public (ex: when using Tailscale). See discussion here Upstream default when unset: _Empty_ (use server address)."
+        },
+        "ND_SMARTPLAYLISTREFRESHDELAY": {
+          "type": "string",
+          "description": "How often to refresh Smart Playlists. Check the smart playlists docs Upstream default when unset: \"5s\"."
+        },
+        "ND_SUBSONIC_APPENDSUBTITLE": {
+          "type": "string",
+          "description": "Append the subtitle tag to the song title in all Subsonic API responses Upstream default when unset: true."
+        },
+        "ND_SUBSONIC_ARTISTPARTICIPATIONS": {
+          "type": "string",
+          "description": "When Subsonic clients request artist's albums, include albums where the artist participates (ex: Various Artists compilations) Upstream default when unset: false."
+        },
+        "ND_SUBSONIC_APPENDALBUMVERSION": {
+          "type": "string",
+          "description": "Append album version/edition information to album names in Subsonic API responses (e.g., \"Album Name (Deluxe Edition)\") Upstream default when unset: true."
+        },
+        "ND_SUBSONIC_DEFAULTREPORTREALPATH": {
+          "type": "string",
+          "description": "Set to true to report the real path of the music files in the API. Can be customized individually for each client/player. This can be a security risk, so it is disabled by default Upstream default when unset: false."
+        },
+        "ND_SUBSONIC_ENABLEAVERAGERATING": {
+          "type": "string",
+          "description": "Controls whether the averageRating attribute is included in Subsonic API responses. When disabled, the average rating across all users is not exposed in API responses, though it is still calculated internally. Set to false to hide other users' rating data Upstream default when unset: true."
+        },
+        "ND_SUBSONIC_LEGACYCLIENTS": {
+          "type": "string",
+          "description": "List of clients that does not work with the new OpenSubsonic API improvements. Upstream default when unset: \"DSub\"."
+        },
+        "ND_SUBSONIC_MINIMALCLIENTS": {
+          "type": "string",
+          "description": "List of clients that should receive a minimal response for songs and playlists, containing only the bare minimum fields (id, title, etc). Useful for clients that get confused by the extra metadata Upstream default when unset: \"SubMusic\"."
+        },
+        "ND_TLSCERT": {
+          "type": "string",
+          "description": "Path for the TLS certificate file, which should include the signature chain if any Upstream default when unset: _Empty_ (disable TLS)."
+        },
+        "ND_TLSKEY": {
+          "type": "string",
+          "description": "Path for the TLS key file Upstream default when unset: _Empty_ (disable TLS)."
+        },
+        "ND_TRANSCODING_ENABLECANCELLATION": {
+          "type": "string",
+          "description": "Stop the underlying ffmpeg process as soon as a client disconnects mid-stream (e.g. when the user skips, stops, or closes playback). Disabled by default so that an in-progress transcode runs to completion even after the client disconnects: the finished file is stored in the transcoding cache and served instantly the next time it is requested. Enable this to free CPU immediately on disconnect, at the cost of discarding that partially-transcoded work Upstream default when unset: false."
+        },
+        "ND_TRANSCODING_MAXCONCURRENT": {
+          "type": "string",
+          "description": "Maximum number of concurrent transcodes server-wide. Set to 0 for unlimited. Helps prevent an ffmpeg-based denial of service Upstream default when unset: 0 (unlimited)."
+        },
+        "ND_TRANSCODING_MAXCONCURRENTPERUSER": {
+          "type": "string",
+          "description": "Maximum number of concurrent transcodes per user. Set to 0 for unlimited Upstream default when unset: 0 (unlimited)."
+        },
+        "ND_TRANSCODINGCACHESIZE": {
+          "type": "string",
+          "description": "Size of transcoding cache. Set to \"0\" to disable cache Upstream default when unset: \"100MB\"."
+        },
+        "ND_UICOVERARTSIZE": {
+          "type": "string",
+          "description": "Size (in pixels) of the cover art images requested by the web UI. Larger values look sharper on high-DPI displays, but use more bandwidth and cache space. Values are clamped to the range 200-1200 Upstream default when unset: 300."
+        },
+        "ND_UILOGINBACKGROUNDURL": {
+          "type": "string",
+          "description": "Change background image used in the Login page Upstream default when unset: _random music image from this Unsplash.com collection_."
+        },
+        "ND_UIPLAYBACKREPORTINTERVAL": {
+          "type": "string",
+          "description": "How often the web UI reports playback progress to the server (used by the Now Playing feature and the playbackReport OpenSubsonic extension) Upstream default when unset: \"1m\"."
+        },
+        "ND_UISEARCHDEBOUNCEMS": {
+          "type": "string",
+          "description": "Debounce delay in milliseconds for the search input in the UI. Higher values reduce search requests while typing Upstream default when unset: 200."
+        },
+        "ND_UIWELCOMEMESSAGE": {
+          "type": "string",
+          "description": "Add a welcome message to the login screen Upstream default when unset: _Empty_."
+        },
+        "ND_UNIXSOCKETPERM": {
+          "type": "string",
+          "description": "Set file permissions for Unix Socket File.\\* Upstream default when unset: \"0660\"."
+        },
+        "ND_SYSTEMD_PRIORITY_LOGGING": {
+          "type": "string",
+          "description": "Enable syslog priority prefixes for systemd-journald. Both this variable and the JOURNAL_STREAM environment variable must be set for journal format logging to activate Upstream default when unset: _Empty_ (disabled)."
+        },
+        "ND_SCANNER_EXTRACTOR": {
+          "type": "string",
+          "description": "Advanced scanner metadata extraction backend; retain the image-supported default unless troubleshooting. Upstream default when unset: taglib (image backend)."
         }
       }
     },
@@ -374,6 +938,20 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup health check; allows up to 15 minutes for database migrations before liveness begins.",
+      "additionalProperties": true
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret or ConfigMap sources for application environment variables; explicit env entries win.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
