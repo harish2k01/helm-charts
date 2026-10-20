@@ -18,7 +18,7 @@ helm install radarr harish2k01/radarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.1.2
+helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.2.0
 ```
 
 Deploy another Radarr instance by using a different release name and values file:
@@ -72,7 +72,7 @@ Configure Radarr paths inside the application to stay under that shared mount.
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Radarr replicas |
 | `image.repository` | string | `lscr.io/linuxserver/radarr` | Container image repository |
-| `image.tag` | string | `6.1.1` | Container image tag |
+| `image.tag` | string | `6.4.4` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
@@ -94,3 +94,13 @@ Configure Radarr paths inside the application to stay under that shared mount.
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional configuration controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `envFrom` | list | `[]` | Existing Secret or ConfigMap environment sources; explicit `env` takes precedence. |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.
