@@ -21,3 +21,14 @@ test('InfluxDB overrides reach only its sidecar and retain Kubernetes Secret ref
   assert.deepEqual(influx.envFrom,[{secretRef:{name:'influx-settings'}}]);
   assert.equal(deployment.spec.template.spec.containers.find(c=>c.name==='scrutiny-web').env,undefined);
 });
+test('application Secret keys and sidecar config mounts stay isolated',()=>{
+  const deployment=render('--set','extraEnv[0].name=SCRUTINY_WEB_INFLUXDB_TOKEN','--set','extraEnv[0].valueFrom.secretKeyRef.name=credentials','--set','extraEnv[0].valueFrom.secretKeyRef.key=token','--set','influxdb.envFrom[0].secretRef.name=db-settings','--set','extraVolumes[0].name=custom-config','--set','extraVolumes[0].configMap.name=influx-config','--set','influxdb.extraVolumeMounts[0].name=custom-config','--set','influxdb.extraVolumeMounts[0].mountPath=/etc/influxdb2').find(d=>d.kind==='Deployment');
+  const app=deployment.spec.template.spec.containers.find(c=>c.name==='scrutiny-web');
+  const influx=deployment.spec.template.spec.containers.find(c=>c.name==='influxdb');
+  assert.deepEqual(app.env[0].valueFrom,{secretKeyRef:{name:'credentials',key:'token'}});
+  assert.equal(influx.env,undefined);
+  assert.deepEqual(influx.envFrom,[{secretRef:{name:'db-settings'}}]);
+  assert.ok(influx.volumeMounts.some(m=>m.name==='custom-config'&&m.mountPath==='/etc/influxdb2'));
+  assert.ok(!app.volumeMounts.some(m=>m.name==='custom-config'));
+  assert.ok(deployment.spec.template.spec.volumes.some(v=>v.name==='custom-config'&&v.configMap.name==='influx-config'));
+});

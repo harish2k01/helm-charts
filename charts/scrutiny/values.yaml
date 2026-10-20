@@ -18,8 +18,10 @@ influxdb:
   # Changing bind/path settings requires matching ports, mounts and Scrutiny URL.
   # INFLUXD_LOG_LEVEL: "" # supported log levels are debug, info, and error; unset uses upstream default.
   # INFLUXD_FLUX_LOG_ENABLED: "" # enables detailed logging for flux queries; unset uses upstream default.
-  # INFLUXD_TRACING_TYPE: "" # path to boltdb database; unset uses upstream default.
-  # INFLUXD_SQLITE_PATH: "" # override default assets by serving from a specific directory (developer mode); unset uses upstream default.
+  # INFLUXD_TRACING_TYPE: "" # Tracing backend: log or jaeger; unset uses upstream default.
+  # INFLUXD_BOLT_PATH: "" # path to boltdb database; unset uses upstream default.
+  # INFLUXD_SQLITE_PATH: "" # SQLite metadata path; default influxd.sqlite next to the Bolt database; unset uses upstream default.
+  # INFLUXD_ASSETS_PATH: "" # override default assets by serving from a specific directory (developer mode); unset uses upstream default.
   # INFLUXD_STORE: "" # backing store for REST resources (disk or memory); unset uses upstream default.
   # INFLUXD_E2E_TESTING: "" # add /debug/flush endpoint to clear stores; used for end-to-end tests; unset uses upstream default.
   # INFLUXD_TESTING_ALWAYS_ALLOW_SETUP: "" # ensures the /api/v2/setup endpoint always returns true to allow onboarding; unset uses upstream default.
