@@ -18,7 +18,7 @@ helm install uptime-kuma harish2k01/uptime-kuma
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.1.3
+helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.2.0
 ```
 
 By default, Uptime Kuma stores data in SQLite under `/app/data` with a persistent volume.
@@ -164,13 +164,6 @@ Database-related environment variables are managed by the chart when `database.m
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 
-## Upgrading within Uptime Kuma 2
+## Additional runtime configuration
 
-See [upgrade notes](CHANGELOG.md) for removed status-page sorting, database migration precautions, monitor/image requirements, and new application features. The image stays on the `-slim` variant. Optional SQLite tuning uses the existing runtime environment map:
-
-```yaml
-env:
-  UPTIME_KUMA_SQLITE_SINGLE_CONNECTION: "true"
-```
-
-The upstream default is already single-connection SQLite. Do not enable `UPTIME_KUMA_DEBUG_INSPECTOR` on exposed instances.
+`env` supports non-secret runtime tuning. Use `extraEnv` for individual `valueFrom.secretKeyRef` entries, `envFrom` for complete Secret/ConfigMap sources, and `extraVolumes`/`extraVolumeMounts` for TLS certificates or sockets. Set `service.targetPort` together with `env.UPTIME_KUMA_PORT` when changing the listener port. See [CHANGELOG.md](CHANGELOG.md) for upgrade details.

@@ -86,6 +86,13 @@
           "type": "integer",
           "description": "Service port exposed inside the cluster.",
           "default": 3001
+        },
+        "targetPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 3001,
+          "description": "App container listener port; match env.UPTIME_KUMA_PORT when changing."
         }
       }
     },
@@ -606,6 +613,42 @@
       "description": "Non-secret environment variables passed to the application container.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "extraEnv": {
+      "type": "array",
+      "description": "Optional Kubernetes extraEnv entries.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Optional Kubernetes envFrom entries.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Optional Kubernetes extraVolumes entries.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Optional Kubernetes extraVolumeMounts entries.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "default": []
     }
   }
 }
