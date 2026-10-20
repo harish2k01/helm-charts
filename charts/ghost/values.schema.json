@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "6.39.0-alpine"
+          "default": "6.71.0-alpine"
         },
         "pullPolicy": {
           "type": "string",
