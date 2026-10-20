@@ -10,7 +10,7 @@ It runs `cloudflared tunnel --no-autoupdate --loglevel info --metrics 0.0.0.0:20
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 
 kubectl create namespace cloudflare
@@ -26,7 +26,7 @@ helm install cloudflared harish2k01/cloudflared --namespace cloudflare
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.1.1
+helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.2.0
 ```
 
 ## Sealed Secret
@@ -49,7 +49,7 @@ token:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of cloudflared connector pods |
 | `image.repository` | string | `cloudflare/cloudflared` | Container image repository |
-| `image.tag` | string | `2026.3.0` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `2026.10.2` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `selectorLabels` | object | `{pod: cloudflared}` | Deployment selector labels |
 | `podSecurityContext` | object | ICMP ping sysctl | Pod security context |
@@ -65,3 +65,7 @@ token:
 | `service.enabled` | bool | `false` | Expose the metrics endpoint with a Service |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `topologySpreadConstraints` | list | `[]` | Pod topology spread constraints |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes. Optional runtime settings and Secret references are documented next to `cloudflared.extraEnv` in `values.yaml`.
