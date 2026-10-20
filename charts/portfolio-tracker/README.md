@@ -98,3 +98,15 @@ httpRoute:
 | `nodeSelector` | object | `{}` | Application pod node selector. |
 | `tolerations` | list | `[]` | Application pod tolerations. |
 | `affinity` | object | `{}` | Application pod affinity rules. |
+
+## Optional asset logos
+
+```yaml
+portfolioTracker:
+  env:
+    LOGO_PROVIDER: logo_dev
+  secrets:
+    existingSecret: portfolio-secrets
+```
+
+The existing Secret must contain `NEXTAUTH_SECRET` and may include `LOGO_DEV_TOKEN` or `BRANDFETCH_CLIENT_ID`, plus optional SMTP credentials. For local evaluation the same logo keys are supported under `portfolioTracker.secrets.inline`; their defaults are empty. Use publishable provider identifiers because logo URLs are sent to browsers. The 0.7.0 schema migration requires a PostgreSQL backup before rollout; see [upgrade notes](CHANGELOG.md).

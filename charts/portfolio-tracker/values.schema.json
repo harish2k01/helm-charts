@@ -25,7 +25,11 @@
         },
         "pullPolicy": {
           "type": "string",
-          "enum": ["Always", "IfNotPresent", "Never"],
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ],
           "default": "IfNotPresent"
         }
       }
@@ -65,7 +69,12 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["ClusterIP", "NodePort", "LoadBalancer", "ExternalName"],
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer",
+            "ExternalName"
+          ],
           "default": "ClusterIP"
         },
         "port": {
@@ -164,7 +173,11 @@
                 },
                 "pullPolicy": {
                   "type": "string",
-                  "enum": ["Always", "IfNotPresent", "Never"],
+                  "enum": [
+                    "Always",
+                    "IfNotPresent",
+                    "Never"
+                  ],
                   "default": "IfNotPresent"
                 }
               }
@@ -314,6 +327,16 @@
                 "SMTP_PASS": {
                   "type": "string",
                   "default": ""
+                },
+                "LOGO_DEV_TOKEN": {
+                  "type": "string",
+                  "description": "Optional publishable logo-provider identifier.",
+                  "default": ""
+                },
+                "BRANDFETCH_CLIENT_ID": {
+                  "type": "string",
+                  "description": "Optional publishable logo-provider identifier.",
+                  "default": ""
                 }
               }
             }
@@ -322,7 +345,24 @@
         "env": {
           "type": "object",
           "additionalProperties": {
-            "type": ["string", "number", "boolean"]
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          },
+          "properties": {
+            "LOGO_PROVIDER": {
+              "type": "string",
+              "description": "Preferred configured asset-logo provider: logo_dev or brandfetch.",
+              "enum": [
+                "",
+                "logo_dev",
+                "logodev",
+                "brandfetch"
+              ],
+              "default": ""
+            }
           }
         },
         "envFrom": {
