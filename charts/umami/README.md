@@ -154,4 +154,4 @@ umami:
           key: encryption-key
 ```
 
-The 2FA key must be64 hexadecimal characters and stable across pod replacements. MCP requires an Umami API key. `startupProbe` defaults to a20-minute migration/startup budget and may be customized as a Kubernetes probe. Build-time frontend options require a custom image. See [CHANGELOG.md](CHANGELOG.md) for release and migration details.
+The 2FA key must be 64 hexadecimal characters and stable across pod replacements. MCP requires an Umami API key. `startupProbe` defaults to a 20-minute migration/startup budget and may be customized as a Kubernetes probe. Build-time frontend options require a custom image. See [CHANGELOG.md](CHANGELOG.md) for release and migration details.

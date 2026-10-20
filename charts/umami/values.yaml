@@ -120,16 +120,20 @@ umami:
     # REMOVE_TRAILING_SLASH: "1"
     # CORS_MAX_AGE: "86400"
     # ALLOWED_FRAME_URLS: "https://dashboard.example.com"
-    # PRIVATE_MODE: "1" # Enforce upstream private collection behavior.
+    # PRIVATE_MODE: "1" # Hide telemetry and related public UI metadata.
     # SKIP_LOCATION_HEADERS: "1" # Disable hosting-provider location headers.
     # SALT_ROTATION: "month"
     # USE_UUIDV7: "1"
     # LOG_QUERY: "1" # SQL logging may expose analytics data.
     # GEOLITE_DB_PATH: "/geo/GeoLite2-City.mmdb" # Mount with extraVolumes.
-    # FAVICON_URL: "https://icons.example.com/{domain}"
+    # FAVICON_URL: "https://icons.example.com/{{domain}}"
     # LINKS_URL: "https://links.example.com"
     # PIXELS_URL: "https://pixels.example.com"
     # COLLECT_API_ENDPOINT: "https://collector.example.com/api/send"
+    # KAFKA_BROKER: "kafka.example.com:9093" # Requires Secret-backed KAFKA_URL.
+    # KAFKA_SASL_MECHANISM: scram-sha-512
+    # KAFKA_MAX_MESSAGE_BYTES: "1048576"
+    # KAFKA_SSL_ALLOW_UNAUTHORIZED: "false" # Keep TLS verification enabled.
     # SKIP_DB_CHECK: "1" # Advanced: do not skip database checks during upgrades.
     # SKIP_DB_MIGRATION: "1" # Only if migrations are managed separately.
 
