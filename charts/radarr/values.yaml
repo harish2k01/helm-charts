@@ -28,6 +28,100 @@ env:
   TZ: Asia/Kolkata
 
 # Load credentials from existing Secrets or shared ConfigMaps. Explicit env wins.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+  # App identity and UI: InstanceName Upstream default: Radarr.
+  # RADARR__APP__INSTANCENAME: "Radarr"
+  # App identity and UI: Theme Upstream default: auto.
+  # RADARR__APP__THEME: "auto"
+  # App identity and UI: LaunchBrowser Upstream default: true.
+  # RADARR__APP__LAUNCHBROWSER: "true"
+  # Authentication: ApiKey Upstream default: generated/persisted.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # RADARR__AUTH__APIKEY: ""
+  # Authentication: Enabled Upstream default: false.
+  # RADARR__AUTH__ENABLED: "false"
+  # Authentication: Method Upstream default: None (first-run setup required).
+  # RADARR__AUTH__METHOD: "Forms"
+  # Authentication: Required Upstream default: Enabled.
+  # RADARR__AUTH__REQUIRED: "Enabled"
+  # Authentication: TrustCgnatIpAddresses Upstream default: false.
+  # RADARR__AUTH__TRUSTCGNATIPADDRESSES: "false"
+  # Logging: Level Upstream default: debug.
+  # RADARR__LOG__LEVEL: "debug"
+  # Logging: FilterSentryEvents Upstream default: true.
+  # RADARR__LOG__FILTERSENTRYEVENTS: "true"
+  # Logging: Rotate Upstream default: 50.
+  # RADARR__LOG__ROTATE: "50"
+  # Logging: SizeLimit Upstream default: 1.
+  # RADARR__LOG__SIZELIMIT: "1"
+  # Logging: Sql Upstream default: false.
+  # RADARR__LOG__SQL: "false"
+  # Logging: ConsoleLevel Upstream default: empty.
+  # RADARR__LOG__CONSOLELEVEL: ""
+  # Logging: ConsoleFormat Upstream default: Standard.
+  # RADARR__LOG__CONSOLEFORMAT: "Standard"
+  # Logging: AnalyticsEnabled Upstream default: true.
+  # RADARR__LOG__ANALYTICSENABLED: "true"
+  # Logging: SyslogServer Upstream default: empty.
+  # RADARR__LOG__SYSLOGSERVER: ""
+  # Logging: SyslogPort Upstream default: 514.
+  # RADARR__LOG__SYSLOGPORT: "514"
+  # Logging: SyslogLevel Upstream default: inherits Log.Level.
+  # RADARR__LOG__SYSLOGLEVEL: ""
+  # Logging: DbEnabled Upstream default: true.
+  # RADARR__LOG__DBENABLED: "true"
+  # External PostgreSQL: Host Upstream default: empty (SQLite).
+  # RADARR__POSTGRES__HOST: "postgresql.database.svc"
+  # External PostgreSQL: Port Upstream default: 5432.
+  # RADARR__POSTGRES__PORT: "5432"
+  # External PostgreSQL: User Upstream default: empty.
+  # RADARR__POSTGRES__USER: ""
+  # External PostgreSQL: Password Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # RADARR__POSTGRES__PASSWORD: ""
+  # External PostgreSQL: MainDb Upstream default: radarr-main.
+  # RADARR__POSTGRES__MAINDB: "radarr-main"
+  # External PostgreSQL: LogDb Upstream default: radarr-log.
+  # RADARR__POSTGRES__LOGDB: "radarr-log"
+  # External PostgreSQL: MainDbConnectionString Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # RADARR__POSTGRES__MAINDBCONNECTIONSTRING: ""
+  # External PostgreSQL: LogDbConnectionString Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # RADARR__POSTGRES__LOGDBCONNECTIONSTRING: ""
+  # Listener/proxy/TLS: UrlBase Upstream default: empty.
+  # RADARR__SERVER__URLBASE: ""
+  # Listener/proxy/TLS: BindAddress Upstream default: *.
+  # RADARR__SERVER__BINDADDRESS: "*"
+  # Listener/proxy/TLS: AllowedHosts Upstream default: empty (any host).
+  # RADARR__SERVER__ALLOWEDHOSTS: "radarr.example.com"
+  # Listener/proxy/TLS: Port Upstream default: 7878.
+  # RADARR__SERVER__PORT: "7878"
+  # Listener/proxy/TLS: EnableSsl Upstream default: false.
+  # RADARR__SERVER__ENABLESSL: "false"
+  # Listener/proxy/TLS: SslPort Upstream default: 9898.
+  # RADARR__SERVER__SSLPORT: "9898"
+  # Listener/proxy/TLS: SslCertPath Upstream default: empty.
+  # RADARR__SERVER__SSLCERTPATH: ""
+  # Listener/proxy/TLS: SslCertPassword Upstream default: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # RADARR__SERVER__SSLCERTPASSWORD: ""
+  # Listener/proxy/TLS: TrustedNetworks Upstream default: empty (loopback only).
+  # RADARR__SERVER__TRUSTEDNETWORKS: "192.0.2.0/24"
+  # Binary updater (keep image-managed): Mechanism Upstream default: BuiltIn.
+  # RADARR__UPDATE__MECHANISM: "BuiltIn"
+  # Binary updater (keep image-managed): Automatically Upstream default: false on Linux.
+  # RADARR__UPDATE__AUTOMATICALLY: "false"
+  # Binary updater (keep image-managed): ScriptPath Upstream default: empty.
+  # RADARR__UPDATE__SCRIPTPATH: ""
+  # Binary updater (keep image-managed): Branch Upstream default: master.
+  # RADARR__UPDATE__BRANCH: "master"
+
 envFrom: []
 
 # Main HTTP service for the Radarr web UI/API.

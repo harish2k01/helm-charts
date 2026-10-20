@@ -91,6 +91,174 @@
           "type": "string",
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
+        },
+        "UMASK": {
+          "type": "string",
+          "description": "Mask applied to newly created files Upstream default when unset: 022."
+        },
+        "RADARR__APP__INSTANCENAME": {
+          "type": "string",
+          "description": "App identity and UI: InstanceName Upstream default when unset: Radarr."
+        },
+        "RADARR__APP__THEME": {
+          "type": "string",
+          "description": "App identity and UI: Theme Upstream default when unset: auto."
+        },
+        "RADARR__APP__LAUNCHBROWSER": {
+          "type": "string",
+          "description": "App identity and UI: LaunchBrowser Upstream default when unset: true."
+        },
+        "RADARR__AUTH__APIKEY": {
+          "type": "string",
+          "description": "Authentication: ApiKey Upstream default when unset: generated/persisted."
+        },
+        "RADARR__AUTH__ENABLED": {
+          "type": "string",
+          "description": "Authentication: Enabled Upstream default when unset: false."
+        },
+        "RADARR__AUTH__METHOD": {
+          "type": "string",
+          "description": "Authentication: Method Upstream default when unset: None (first-run setup required)."
+        },
+        "RADARR__AUTH__REQUIRED": {
+          "type": "string",
+          "description": "Authentication: Required Upstream default when unset: Enabled."
+        },
+        "RADARR__AUTH__TRUSTCGNATIPADDRESSES": {
+          "type": "string",
+          "description": "Authentication: TrustCgnatIpAddresses Upstream default when unset: false."
+        },
+        "RADARR__LOG__LEVEL": {
+          "type": "string",
+          "description": "Logging: Level Upstream default when unset: debug."
+        },
+        "RADARR__LOG__FILTERSENTRYEVENTS": {
+          "type": "string",
+          "description": "Logging: FilterSentryEvents Upstream default when unset: true."
+        },
+        "RADARR__LOG__ROTATE": {
+          "type": "string",
+          "description": "Logging: Rotate Upstream default when unset: 50."
+        },
+        "RADARR__LOG__SIZELIMIT": {
+          "type": "string",
+          "description": "Logging: SizeLimit Upstream default when unset: 1."
+        },
+        "RADARR__LOG__SQL": {
+          "type": "string",
+          "description": "Logging: Sql Upstream default when unset: false."
+        },
+        "RADARR__LOG__CONSOLELEVEL": {
+          "type": "string",
+          "description": "Logging: ConsoleLevel Upstream default when unset: empty."
+        },
+        "RADARR__LOG__CONSOLEFORMAT": {
+          "type": "string",
+          "description": "Logging: ConsoleFormat Upstream default when unset: Standard."
+        },
+        "RADARR__LOG__ANALYTICSENABLED": {
+          "type": "string",
+          "description": "Logging: AnalyticsEnabled Upstream default when unset: true."
+        },
+        "RADARR__LOG__SYSLOGSERVER": {
+          "type": "string",
+          "description": "Logging: SyslogServer Upstream default when unset: empty."
+        },
+        "RADARR__LOG__SYSLOGPORT": {
+          "type": "string",
+          "description": "Logging: SyslogPort Upstream default when unset: 514."
+        },
+        "RADARR__LOG__SYSLOGLEVEL": {
+          "type": "string",
+          "description": "Logging: SyslogLevel Upstream default when unset: inherits Log.Level."
+        },
+        "RADARR__LOG__DBENABLED": {
+          "type": "string",
+          "description": "Logging: DbEnabled Upstream default when unset: true."
+        },
+        "RADARR__POSTGRES__HOST": {
+          "type": "string",
+          "description": "External PostgreSQL: Host Upstream default when unset: empty (SQLite)."
+        },
+        "RADARR__POSTGRES__PORT": {
+          "type": "string",
+          "description": "External PostgreSQL: Port Upstream default when unset: 5432."
+        },
+        "RADARR__POSTGRES__USER": {
+          "type": "string",
+          "description": "External PostgreSQL: User Upstream default when unset: empty."
+        },
+        "RADARR__POSTGRES__PASSWORD": {
+          "type": "string",
+          "description": "External PostgreSQL: Password Upstream default when unset: empty."
+        },
+        "RADARR__POSTGRES__MAINDB": {
+          "type": "string",
+          "description": "External PostgreSQL: MainDb Upstream default when unset: radarr-main."
+        },
+        "RADARR__POSTGRES__LOGDB": {
+          "type": "string",
+          "description": "External PostgreSQL: LogDb Upstream default when unset: radarr-log."
+        },
+        "RADARR__POSTGRES__MAINDBCONNECTIONSTRING": {
+          "type": "string",
+          "description": "External PostgreSQL: MainDbConnectionString Upstream default when unset: empty."
+        },
+        "RADARR__POSTGRES__LOGDBCONNECTIONSTRING": {
+          "type": "string",
+          "description": "External PostgreSQL: LogDbConnectionString Upstream default when unset: empty."
+        },
+        "RADARR__SERVER__URLBASE": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: UrlBase Upstream default when unset: empty."
+        },
+        "RADARR__SERVER__BINDADDRESS": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: BindAddress Upstream default when unset: *."
+        },
+        "RADARR__SERVER__ALLOWEDHOSTS": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: AllowedHosts Upstream default when unset: empty (any host)."
+        },
+        "RADARR__SERVER__PORT": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: Port Upstream default when unset: 7878."
+        },
+        "RADARR__SERVER__ENABLESSL": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: EnableSsl Upstream default when unset: false."
+        },
+        "RADARR__SERVER__SSLPORT": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: SslPort Upstream default when unset: 9898."
+        },
+        "RADARR__SERVER__SSLCERTPATH": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: SslCertPath Upstream default when unset: empty."
+        },
+        "RADARR__SERVER__SSLCERTPASSWORD": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: SslCertPassword Upstream default when unset: empty."
+        },
+        "RADARR__SERVER__TRUSTEDNETWORKS": {
+          "type": "string",
+          "description": "Listener/proxy/TLS: TrustedNetworks Upstream default when unset: empty (loopback only)."
+        },
+        "RADARR__UPDATE__MECHANISM": {
+          "type": "string",
+          "description": "Binary updater (keep image-managed): Mechanism Upstream default when unset: BuiltIn."
+        },
+        "RADARR__UPDATE__AUTOMATICALLY": {
+          "type": "string",
+          "description": "Binary updater (keep image-managed): Automatically Upstream default when unset: false on Linux."
+        },
+        "RADARR__UPDATE__SCRIPTPATH": {
+          "type": "string",
+          "description": "Binary updater (keep image-managed): ScriptPath Upstream default when unset: empty."
+        },
+        "RADARR__UPDATE__BRANCH": {
+          "type": "string",
+          "description": "Binary updater (keep image-managed): Branch Upstream default when unset: master."
         }
       }
     },
