@@ -178,6 +178,11 @@
           "type": "string",
           "description": "Plain Tailscale auth key used only when authKey.create is true. Avoid committing real keys.",
           "default": ""
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Inject the auth-key Secret. Disable when using OAuth/workload identity through extraEnv/envFrom.",
+          "default": true
         }
       }
     },

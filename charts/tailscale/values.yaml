@@ -43,6 +43,8 @@ sysctl:
 # outside this chart. The key can be reusable or ephemeral, but persistent state
 # is recommended so the pod keeps the same tailnet identity across restarts.
 authKey:
+  # Disable only when using OAuth/workload identity via extraEnv/envFrom instead.
+  enabled: true
   existingSecret: ""
   existingSecretKey: TS_AUTHKEY
   create: false
@@ -76,6 +78,44 @@ tailscale:
   #   TS_DEBUG_FIREWALL_MODE: auto
   # See README.md for Kubernetes netfilter troubleshooting.
   extraEnv: {}
+  # Optional container runtime configuration, all unset unless shown above.
+  # Do not duplicate TS_HOSTNAME/TS_ROUTES/TS_STATE_DIR/TS_KUBE_SECRET/
+  # TS_USERSPACE/TS_ACCEPT_DNS/TS_AUTH_ONCE/TS_ENABLE_HEALTH_CHECK/
+  # TS_ENABLE_METRICS/TS_LOCAL_ADDR_PORT/TS_EXTRA_ARGS/TS_TAILSCALED_EXTRA_ARGS;
+  # use the corresponding tailscale.* values instead. TS_BOOT_TIMEOUT is exposed
+  # by bootTimeout; leave it empty when supplying the variable through envFrom.
+  # extraEnv:
+  #   TS_SOCKS5_SERVER: 0.0.0.0:1055 # Default disabled; expose separately if needed.
+  #   TS_OUTBOUND_HTTP_PROXY_LISTEN: 0.0.0.0:1055 # Default disabled; HTTP proxy.
+  #   TS_SOCKET: /tmp/tailscaled.sock # Default local API Unix socket.
+  #   TS_DEST_IP: 192.0.2.10 # Default none; forward inbound tailnet traffic.
+  #   TS_TAILNET_TARGET_IP: 100.64.0.10 # Default none; egress proxy target.
+  #   TS_TAILNET_TARGET_FQDN: service.example.ts.net # Default none; alternative egress target.
+  #   TS_SERVE_CONFIG: /etc/tailscale/serve.json # Default none; mount config file.
+  #   TS_DEBUG_FIREWALL_MODE: auto # Default upstream choice; auto/nftables/iptables.
+  #   TS_EXPERIMENTAL_ENABLE_FORWARDING_OPTIMIZATIONS: "false" # Default false.
+  #   TS_EXPERIMENTAL_SERVICE_AUTO_ADVERTISEMENT: "true" # Default true outside Kubernetes.
+  #   TS_DEBUG_ADDR_PORT: 127.0.0.1:9001 # Default disabled; diagnostic endpoint.
+  # Alternative OAuth/workload-identity authentication requires authKey.enabled=false.
+  # OAuth client ID alone supports token auto-discovery only on supported platforms:
+  #   TS_CLIENT_ID: client-id # Default unset; client identifier.
+  #   TS_AUDIENCE: audience # Default unset; supported provider token audience.
+  # envFrom:
+  #   - secretRef:
+  #       name: tailscale-oauth-credentials
+  # Secret keys: TS_CLIENT_SECRET (OAuth) OR TS_ID_TOKEN (federation), never both.
+  # TS_AUTHKEY/TS_AUTH_KEY must not be combined with OAuth/federation variables;
+  # use authKey.existingSecret for normal auth-key mode. Secret/token file values
+  # may use file:/mounted/path via projected Secret volumes where upstream supports it.
+  # Operator-managed only: POD_IP/POD_IPS/POD_UID, TS_EGRESS_PROXIES_CONFIG_PATH,
+  # TS_INGRESS_PROXIES_CONFIG_PATH, TS_EXPERIMENTAL_CERT_SHARE,
+  # TS_EXPERIMENTAL_DEST_DNS_NAME, EXPERIMENTAL_ALLOW_PROXYING_CLUSTER_TRAFFIC_VIA_INGRESS.
+  # TS_EXPERIMENTAL_VERSIONED_CONFIG_DIR conflicts with this chart's generated
+  # hostname/routes/auth settings; it is not a drop-in override for this chart.
+  # Deprecated: TS_HEALTHCHECK_ADDR_PORT (use enableHealthCheck/localAddrPort).
+  # Internal/test-only TS_TEST_ONLY_ROOT and TS_TEST_FAKE_NETFILTER are not deployment values.
+  # TS_SERVE_ALLOW_ALL_INTERFACES is an advanced daemon behavior override; review
+  # Serve exposure before using it. Go/Docker toolchain variables are build-only.
   envFrom: []
 
 # Persistent state prevents a new machine from appearing in the Tailscale admin
