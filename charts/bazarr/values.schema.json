@@ -91,6 +91,50 @@
           "type": "string",
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
+        },
+        "UMASK": {
+          "type": "string",
+          "description": "Mask applied to newly created files Upstream default when unset: 022."
+        },
+        "BAZARR_CONFIG_BASE_FILE_PATH": {
+          "type": "string",
+          "description": "Directory containing config.yaml/config.ini; other DB paths stay under /config Upstream default when unset: /config/config."
+        },
+        "POSTGRES_ENABLED": {
+          "type": "string",
+          "description": "Use external PostgreSQL instead of SQLite Upstream default when unset: config: postgresql.enabled=false."
+        },
+        "POSTGRES_HOST": {
+          "type": "string",
+          "description": "External database hostname Upstream default when unset: config: localhost."
+        },
+        "POSTGRES_PORT": {
+          "type": "string",
+          "description": "External PostgreSQL port Upstream default when unset: config: 5432."
+        },
+        "POSTGRES_DATABASE": {
+          "type": "string",
+          "description": "External database name Upstream default when unset: config: empty."
+        },
+        "POSTGRES_USERNAME": {
+          "type": "string",
+          "description": "External database username from Secret Upstream default when unset: config: empty."
+        },
+        "POSTGRES_PASSWORD": {
+          "type": "string",
+          "description": "External database password from Secret Upstream default when unset: config: empty."
+        },
+        "POSTGRES_URL": {
+          "type": "string",
+          "description": "PostgreSQL URL; individual fields override URL components Upstream default when unset: config: empty."
+        },
+        "NO_UPDATE": {
+          "type": "string",
+          "description": "Internal argument-parser updater toggle; image must manage updates Upstream default when unset: false (wrapper passes --no-update)."
+        },
+        "NO_CLI": {
+          "type": "string",
+          "description": "Disables CLI parsing; leave unset with the LinuxServer startup command Upstream default when unset: false."
         }
       }
     },
@@ -496,6 +540,15 @@
       "type": "object",
       "description": "Startup health check; allows up to 15 minutes for database migrations before liveness begins.",
       "additionalProperties": true
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret or ConfigMap sources for application environment variables; explicit env entries win.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }
