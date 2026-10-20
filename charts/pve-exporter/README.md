@@ -8,7 +8,7 @@ This chart deploys [prometheus-pve/prometheus-pve-exporter](https://github.com/p
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install pve-exporter harish2k01/pve-exporter
 ```
@@ -16,7 +16,7 @@ helm install pve-exporter harish2k01/pve-exporter
 ## Install From OCI
 
 ```bash
-helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.1.0
+helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.2.0
 ```
 
 ## Proxmox Configuration
@@ -65,9 +65,10 @@ serviceMonitor:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of exporter pods |
 | `image.repository` | string | `prompve/prometheus-pve-exporter` | Container image repository |
-| `image.tag` | string | `3.8.2` | Container image tag |
+| `image.tag` | string | `3.10.1` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `proxmox.targets` | list | `[10.10.10.100]` | Proxmox endpoints to scrape |
+| `proxmox.config.enabled` | bool | `true` | Mount Secret-backed YAML; disable for environment configuration mode |
 | `proxmox.config.existingSecret` | string | `""` | Existing Secret containing exporter config |
 | `proxmox.config.createSecret` | bool | `false` | Create a normal Secret from `proxmox.config.value` |
 | `proxmox.config.secretKey` | string | `pve.yaml` | Secret key containing the exporter config |
@@ -80,9 +81,15 @@ serviceMonitor:
 | `serviceMonitor.interval` | string | `30s` | Scrape interval |
 | `serviceMonitor.path` | string | `/pve` | Exporter scrape path |
 | `serviceMonitor.params` | object | default module, cluster, node params | ServiceMonitor scrape params |
+| `collectors.qdevice` | bool | `true` | Collect QDevice state during cluster scrapes; disable if not applicable |
+| `extraArgs` | list | `[]` | Additional exporter CLI flags |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `livenessProbe` | object | HTTP GET `/` | Liveness probe |
 | `readinessProbe` | object | HTTP GET `/` | Readiness probe |
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
