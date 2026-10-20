@@ -16,7 +16,7 @@ helm install portfolio-tracker harish2k01/portfolio-tracker
 ## Install From OCI
 
 ```bash
-helm install portfolio-tracker oci://ghcr.io/harish2k01/helm-charts/portfolio-tracker --version 0.1.0
+helm install portfolio-tracker oci://ghcr.io/harish2k01/helm-charts/portfolio-tracker --version 0.7.0
 ```
 
 ## Production Secrets
@@ -82,7 +82,7 @@ httpRoute:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of application replicas. |
 | `image.repository` | string | `ghcr.io/harish2k01/portfolio-tracker` | Portfolio Tracker image repository. |
-| `image.tag` | string | `0.1.0` | Semantic application release to deploy. |
+| `image.tag` | string | `0.7.0` | Semantic application release to deploy. |
 | `service.port` | int | `3000` | Kubernetes Service port. |
 | `ingress.enabled` | bool | `false` | Create an Ingress resource. |
 | `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute. |

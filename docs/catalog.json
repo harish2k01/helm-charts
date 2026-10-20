@@ -139,8 +139,8 @@
       "name": "Portfolio Tracker",
       "slug": "portfolio-tracker",
       "category": "Finance",
-      "version": "0.1.0",
-      "appVersion": "0.1.0",
+      "version": "0.2.0",
+      "appVersion": "0.7.0",
       "description": "Deploys the self-hosted Portfolio Tracker with PostgreSQL",
       "icon": null
     },
