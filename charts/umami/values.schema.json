@@ -28,7 +28,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this for repeatable installs.",
-          "default": "3.1.0"
+          "default": "3.4.0"
         }
       }
     },
@@ -461,6 +461,15 @@
           "description": "Umami CPU and memory requests and limits.",
           "additionalProperties": true,
           "properties": {}
+        },
+        "extraEnv": {
+          "type": "array",
+          "description": "Kubernetes EnvVar entries, including Secret-backed optional runtime credentials.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
         }
       }
     },
@@ -493,6 +502,20 @@
       "description": "Affinity rules for Umami pods.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup budget for automatic migrations before liveness begins.",
+      "additionalProperties": true,
+      "default": {
+        "httpGet": {
+          "path": "/api/heartbeat",
+          "port": "http"
+        },
+        "periodSeconds": 10,
+        "timeoutSeconds": 5,
+        "failureThreshold": 120
+      }
     }
   }
 }

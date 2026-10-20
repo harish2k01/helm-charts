@@ -109,6 +109,40 @@ umami:
   env:
     PORT: "3000"
     DISABLE_TELEMETRY: "1"
+    # Optional runtime settings; uncomment only the behavior you want to change.
+    # MCP_ENABLED: "1" # Enables the API-key-authenticated /mcp endpoint.
+    # DISABLE_LOGIN: "1" # Disables account sign-in.
+    # DISABLE_UI: "1" # Collector-only deployment.
+    # DISABLE_UPDATES: "1" # Hide upstream update checks.
+    # DISABLE_BOT_CHECK: "1" # Include detected bots in collected events.
+    # CLIENT_IP_HEADER: "X-Forwarded-For" # Trust only headers set by your proxy.
+    # IGNORE_IP: "127.0.0.1" # Comma-separated addresses excluded from tracking.
+    # REMOVE_TRAILING_SLASH: "1"
+    # CORS_MAX_AGE: "86400"
+    # ALLOWED_FRAME_URLS: "https://dashboard.example.com"
+    # PRIVATE_MODE: "1" # Enforce upstream private collection behavior.
+    # SKIP_LOCATION_HEADERS: "1" # Disable hosting-provider location headers.
+    # SALT_ROTATION: "month"
+    # USE_UUIDV7: "1"
+    # LOG_QUERY: "1" # SQL logging may expose analytics data.
+    # GEOLITE_DB_PATH: "/geo/GeoLite2-City.mmdb" # Mount with extraVolumes.
+    # FAVICON_URL: "https://icons.example.com/{domain}"
+    # LINKS_URL: "https://links.example.com"
+    # PIXELS_URL: "https://pixels.example.com"
+    # COLLECT_API_ENDPOINT: "https://collector.example.com/api/send"
+    # SKIP_DB_CHECK: "1" # Advanced: do not skip database checks during upgrades.
+    # SKIP_DB_MIGRATION: "1" # Only if migrations are managed separately.
+
+  # Kubernetes EnvVar entries, especially Secret references for sensitive keys.
+  # Use this for TWO_FACTOR_ENCRYPTION_KEY, REDIS_URL, CLICKHOUSE_URL,
+  # DATABASE_REPLICA_URL, DIRECT_DATABASE_URL, KAFKA_URL or MAXMIND_LICENSE_KEY.
+  # DATABASE_URL and APP_SECRET stay managed by database/secrets settings above.
+  extraEnv: []
+  # - name: TWO_FACTOR_ENCRYPTION_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: umami-2fa
+  #       key: encryption-key
 
   # Additional envFrom entries for ConfigMaps or Secrets managed outside the chart.
   envFrom: []
@@ -118,6 +152,14 @@ umami:
   extraVolumeMounts: []
 
   resources: {}
+
+startupProbe:
+  httpGet:
+    path: /api/heartbeat
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 120
 
 livenessProbe:
   httpGet:

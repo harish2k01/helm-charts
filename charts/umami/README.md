@@ -16,7 +16,7 @@ helm install umami harish2k01/umami
 ## Install From OCI
 
 ```bash
-helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.1.0
+helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.2.0
 ```
 
 ## Database Configuration
@@ -110,7 +110,7 @@ httpRoute:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Umami replicas. |
 | `image.repository` | string | `ghcr.io/umami-software/umami` | Umami container image repository. |
-| `image.tag` | string | `3.1.0` | Umami container image tag. |
+| `image.tag` | string | `3.4.0` | Umami container image tag. |
 | `image.pullPolicy` | string | `IfNotPresent` | Container image pull policy. |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type. |
 | `service.port` | int | `3000` | Service port. |
@@ -137,3 +137,21 @@ httpRoute:
 | `nodeSelector` | object | `{}` | Umami pod node selector. |
 | `tolerations` | list | `[]` | Umami pod tolerations. |
 | `affinity` | object | `{}` | Umami pod affinity rules. |
+
+## Optional runtime configuration
+
+`umami.env` contains commented examples for collection, privacy, proxy, framing and geo settings. Use `umami.extraEnv` for individual Secret references or `umami.envFrom` for a complete Secret/ConfigMap. `DATABASE_URL` and `APP_SECRET` remain controlled by the database and Secret sections.
+
+```yaml
+umami:
+  env:
+    MCP_ENABLED: "1"
+  extraEnv:
+    - name: TWO_FACTOR_ENCRYPTION_KEY
+      valueFrom:
+        secretKeyRef:
+          name: umami-2fa
+          key: encryption-key
+```
+
+The 2FA key must be64 hexadecimal characters and stable across pod replacements. MCP requires an Umami API key. `startupProbe` defaults to a20-minute migration/startup budget and may be customized as a Kubernetes probe. Build-time frontend options require a custom image. See [CHANGELOG.md](CHANGELOG.md) for release and migration details.

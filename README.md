@@ -96,7 +96,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`syncthing`](charts/syncthing) | `0.1.0` | `2.1.0` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
 | [`tailscale`](charts/tailscale) | `0.1.2` | `v1.96.5` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
-| [`umami`](charts/umami) | `0.1.0` | `3.1.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
+| [`umami`](charts/umami) | `0.2.0` | `3.4.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.1.2` | `2.2.1-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
 | [`vaultwarden`](charts/vaultwarden) | `0.1.1` | `1.37.1` | Security | Deploys Vaultwarden password management on Kubernetes. |
 
