@@ -14,7 +14,11 @@
       "matchManagers": [
         "helm-values"
       ],
-      "automerge": false
+      "automerge": false,
+      "prBodyNotes": [
+        "Image versions alone are not a complete chart release. Compatibility notes belong in the chart CHANGELOG.md; runtime values, schema defaults, appVersion, image metadata, chart version and generated catalog are reviewed together.",
+        "Container-wrapper changes and all intervening app releases are reviewed for new/removed runtime configuration, persistence and migration changes before merge."
+      ]
     },
     {
       "description": "Do not update embedded database images managed by application chart compatibility.",
@@ -24,6 +28,328 @@
         "mariadb"
       ],
       "enabled": false
+    },
+    {
+      "description": "Exclude historical Ubuntu-style qBittorrent tags misclassified as application upgrades; reassess this ceiling for a genuine future v10.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/qbittorrent"
+      ],
+      "versioning": "semver",
+      "allowedVersions": "/^[4-9]\\.[0-9]+\\.[0-9]+$/"
+    },
+    {
+      "description": "Redis and InfluxDB upgrades need app/server and persisted-format compatibility review.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "redis",
+        "influxdb"
+      ],
+      "automerge": false,
+      "prBodyNotes": [
+        "This is a database/cache dependency update. Upstream application support, the exact server version, persistence migration, backups and rollback constraints must be verified before it is considered merge-ready."
+      ]
+    },
+    {
+      "description": "Link adguard-home image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "adguard/adguardhome"
+      ],
+      "sourceUrl": "https://github.com/AdguardTeam/AdGuardHome",
+      "changelogUrl": "https://github.com/AdguardTeam/AdGuardHome/releases"
+    },
+    {
+      "description": "Link bazarr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/bazarr"
+      ],
+      "sourceUrl": "https://github.com/morpheus65535/bazarr",
+      "changelogUrl": "https://github.com/morpheus65535/bazarr/releases"
+    },
+    {
+      "description": "Link bentopdf image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/alam00000/bentopdf-simple"
+      ],
+      "sourceUrl": "https://github.com/alam00000/BentoPDF",
+      "changelogUrl": "https://github.com/alam00000/BentoPDF/releases"
+    },
+    {
+      "description": "Link cloudflared image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "cloudflare/cloudflared"
+      ],
+      "sourceUrl": "https://github.com/cloudflare/cloudflared",
+      "changelogUrl": "https://github.com/cloudflare/cloudflared/releases"
+    },
+    {
+      "description": "Link feishin image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/jeffvli/feishin"
+      ],
+      "sourceUrl": "https://github.com/jeffvli/feishin",
+      "changelogUrl": "https://github.com/jeffvli/feishin/releases"
+    },
+    {
+      "description": "Link flaresolverr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/flaresolverr/flaresolverr"
+      ],
+      "sourceUrl": "https://github.com/FlareSolverr/FlareSolverr",
+      "changelogUrl": "https://github.com/FlareSolverr/FlareSolverr/releases"
+    },
+    {
+      "description": "Link ghost image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghost"
+      ],
+      "sourceUrl": "https://github.com/TryGhost/Ghost",
+      "changelogUrl": "https://github.com/TryGhost/Ghost/releases"
+    },
+    {
+      "description": "Link homepage image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/gethomepage/homepage"
+      ],
+      "sourceUrl": "https://github.com/gethomepage/homepage",
+      "changelogUrl": "https://github.com/gethomepage/homepage/releases"
+    },
+    {
+      "description": "Link jellyfin image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/jellyfin"
+      ],
+      "sourceUrl": "https://github.com/jellyfin/jellyfin",
+      "changelogUrl": "https://github.com/jellyfin/jellyfin/releases"
+    },
+    {
+      "description": "Link k8s-debug-pod image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/harish2k01/k8s-debug-pod"
+      ],
+      "sourceUrl": "https://github.com/harish2k01/k8s-debug-pod",
+      "changelogUrl": "https://github.com/harish2k01/k8s-debug-pod/releases"
+    },
+    {
+      "description": "Link navidrome image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "deluan/navidrome"
+      ],
+      "sourceUrl": "https://github.com/navidrome/navidrome",
+      "changelogUrl": "https://github.com/navidrome/navidrome/releases"
+    },
+    {
+      "description": "Link owncloud image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "owncloud/server"
+      ],
+      "sourceUrl": "https://github.com/owncloud/core",
+      "changelogUrl": "https://github.com/owncloud/core/releases"
+    },
+    {
+      "description": "Link pocket-id image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/pocket-id/pocket-id"
+      ],
+      "sourceUrl": "https://github.com/pocket-id/pocket-id",
+      "changelogUrl": "https://github.com/pocket-id/pocket-id/releases"
+    },
+    {
+      "description": "Link portfolio-tracker image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/harish2k01/portfolio-tracker"
+      ],
+      "sourceUrl": "https://github.com/harish2k01/portfolio-tracker",
+      "changelogUrl": "https://github.com/harish2k01/portfolio-tracker/releases"
+    },
+    {
+      "description": "Link prowlarr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/prowlarr"
+      ],
+      "sourceUrl": "https://github.com/Prowlarr/Prowlarr",
+      "changelogUrl": "https://github.com/Prowlarr/Prowlarr/releases"
+    },
+    {
+      "description": "Link pve-exporter image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "prompve/prometheus-pve-exporter"
+      ],
+      "sourceUrl": "https://github.com/prometheus-pve/prometheus-pve-exporter",
+      "changelogUrl": "https://github.com/prometheus-pve/prometheus-pve-exporter/releases"
+    },
+    {
+      "description": "Link qbittorrent image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/qbittorrent"
+      ],
+      "sourceUrl": "https://github.com/qbittorrent/qBittorrent",
+      "changelogUrl": "https://github.com/qbittorrent/qBittorrent/releases"
+    },
+    {
+      "description": "Link radarr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/radarr"
+      ],
+      "sourceUrl": "https://github.com/Radarr/Radarr",
+      "changelogUrl": "https://github.com/Radarr/Radarr/releases"
+    },
+    {
+      "description": "Link seerr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/seerr-team/seerr"
+      ],
+      "sourceUrl": "https://github.com/seerr-team/seerr",
+      "changelogUrl": "https://github.com/seerr-team/seerr/releases"
+    },
+    {
+      "description": "Link sonarr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/sonarr"
+      ],
+      "sourceUrl": "https://github.com/Sonarr/Sonarr",
+      "changelogUrl": "https://github.com/Sonarr/Sonarr/releases"
+    },
+    {
+      "description": "Link speedtest-tracker image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/speedtest-tracker"
+      ],
+      "sourceUrl": "https://github.com/alexjustesen/speedtest-tracker",
+      "changelogUrl": "https://github.com/alexjustesen/speedtest-tracker/releases"
+    },
+    {
+      "description": "Link syncthing image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "syncthing/syncthing"
+      ],
+      "sourceUrl": "https://github.com/syncthing/syncthing",
+      "changelogUrl": "https://github.com/syncthing/syncthing/releases"
+    },
+    {
+      "description": "Link tailscale image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "tailscale/tailscale"
+      ],
+      "sourceUrl": "https://github.com/tailscale/tailscale",
+      "changelogUrl": "https://github.com/tailscale/tailscale/releases"
+    },
+    {
+      "description": "Link umami image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/umami-software/umami"
+      ],
+      "sourceUrl": "https://github.com/umami-software/umami",
+      "changelogUrl": "https://github.com/umami-software/umami/releases"
+    },
+    {
+      "description": "Link uptime-kuma image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "louislam/uptime-kuma"
+      ],
+      "sourceUrl": "https://github.com/louislam/uptime-kuma",
+      "changelogUrl": "https://github.com/louislam/uptime-kuma/releases"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "redis"
+      ],
+      "sourceUrl": "https://github.com/redis/redis",
+      "changelogUrl": "https://github.com/redis/redis/releases"
+    },
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "influxdb"
+      ],
+      "sourceUrl": "https://github.com/influxdata/influxdb",
+      "changelogUrl": "https://github.com/influxdata/influxdb/releases"
     }
-  ]
+  ],
+  "automerge": false,
+  "ignoreUnstable": true
 }
