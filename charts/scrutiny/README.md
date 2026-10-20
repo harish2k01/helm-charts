@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.3
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.4
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -155,3 +155,11 @@ The Deployment now defaults to `deploymentStrategy.type: Recreate` so old and ne
 Sources reviewed: [2.9.0 release notes](https://github.com/influxdata/influxdb/releases/tag/v2.9.0), [2.9.1 release notes](https://github.com/influxdata/influxdb/releases/tag/v2.9.1), [2.8.0 to 2.9.1 source comparison](https://github.com/influxdata/influxdb/compare/v2.8.0...v2.9.1), [token storage compatibility](https://github.com/influxdata/influxdb/blob/v2.9.1/authorization/storage.go), [container entrypoint](https://github.com/influxdata/influxdata-docker/blob/master/influxdb/2.9/entrypoint.sh), and [official image tags](https://github.com/docker-library/official-images/blob/master/library/influxdb).
 
 Helm rendering verifies chart wiring; it does not validate a migration of your production database. Test a restored backup before production rollout.
+
+## BusyBox init image upgrade (0.2.4)
+
+The init image is pinned to BusyBox 1.38.0 (previously 1.36). [Upstream release notes](https://busybox.net/) explicitly label 1.38.0 **unstable**; review this release status before production use. [Official image metadata](https://github.com/docker-library/official-images/blob/master/library/busybox) confirms the version and architectures. This update does not change the application image beyond the prerequisite app/dependency PR.
+
+Reviewed all intervening 1.37 and 1.38 release notes and the init script: it uses only sh -c, test -f and plain cp. Shell changes include stricter unknown options, heredoc fixes and removal of the nonstandard chdir builtin; none is used here. The cp -aT symlink fix does not affect plain file copy. Existing persisted scrutiny.yaml is intentionally preserved.
+
+Merge InfluxDB PR #20 before BusyBox PR #19. PR #19 includes both prerequisites and uses distinct chart versions to avoid publishing two different packages under the same version. Its GitHub Actions smoke job runs both charts' actual rendered init scripts in isolated Linux containers, including copy/preserve-existing-file behavior and both forwarding keys. Helm rendering alone does not prove shell behavior; check that job before merging. Existing production data and nodes are not touched by that smoke test.

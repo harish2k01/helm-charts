@@ -1,0 +1,32 @@
+name: BusyBox Init Smoke
+
+on:
+  pull_request:
+    paths:
+      - charts/scrutiny/**
+      - charts/tailscale/**
+      - scripts/smoke-busybox.mjs
+      - .github/workflows/busybox-smoke.yaml
+  push:
+    branches: [main]
+    paths:
+      - charts/scrutiny/**
+      - charts/tailscale/**
+      - scripts/smoke-busybox.mjs
+      - .github/workflows/busybox-smoke.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  init-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: azure/setup-helm@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+      - name: Exercise rendered init scripts in disposable Linux containers
+        run: node scripts/smoke-busybox.mjs

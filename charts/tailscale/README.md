@@ -20,7 +20,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.3
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.4
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -140,3 +140,11 @@ The intervening client and container releases include routing, DNS, security, co
 The chart keeps PVC-backed state and explicitly renders an empty `TS_KUBE_SECRET`, which the target image still supports as disabling Kubernetes Secret state storage. Existing auth, routing, health (`/healthz`), metrics, and kernel-networking settings remain supported. No operator CRDs are installed by this chart; upstream operator-only features need the separate Tailscale operator. For custom Serve configurations, review the target release's interface-binding behavior and use `tailscale.extraEnv` for supported optional container variables.
 
 Sources: [client/container changelog](https://tailscale.com/changelog), [complete source comparison](https://github.com/tailscale/tailscale/compare/v1.96.5...v1.104.1), and [container environment parsing](https://github.com/tailscale/tailscale/blob/v1.104.1/cmd/containerboot/settings.go).
+
+## BusyBox init image upgrade (0.1.4)
+
+The init image is pinned to BusyBox 1.38.0 (previously 1.37). [Upstream release notes](https://busybox.net/) explicitly label 1.38.0 **unstable**; review this release status before production use. [Official image metadata](https://github.com/docker-library/official-images/blob/master/library/busybox) confirms the version and architectures. This update does not change the application image beyond the prerequisite app/dependency PR.
+
+Reviewed all 1.38 release notes and the init script: it uses sh -ec and sysctl -w for the existing IPv4/IPv6 forwarding keys. No new environment variable or sysctl key is required. The init container retains its existing privilege and enable/disable controls. New ash restrictions do not affect these commands.
+
+Merge Tailscale PR #47 before BusyBox PR #19. PR #19 includes both prerequisites and uses distinct chart versions to avoid publishing two different packages under the same version. Its GitHub Actions smoke job runs both charts' actual rendered init scripts in isolated Linux containers, including copy/preserve-existing-file behavior and both forwarding keys. Helm rendering alone does not prove shell behavior; check that job before merging. Existing production data and nodes are not touched by that smoke test.

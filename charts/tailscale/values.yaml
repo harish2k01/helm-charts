@@ -32,7 +32,8 @@ sysctl:
   enabled: true
   image:
     repository: busybox
-    tag: "1.38"
+    # Upstream labels 1.38.0 unstable; read upgrade notes before production use.
+    tag: "1.38.0"
     pullPolicy: IfNotPresent
   securityContext:
     privileged: true
