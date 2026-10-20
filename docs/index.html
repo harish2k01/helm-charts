@@ -1,1473 +1,256 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Harish's Helm Charts</title>
-    <meta name="theme-color" content="#107f7d">
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23107f7d'/%3E%3Cpath d='M16 18h8v11h16V18h8v28h-8V35H24v11h-8V18Z' fill='white'/%3E%3Cpath d='M46 14l5 5-5 5-5-5 5-5ZM18 40l5 5-5 5-5-5 5-5Z' fill='%23e1b45b'/%3E%3C/svg%3E"
-    >
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Helm Charts for Kubernetes Homelab | Harish</title>
     <meta
       name="description"
-      content="A Helm chart catalog for self-hosted Kubernetes applications, published through GitHub Pages and GHCR OCI."
-    >
-    <meta property="og:title" content="Harish's Helm Charts">
+      content="Helm charts for self-hosted Kubernetes homelab applications, maintained by Harish. Browse the catalog and install from the Helm repository or GHCR OCI."
+    />
+    <meta name="theme-color" content="#172442" />
+    <meta
+      property="og:title"
+      content="Helm Charts for Kubernetes Homelab | Harish"
+    />
     <meta
       property="og:description"
-      content="Reusable signed Helm charts for self-hosted Kubernetes apps, published as a Helm repository and GHCR OCI charts."
-    >
-    <meta property="og:type" content="website">
-    <script>
-      (() => {
-        try {
-          const theme = localStorage.getItem("theme");
-          if (theme === "dark" || theme === "light") {
-            document.documentElement.dataset.theme = theme;
-          }
-        } catch {
-          document.documentElement.dataset.theme = "";
-        }
-      })();
-    </script>
-    <script defer src="https://umami.harish2k01.xyz/script.js" data-website-id="6c998a68-e6a9-4cbf-913a-369f9fc27f96"></script>
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #f6f8f5;
-        --surface: #ffffff;
-        --surface-2: #f0f5f1;
-        --ink: #17201b;
-        --muted: #66736b;
-        --line: #dce5de;
-        --teal: #107f7d;
-        --teal-dark: #0b5e5c;
-        --coral: #cf5c45;
-        --gold: #c48920;
-        --green: #2f8c5d;
-        --code: #111816;
-        --code-line: #26322e;
-        --code-text: #e9f2ed;
-        --code-muted: #9eb1a7;
-        --shadow: 0 24px 70px rgba(31, 47, 40, 0.13);
-        --soft-shadow: 0 16px 36px rgba(31, 47, 40, 0.08);
-        --body-top: linear-gradient(180deg, #eaf4ef 0, rgba(234, 244, 239, 0) 360px);
-        --body-ambient: linear-gradient(135deg, rgba(16, 127, 125, 0.08), rgba(207, 92, 69, 0.06) 44%, rgba(196, 137, 32, 0.08));
-        --header-bg: rgba(255, 255, 255, 0.78);
-        --header-border: rgba(220, 229, 222, 0.8);
-        --inline-code-bg: #edf2ee;
-        --trust-bg: rgba(255, 255, 255, 0.72);
-        --trust-border: rgba(220, 229, 222, 0.95);
-        --panel-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.78));
-        --flow-bg: #fbfdfb;
-        --version-border: rgba(47, 140, 93, 0.25);
-        --version-bg: rgba(47, 140, 93, 0.08);
-        --version-text: #256d4b;
-        --card-hover-border: rgba(16, 127, 125, 0.32);
-      }
-
-      :root[data-theme="dark"] {
-        color-scheme: dark;
-        --bg: #0d1412;
-        --surface: #141f1c;
-        --surface-2: #1b2925;
-        --ink: #eef7f1;
-        --muted: #a8b8ae;
-        --line: #2b3d37;
-        --teal: #4dbdb9;
-        --teal-dark: #7bd7d2;
-        --coral: #e47c66;
-        --gold: #e1b45b;
-        --green: #63c28e;
-        --code: #080d0c;
-        --code-line: #24352f;
-        --code-text: #e8f3ee;
-        --code-muted: #8fa79b;
-        --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
-        --soft-shadow: 0 16px 36px rgba(0, 0, 0, 0.26);
-        --body-top: linear-gradient(180deg, rgba(37, 80, 72, 0.44) 0, rgba(13, 20, 18, 0) 360px);
-        --body-ambient: linear-gradient(135deg, rgba(77, 189, 185, 0.12), rgba(228, 124, 102, 0.08) 44%, rgba(225, 180, 91, 0.1));
-        --header-bg: rgba(20, 31, 28, 0.78);
-        --header-border: rgba(68, 91, 82, 0.7);
-        --inline-code-bg: #1b2925;
-        --trust-bg: rgba(20, 31, 28, 0.72);
-        --trust-border: rgba(68, 91, 82, 0.8);
-        --panel-gradient: linear-gradient(180deg, rgba(20, 31, 28, 0.96), rgba(20, 31, 28, 0.78));
-        --flow-bg: #101a17;
-        --version-border: rgba(99, 194, 142, 0.32);
-        --version-bg: rgba(99, 194, 142, 0.12);
-        --version-text: #9be3bb;
-        --card-hover-border: rgba(77, 189, 185, 0.45);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          color-scheme: dark;
-          --bg: #0d1412;
-          --surface: #141f1c;
-          --surface-2: #1b2925;
-          --ink: #eef7f1;
-          --muted: #a8b8ae;
-          --line: #2b3d37;
-          --teal: #4dbdb9;
-          --teal-dark: #7bd7d2;
-          --coral: #e47c66;
-          --gold: #e1b45b;
-          --green: #63c28e;
-          --code: #080d0c;
-          --code-line: #24352f;
-          --code-text: #e8f3ee;
-          --code-muted: #8fa79b;
-          --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
-          --soft-shadow: 0 16px 36px rgba(0, 0, 0, 0.26);
-          --body-top: linear-gradient(180deg, rgba(37, 80, 72, 0.44) 0, rgba(13, 20, 18, 0) 360px);
-          --body-ambient: linear-gradient(135deg, rgba(77, 189, 185, 0.12), rgba(228, 124, 102, 0.08) 44%, rgba(225, 180, 91, 0.1));
-          --header-bg: rgba(20, 31, 28, 0.78);
-          --header-border: rgba(68, 91, 82, 0.7);
-          --inline-code-bg: #1b2925;
-          --trust-bg: rgba(20, 31, 28, 0.72);
-          --trust-border: rgba(68, 91, 82, 0.8);
-          --panel-gradient: linear-gradient(180deg, rgba(20, 31, 28, 0.96), rgba(20, 31, 28, 0.78));
-          --flow-bg: #101a17;
-          --version-border: rgba(99, 194, 142, 0.32);
-          --version-bg: rgba(99, 194, 142, 0.12);
-          --version-text: #9be3bb;
-          --card-hover-border: rgba(77, 189, 185, 0.45);
-        }
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        font-family:
-          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
-        color: var(--ink);
-        background:
-          var(--body-top),
-          var(--body-ambient),
-          var(--bg);
-      }
-
-      a {
-        color: inherit;
-      }
-
-      code {
-        padding: 2px 6px;
-        border-radius: 6px;
-        background: var(--inline-code-bg);
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-        font-size: 0.94em;
-      }
-
-      .shell {
-        width: min(1180px, calc(100% - 36px));
-        margin: 0 auto;
-      }
-
-      header {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        margin: 14px 0 10px;
-        padding: 12px 14px;
-        border: 1px solid var(--header-border);
-        border-radius: 8px;
-        background: var(--header-bg);
-        box-shadow: 0 10px 30px rgba(31, 47, 40, 0.08);
-        backdrop-filter: blur(18px);
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 800;
-        text-decoration: none;
-      }
-
-      .mark {
-        display: grid;
-        width: 38px;
-        height: 38px;
-        place-items: center;
-        border: 1px solid rgba(16, 127, 125, 0.25);
-        border-radius: 8px;
-        color: #fff;
-        background: linear-gradient(135deg, var(--teal), var(--green));
-        box-shadow: 0 10px 26px rgba(16, 127, 125, 0.14);
-      }
-
-      nav {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 18px;
-        color: var(--muted);
-        font-size: 14px;
-        font-weight: 700;
-      }
-
-      nav a {
-        text-decoration: none;
-      }
-
-      nav a:hover {
-        color: var(--ink);
-      }
-
-      .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .theme-toggle {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 36px;
-        padding: 0 11px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--ink);
-        background: var(--surface);
-        cursor: pointer;
-        font: inherit;
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .theme-toggle:hover {
-        border-color: var(--card-hover-border);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .theme-swatch {
-        width: 14px;
-        height: 14px;
-        border: 2px solid currentColor;
-        border-radius: 50%;
-        background: linear-gradient(90deg, currentColor 50%, transparent 50%);
-      }
-
-      .hero {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
-        gap: 52px;
-        align-items: center;
-        padding: 72px 0 44px;
-      }
-
-      .eyebrow {
-        width: fit-content;
-        margin: 0 0 18px;
-        padding: 7px 11px;
-        border: 1px solid rgba(16, 127, 125, 0.22);
-        border-radius: 999px;
-        color: var(--teal-dark);
-        background: rgba(16, 127, 125, 0.08);
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      h1 {
-        max-width: 780px;
-        margin: 0;
-        font-size: clamp(44px, 6vw, 78px);
-        line-height: 1;
-        letter-spacing: 0;
-      }
-
-      .lead {
-        max-width: 720px;
-        margin: 22px 0 0;
-        color: var(--muted);
-        font-size: 19px;
-        line-height: 1.65;
-      }
-
-      .trust-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      .trust-item {
-        display: inline-flex;
-        align-items: center;
-        min-height: 34px;
-        padding: 0 11px;
-        border: 1px solid var(--trust-border);
-        border-radius: 999px;
-        color: var(--muted);
-        background: var(--trust-bg);
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .badges {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin: 24px 0 0;
-      }
-
-      .badges img {
-        display: block;
-        height: 20px;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 28px;
-      }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 44px;
-        padding: 0 16px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 800;
-        background: var(--surface);
-      }
-
-      .button.primary {
-        border-color: var(--teal);
-        color: #fff;
-        background: var(--teal);
-        box-shadow: 0 14px 34px rgba(16, 127, 125, 0.2);
-      }
-
-      .button:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .release-panel {
-        position: relative;
-        overflow: hidden;
-        padding: 24px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background:
-          var(--panel-gradient),
-          var(--surface);
-        box-shadow: var(--shadow);
-      }
-
-      .release-panel::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--teal), var(--coral), var(--gold));
-        content: "";
-      }
-
-      .release-panel h2 {
-        margin: 0;
-        font-size: 20px;
-        letter-spacing: 0;
-      }
-
-      .release-panel p {
-        margin: 8px 0 0;
-        color: var(--muted);
-        line-height: 1.55;
-      }
-
-      .flow {
-        display: grid;
-        gap: 10px;
-        margin-top: 22px;
-      }
-
-      .flow-step {
-        display: grid;
-        grid-template-columns: 38px 1fr auto;
-        gap: 12px;
-        align-items: center;
-        padding: 12px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--flow-bg);
-        box-shadow: 0 8px 22px rgba(31, 47, 40, 0.04);
-      }
-
-      .step-icon {
-        display: grid;
-        width: 38px;
-        height: 38px;
-        place-items: center;
-        border-radius: 8px;
-        color: #fff;
-        font-weight: 900;
-        background: var(--teal);
-      }
-
-      .flow-step:nth-child(2) .step-icon {
-        background: var(--coral);
-      }
-
-      .flow-step:nth-child(3) .step-icon {
-        background: var(--gold);
-      }
-
-      .flow-title {
-        display: block;
-        font-weight: 850;
-      }
-
-      .flow-detail {
-        display: block;
-        margin-top: 2px;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .flow-count {
-        color: var(--teal-dark);
-        font-weight: 850;
-      }
-
-      .install {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-        padding: 46px 0 56px;
-      }
-
-      .terminal {
-        overflow: hidden;
-        border: 1px solid var(--code-line);
-        border-radius: 8px;
-        background: var(--code);
-        box-shadow: 0 20px 60px rgba(17, 24, 22, 0.16);
-      }
-
-      .terminal-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        min-height: 44px;
-        padding: 0 16px;
-        border-bottom: 1px solid var(--code-line);
-        color: #fff;
-        font-size: 13px;
-        font-weight: 850;
-        background: #17211e;
-      }
-
-      .terminal-title span:last-child {
-        color: var(--code-muted);
-        font-weight: 700;
-      }
-
-      pre {
-        margin: 0;
-        padding: 20px;
-        overflow-x: auto;
-        color: var(--code-text);
-        font: 14px/1.8 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      }
-
-      .comment {
-        color: var(--code-muted);
-      }
-
-      .overview {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-        padding: 0 0 64px;
-      }
-
-      .stat {
-        position: relative;
-        overflow: hidden;
-        padding: 22px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .stat::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: 3px;
-        background: var(--teal);
-        content: "";
-      }
-
-      .stat:nth-child(2)::before {
-        background: var(--coral);
-      }
-
-      .stat:nth-child(3)::before {
-        background: var(--gold);
-      }
-
-      .stat strong {
-        display: block;
-        font-size: 34px;
-        line-height: 1;
-      }
-
-      .stat span {
-        display: block;
-        margin-top: 10px;
-        color: var(--muted);
-        line-height: 1.5;
-      }
-
-      .section {
-        padding: 66px 0;
-        border-top: 1px solid var(--line);
-      }
-
-      .section-head {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 22px;
-      }
-
-      .section-head h2 {
-        margin: 0;
-        font-size: 34px;
-        letter-spacing: 0;
-      }
-
-      .section-head p {
-        max-width: 680px;
-        margin: 8px 0 0;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-
-      .chart-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .chart-card {
-        display: grid;
-        min-height: 220px;
-        padding: 18px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface);
-        transition:
-          border-color 160ms ease,
-          box-shadow 160ms ease,
-          transform 160ms ease;
-      }
-
-      .chart-card:hover {
-        transform: translateY(-2px);
-        border-color: var(--card-hover-border);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .chart-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      .chart-card h3 {
-        margin: 0;
-        font-size: 21px;
-        letter-spacing: 0;
-      }
-
-      .version {
-        flex: 0 0 auto;
-        padding: 5px 8px;
-        border: 1px solid var(--version-border);
-        border-radius: 999px;
-        color: var(--version-text);
-        background: var(--version-bg);
-        font-size: 12px;
-        font-weight: 850;
-      }
-
-      .chart-card p {
-        margin: 12px 0 0;
-        color: var(--muted);
-        line-height: 1.55;
-      }
-
-      .chart-meta {
-        display: flex;
-        flex-wrap: wrap;
-        align-self: end;
-        gap: 8px;
-        margin-top: 18px;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        min-height: 28px;
-        padding: 0 9px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--muted);
-        background: var(--surface-2);
-        font-size: 12px;
-        font-weight: 800;
-      }
-
-      .card-link {
-        align-self: end;
-        width: fit-content;
-        margin-top: 18px;
-        color: var(--teal-dark);
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 850;
-      }
-
-      .card-link:hover {
-        text-decoration: underline;
-      }
-
-      .recipes {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      .recipe {
-        padding: 20px;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--surface);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .recipe h3 {
-        margin: 0 0 8px;
-        font-size: 20px;
-      }
-
-      .recipe p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-
-      footer {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px 28px;
-        padding: 32px 0 44px;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      .footer-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        min-width: 0;
-      }
-
-      .footer-item span {
-        flex: 0 0 auto;
-      }
-
-      footer code {
-        min-width: 0;
-        overflow-wrap: anywhere;
-      }
-
-      @media (max-width: 960px) {
-        .hero,
-        .install,
-        .recipes {
-          grid-template-columns: 1fr;
-        }
-
-        .chart-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 700px) {
-        .shell {
-          width: min(100% - 28px, 1180px);
-        }
-
-        header,
-        .section-head {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .header-actions {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .hero {
-          padding-top: 24px;
-        }
-
-        h1 {
-          font-size: 42px;
-        }
-
-        .overview,
-        .chart-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .flow-step {
-          grid-template-columns: 38px 1fr;
-        }
-
-        .flow-count {
-          grid-column: 2;
-        }
-      }
-    </style>
+      content="Reusable Helm charts for your Kubernetes homelab. Browse applications, configure values, and install through Helm or GHCR OCI."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://charts.harish2k01.in/" />
+    <link rel="canonical" href="https://charts.harish2k01.in/" />
+    <link rel="icon" type="image/svg+xml" href="./assets/homelab-mark.svg" />
+    <script src="./assets/theme-init.js"></script>
+    <link rel="stylesheet" href="./assets/catalog.css" />
+    <script src="./assets/catalog.js" defer></script>
+    <script
+      defer
+      src="https://umami.harish2k01.xyz/script.js"
+      data-website-id="6c998a68-e6a9-4cbf-913a-369f9fc27f96"
+    ></script>
   </head>
   <body>
-    <div class="shell">
-      <header>
-        <a class="brand" href="#" aria-label="Harish's Helm Charts Home">
-          <span class="mark" aria-hidden="true">HC</span>
-          <span>Harish's Helm Charts</span>
+    <a class="skip-link" href="#catalog">Skip to chart catalog</a>
+    <div class="site-shell">
+      <header class="site-header">
+        <a
+          class="brand"
+          href="./"
+          aria-label="Harish's homelab Helm charts home"
+        >
+          <img src="./assets/homelab-mark.svg" width="44" height="44" alt="" />
+          <span>Homelab Helm Charts<small>by Harish · harish2k01</small></span>
         </a>
-        <div class="header-actions">
-          <nav aria-label="Primary navigation">
-            <a href="#install">Install</a>
-            <a href="#charts">Charts</a>
-            <a href="index.yaml">index.yaml</a>
-            <a href="https://github.com/harish2k01/helm-charts">GitHub</a>
-          </nav>
-          <button class="theme-toggle" type="button" aria-pressed="false">
-            <span class="theme-swatch" aria-hidden="true"></span>
-            <span class="theme-label">Theme</span>
-          </button>
-        </div>
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Switch to dark theme"
+          title="Switch to dark theme"
+          hidden
+        >
+          <svg
+            class="sun-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
+            />
+          </svg>
+          <svg
+            class="moon-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            aria-hidden="true"
+          >
+            <path d="M20.6 13A8.6 8.6 0 0 1 11 3.4 8.6 8.6 0 1 0 20.6 13Z" />
+          </svg>
+        </button>
       </header>
-
       <main>
-        <section class="hero">
-          <div>
-            <p class="eyebrow">Helm Chart Catalog for Kubernetes</p>
-            <h1>Helm Charts for Kubernetes Homelab</h1>
-            <p class="lead">
-              Deploy production grade charts for media automation,
-              networking, monitoring, finance, operations, and homelab services. Every
-              chart is published through the classic Helm repository flow and
-              as an OCI package in GHCR with signed provenance files.
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-intro">
+            <p class="eyebrow">Self-hosted. Maintained by Harish.</p>
+            <h1 id="page-title">
+              Helm Charts for<br /><span>Kubernetes Homelab</span>
+            </h1>
+            <p class="subtitle">
+              Deploy self-hosted applications on Kubernetes with reusable,
+              configurable Helm charts. Install from the Helm repository or
+              directly from GHCR OCI.
             </p>
-            <div class="trust-row" aria-label="Repository qualities">
-              <span class="trust-item">Portable Defaults</span>
-              <span class="trust-item">Helm Repo and OCI</span>
-              <span class="trust-item">Signed Provenance</span>
-              <span class="trust-item">Versioned Releases</span>
-            </div>
-            <div class="badges" aria-label="Repository status">
-              <a href="https://artifacthub.io/packages/search?repo=kubernetes-homelab-helm-charts">
-                <img alt="Artifact Hub link" src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/kubernetes-homelab-helm-charts">
-              </a>
-              <a href="https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml">
-                <img alt="Release Charts status" src="https://github.com/harish2k01/helm-charts/actions/workflows/release.yaml/badge.svg">
-              </a>
-              <a href="https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml">
-                <img alt="Lint Charts status" src="https://github.com/harish2k01/helm-charts/actions/workflows/lint.yaml/badge.svg">
-              </a>
-            </div>
-            <div class="actions">
-              <a class="button primary" href="#install">Install a Chart</a>
-              <a class="button" href="#charts">Browse Catalog</a>
+            <div class="resource-links" aria-label="Repository resources">
+              <a
+                href="https://artifacthub.io/packages/search?repo=kubernetes-homelab-helm-charts"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Artifact Hub <span aria-hidden="true">↗</span></a
+              >
+              <a
+                href="https://github.com/harish2k01/helm-charts"
+                target="_blank"
+                rel="noopener noreferrer"
+                >GitHub <span aria-hidden="true">↗</span></a
+              >
+              <a href="./chart-signing-key.asc"
+                >Signing key <span aria-hidden="true">↓</span></a
+              >
             </div>
           </div>
-
-          <aside class="release-panel" aria-label="Release pipeline summary">
-            <h2>Published for both Helm Workflows</h2>
-            <p>
-              Releases are packaged and signed once, then made available
-              through GitHub Pages for legacy Helm installs and GHCR for
-              registry-native OCI installs.
+          <div class="terminal" aria-label="Quick start installation">
+            <div class="terminal-header">
+              <div
+                class="install-tabs"
+                role="group"
+                aria-label="Quick start installation source"
+              >
+                <button
+                  type="button"
+                  data-quick-method="helm"
+                  aria-pressed="true"
+                >
+                  Helm repository
+                </button>
+                <button
+                  type="button"
+                  data-quick-method="oci"
+                  aria-pressed="false"
+                >
+                  OCI / GHCR
+                </button>
+              </div>
+              <button
+                class="copy-button"
+                type="button"
+                data-copy-quick
+                aria-label="Copy quick start commands"
+              >
+                Copy
+              </button>
+            </div>
+            <pre><code id="quick-command">helm repo add harish2k01 \
+  https://charts.harish2k01.in
+helm repo update</code></pre>
+            <p class="terminal-caption" id="quick-caption">
+              Add the repository once, then choose a chart below.
             </p>
-            <div class="flow">
-              <div class="flow-step">
-                <span class="step-icon">1</span>
-                <span>
-                  <span class="flow-title">Package and Sign Charts</span>
-                  <span class="flow-detail">Versioned .tgz and .prov artifacts</span>
-                </span>
-                <span class="flow-count">31</span>
-              </div>
-              <div class="flow-step">
-                <span class="step-icon">2</span>
-                <span>
-                  <span class="flow-title">Publish index.yaml</span>
-                  <span class="flow-detail">Legacy Helm repo support</span>
-                </span>
-                <span class="flow-count">Pages</span>
-              </div>
-              <div class="flow-step">
-                <span class="step-icon">3</span>
-                <span>
-                  <span class="flow-title">Push OCI charts</span>
-                  <span class="flow-detail">Registry installs from GHCR</span>
-                </span>
-                <span class="flow-count">OCI</span>
-              </div>
-            </div>
-          </aside>
-        </section>
-
-        <section class="install" id="install" aria-label="Install commands">
-          <div class="terminal">
-            <div class="terminal-title">
-              <span>Legacy Helm Repository</span>
-              <span>Signed .prov</span>
-            </div>
-            <pre><span class="comment"># Add the repository</span>
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
-helm repo update
-
-<span class="comment"># Install a chart</span>
-helm install bentopdf harish2k01/bentopdf --version 0.1.3
-
-<span class="comment"># List every published version</span>
-helm search repo harish2k01 --versions</pre>
-          </div>
-
-          <div class="terminal">
-            <div class="terminal-title">
-              <span>OCI Registry</span>
-              <span>GHCR</span>
-            </div>
-            <pre><span class="comment"># Install directly from OCI</span>
-helm install bentopdf \
-  oci://ghcr.io/harish2k01/helm-charts/bentopdf \
-  --version 0.1.3
-
-<span class="comment"># Use the same values workflow</span>
-helm upgrade bentopdf \
-  oci://ghcr.io/harish2k01/helm-charts/bentopdf \
-  --version 0.1.3 -f values.yaml</pre>
           </div>
         </section>
-
-        <section class="overview" aria-label="Repository Highlights">
-          <div class="stat">
-            <strong>31</strong>
-            <span>Ready-to-use charts across media, analytics, dashboards, networking, monitoring, finance, publishing, storage, operations, and security.</span>
+        <div class="repository-notes">
+          <span>Helm repository + GHCR OCI</span><span>Configurable values</span
+          ><span>Signed chart packages</span>
+        </div>
+        <section id="catalog" class="catalog" aria-labelledby="catalog-title">
+          <div class="section-heading">
+            <h2 id="catalog-title">Chart catalog</h2>
+            <span id="chart-total" class="muted"></span>
           </div>
-          <div class="stat">
-            <strong>2</strong>
-            <span>Supported install paths: a classic Helm repository and OCI charts in GHCR.</span>
+          <div id="catalog-controls" hidden>
+            <label class="search-field"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <circle cx="10.5" cy="10.5" r="6.5" />
+                <path d="m16 16 5 5" /></svg
+              ><input
+                id="chart-search"
+                type="search"
+                placeholder="Search charts, applications, or categories…"
+                aria-label="Search charts"
+                autocomplete="off"
+            /></label>
+            <div
+              id="category-filters"
+              class="category-filters"
+              role="group"
+              aria-label="Filter charts by category"
+            ></div>
           </div>
-          <div class="stat">
-            <strong>Signed</strong>
-            <span>Current chart packages include Helm provenance files for package verification.</span>
-          </div>
-        </section>
-
-        <section class="section" id="charts">
-          <div class="section-head">
-            <div>
-              <h2>Chart Catalog</h2>
-              <p>
-                Each chart is intentionally portable: no personal domains, no
-                hard-coded namespaces, no assumed storage classes, and no
-                cluster-specific controller requirements.
-              </p>
-            </div>
-            <a class="button" href="https://github.com/harish2k01/helm-charts/tree/main/charts">Source</a>
-          </div>
-
-          <div class="chart-grid">
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>adguard-home</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v0.107.76</span>
-                <span class="pill">Network</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/adguard-home">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>bazarr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Bazarr subtitle automation on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 1.5.6</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bazarr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>bentopdf</h3>
-                  <span class="version">0.1.3</span>
-                </div>
-                <p>Deploys BentoPDF document conversion on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 2.8.4</span>
-                <span class="pill">Documents</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/bentopdf">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>cloudflared</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 2026.3.0</span>
-                <span class="pill">Network</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/cloudflared">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>feishin</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Feishin music streaming client on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 1.11.0</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/feishin">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>firefly-iii</h3>
-                  <span class="version">0.1.3</span>
-                </div>
-                <p>Deploys Firefly III with PostgreSQL for personal finance tracking.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App version-6.6.6</span>
-                <span class="pill">Finance</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/firefly-iii">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>flaresolverr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys FlareSolverr request solving for automation stacks.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v3.4.6</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/flaresolverr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>ghost</h3>
-                  <span class="version">0.1.1</span>
-                </div>
-                <p>Deploys Ghost publishing platform with persistent content storage and MySQL.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 6.39.0-alpine</span>
-                <span class="pill">Publishing</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/ghost">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>homepage</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Homepage dashboard with Kubernetes discovery support.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 1.13.1</span>
-                <span class="pill">Dashboard</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/homepage">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>jellyfin</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Jellyfin media server with library mount support.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 10.11.8</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/jellyfin">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>k8s-debug-pod</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys an Ubuntu-based Kubernetes troubleshooting pod.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 0.1.0</span>
-                <span class="pill">Operations</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/k8s-debug-pod">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>navidrome</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Navidrome music streaming with separate app data and music PVCs.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 0.61.2</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/navidrome">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>owncloud</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys ownCloud Server with persistent file storage, MariaDB, and Redis.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 10.16.2</span>
-                <span class="pill">Storage</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/owncloud">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>pocket-id</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Pocket ID passkey-based OIDC provider on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v2.7.0</span>
-                <span class="pill">Security</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/pocket-id">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>portfolio-next</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys the static Astro portfolio with digest-pinned NGINX and Gateway API routing.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v0.1.0</span>
-                <span class="pill">Publishing</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/portfolio-next">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>portfolio-tracker</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys the self-hosted Portfolio Tracker with PostgreSQL.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 0.1.0</span>
-                <span class="pill">Finance</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/portfolio-tracker">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>prowlarr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Prowlarr indexer management for media automation.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 2.3.5</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/prowlarr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>pve-exporter</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys the prometheus-pve-exporter for Proxmox VE metrics.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 3.8.2</span>
-                <span class="pill">Monitoring</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/pve-exporter">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>qbittorrent</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys qBittorrent with persistent configuration and media mounts.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 5.2.0</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/qbittorrent">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>qbittorrent-exporter</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys the martabal qBittorrent Prometheus exporter.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v2.0.1</span>
-                <span class="pill">Monitoring</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/qbittorrent-exporter">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>radarr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Radarr movie automation with reusable release values.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 6.1.1</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/radarr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>scrutiny</h3>
-                  <span class="version">0.2.2</span>
-                </div>
-                <p>Deploys Scrutiny web and API components for S.M.A.R.T. collectors.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v0.9.2-web</span>
-                <span class="pill">Monitoring</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/scrutiny">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>seerr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Seerr media request management for shared libraries.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v3.2.0</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/seerr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>sonarr</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Sonarr TV automation with PVC and ingress options.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 4.0.17</span>
-                <span class="pill">Media</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/sonarr">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>speedtest-tracker</h3>
-                  <span class="version">0.1.3</span>
-                </div>
-                <p>Deploys Speedtest Tracker for scheduled network performance checks.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 1.14.0</span>
-                <span class="pill">Monitoring</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/speedtest-tracker">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>syncthing</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Syncthing continuous file synchronization with persistent state and sync ports.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 2.1.0</span>
-                <span class="pill">Storage</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/syncthing">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>tailscale</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Tailscale as a Kubernetes subnet router and exit node.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App v1.96.5</span>
-                <span class="pill">Network</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/tailscale">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>tor-proxy</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys a Tor SOCKS proxy for workloads that need routed egress.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App latest</span>
-                <span class="pill">Network</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/tor-proxy">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>umami</h3>
-                  <span class="version">0.1.0</span>
-                </div>
-                <p>Deploys Umami privacy-focused web analytics with PostgreSQL.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 3.1.0</span>
-                <span class="pill">Analytics</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/umami">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>uptime-kuma</h3>
-                  <span class="version">0.1.2</span>
-                </div>
-                <p>Deploys Uptime Kuma for self-hosted uptime monitoring.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 2.2.1-slim</span>
-                <span class="pill">Monitoring</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/uptime-kuma">Chart docs</a>
-            </article>
-
-            <article class="chart-card">
-              <div>
-                <div class="chart-top">
-                  <h3>vaultwarden</h3>
-                  <span class="version">0.1.1</span>
-                </div>
-                <p>Deploys Vaultwarden password management on Kubernetes.</p>
-              </div>
-              <div class="chart-meta">
-                <span class="pill">App 1.37.1</span>
-                <span class="pill">Security</span>
-              </div>
-              <a class="card-link" href="https://github.com/harish2k01/helm-charts/tree/main/charts/vaultwarden">Chart docs</a>
-            </article>
-          </div>
-        </section>
-
-        <section class="section" aria-label="Usage recipes">
-          <div class="section-head">
-            <div>
-              <h2>Useful Patterns</h2>
-              <p>These charts stay small, so most customization happens through values files.</p>
-            </div>
-          </div>
-          <div class="recipes">
-            <article class="recipe">
-              <h3>Install Releases</h3>
-              <p>
-                Reuse charts with different release names, such as
-                <code>radarr</code> and <code>radarr4k</code>, while pointing
-                each release at its own values file.
-              </p>
-            </article>
-            <article class="recipe">
-              <h3>Shared Storage</h3>
-              <p>
-                Mount the same existing PVC into qBittorrent, Radarr, Sonarr,
-                and Bazarr at the same path to preserve hardlinks and atomic
-                moves.
-              </p>
-            </article>
-          </div>
+          <p id="catalog-status" class="muted" role="status" hidden>
+            Loading chart catalog…
+          </p>
+          <div id="chart-grid" class="chart-grid"></div>
+          <noscript
+            ><p>
+              Browse
+              <a href="https://github.com/harish2k01/helm-charts#chart-catalog"
+                >the chart catalog on GitHub</a
+              >
+              for chart versions, documentation, and installation instructions.
+            </p></noscript
+          >
         </section>
       </main>
-
       <footer>
-        <span class="footer-item">
-          <span>Helm Repo:</span>
-          <code>https://harish2k01.github.io/helm-charts</code>
-        </span>
-        <span class="footer-item">
-          <span>OCI Registry:</span>
-          <code>oci://ghcr.io/harish2k01/helm-charts</code>
-        </span>
-        <span class="footer-item">
-          <span>Signing Key:</span>
-          <code>https://harish2k01.github.io/helm-charts/chart-signing-key.asc</code>
-        </span>
+        <span>Helm Charts for Kubernetes Homelab</span
+        ><span
+          >Created and maintained by
+          <a href="https://github.com/harish2k01">Harish</a>.</span
+        >
       </footer>
     </div>
-    <script>
-      (() => {
-        const root = document.documentElement;
-        const toggle = document.querySelector(".theme-toggle");
-        const label = document.querySelector(".theme-label");
-        const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-        const currentTheme = () => {
-          const selected = root.dataset.theme;
-          if (selected === "dark" || selected === "light") {
-            return selected;
-          }
-          return media.matches ? "dark" : "light";
-        };
-
-        const updateToggle = () => {
-          const theme = currentTheme();
-          toggle.setAttribute("aria-pressed", String(theme === "dark"));
-          label.textContent = theme === "dark" ? "Light" : "Dark";
-        };
-
-        toggle.addEventListener("click", () => {
-          const nextTheme = currentTheme() === "dark" ? "light" : "dark";
-          root.dataset.theme = nextTheme;
-          try {
-            localStorage.setItem("theme", nextTheme);
-          } catch {
-            root.dataset.theme = nextTheme;
-          }
-          updateToggle();
-        });
-
-        if (media.addEventListener) {
-          media.addEventListener("change", updateToggle);
-        } else if (media.addListener) {
-          media.addListener(updateToggle);
-        }
-        updateToggle();
-      })();
-    </script>
+    <dialog id="chart-details" aria-labelledby="detail-title">
+      <div class="dialog-heading">
+        <div class="app-heading">
+          <div id="detail-icon" class="app-icon"></div>
+          <div>
+            <h2 id="detail-title"></h2>
+            <p id="detail-version" class="muted"></p>
+          </div>
+        </div>
+        <button
+          id="close-details"
+          class="close-button"
+          type="button"
+          aria-label="Close chart details"
+        >
+          ×
+        </button>
+      </div>
+      <p id="detail-description"></p>
+      <div
+        class="detail-tabs"
+        role="group"
+        aria-label="Chart installation source"
+      >
+        <button type="button" data-detail-method="helm" aria-pressed="true">
+          Helm repository</button
+        ><button type="button" data-detail-method="oci" aria-pressed="false">
+          OCI / GHCR
+        </button>
+      </div>
+      <div class="terminal detail-terminal">
+        <div class="detail-command-heading">
+          <span id="detail-command-label">Install from Helm repository</span
+          ><button type="button" class="copy-button" id="copy-install">
+            Copy commands
+          </button>
+        </div>
+        <pre><code id="detail-command"></code></pre>
+      </div>
+      <div class="resource-links">
+        <a id="detail-docs" target="_blank" rel="noopener noreferrer"
+          >Documentation ↗</a
+        ><a id="detail-values" target="_blank" rel="noopener noreferrer"
+          >Default values ↗</a
+        >
+      </div>
+      <p class="detail-note">
+        Review the chart documentation and values before installing into your
+        cluster.
+      </p>
+    </dialog>
+    <div id="copy-status" class="sr-only" role="status"></div>
   </body>
 </html>
