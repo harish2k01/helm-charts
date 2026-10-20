@@ -3,8 +3,8 @@ name: navidrome
 description: Deploys Navidrome music streaming server on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/navidrome.png
-version: 0.1.0
-appVersion: "0.61.2"
+version: 0.2.0
+appVersion: "0.64.2"
 home: https://www.navidrome.org
 sources:
   - https://github.com/navidrome/navidrome
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: navidrome
-      image: deluan/navidrome:0.61.2
+      image: deluan/navidrome:0.64.2
 maintainers:
   - name: harish2k01

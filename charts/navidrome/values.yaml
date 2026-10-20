@@ -15,9 +15,17 @@ podSecurityContext: {}
 securityContext: {}
 
 # Non-secret Navidrome settings. Add any other ND_* settings here.
+# Optional new settings can be supplied via this map without template changes:
+# ND_JELLYFIN_ENABLED, ND_JELLYFIN_SERVERNAME, ND_JELLYFIN_EXPOSEDPUBLICUSERS,
+# ND_JELLYFIN_MAXCONCURRENTSTREAMS, ND_JELLYFIN_AUTODISCOVERY, ND_JELLYFIN_QUICKCONNECT,
+# ND_SCANNER_ARTISTSPLITEXCEPTIONS, ND_SCANNER_IGNOREDOTFOLDERS,
+# ND_TRANSCODING_MAXCONCURRENT, ND_TRANSCODING_MAXCONCURRENTPERUSER.
 env:
   TZ: Asia/Kolkata
-  ND_SCANSCHEDULE: 1h
+  # Scanner settings use the section separator underscore.
+  ND_SCANNER_SCHEDULE: 1h
+  # Preserve the pre-0.63 default; sharing is now enabled by default upstream.
+  ND_ENABLESHARING: "false"
 
 # Main HTTP service for the Navidrome web UI.
 service:
@@ -81,6 +89,16 @@ httpRoute:
             value: /
 
 resources: {}
+
+# Allow database migrations/scans to finish before liveness starts restarting pods.
+# Increase failureThreshold for large libraries or slow persistent storage.
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 90
 
 livenessProbe:
   httpGet:

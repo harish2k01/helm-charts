@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "0.61.2"
+          "default": "0.64.2"
         },
         "pullPolicy": {
           "type": "string",
@@ -82,10 +82,19 @@
           "description": "Timezone used by the application container.",
           "default": "Asia/Kolkata"
         },
-        "ND_SCANSCHEDULE": {
+        "ND_SCANNER_SCHEDULE": {
           "type": "string",
-          "description": "Navidrome music library scan schedule.",
+          "description": "Library scan interval or cron schedule; use 0 to disable.",
           "default": "1h"
+        },
+        "ND_ENABLESHARING": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Keep public sharing disabled unless explicitly enabled.",
+          "default": "false"
         }
       }
     },
@@ -374,6 +383,11 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Startup health check; allows up to 15 minutes for database migrations before liveness begins.",
+      "additionalProperties": true
     }
   }
 }
