@@ -7,6 +7,10 @@ on:
     paths:
       - charts/**
       - docs/**
+      - scripts/build-catalog.mjs
+      - package.json
+      - package-lock.json
+      - README.md
       - .github/workflows/release.yaml
 
 permissions:
@@ -18,6 +22,9 @@ permissions:
 concurrency:
   group: github-pages
   cancel-in-progress: false
+
+env:
+  HELM_REPOSITORY_URL: https://charts.harish2k01.in
 
 jobs:
   build-and-deploy:
@@ -115,33 +122,56 @@ jobs:
             echo "HELM_SIGNING_PUBLIC_KEY=${RUNNER_TEMP}/helm-chart-signing-key.asc"
           } >> "$GITHUB_ENV"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Generate chart catalog
+        run: |
+          npm ci --ignore-scripts
+          npm run build:catalog
+
       - name: Prepare Helm repository site
         shell: bash
         run: |
           set -euo pipefail
 
-          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          REPO_URL="$HELM_REPOSITORY_URL"
+          # Retry temporary HTTP errors without hiding persistent history-restore failures.
+          CURL_OPTIONS=(-fsSL --retry 5 --retry-delay 2 --retry-max-time 120 --connect-timeout 15 --max-time 60)
 
           mkdir -p _site
           cp -R docs/. _site/
           touch _site/.nojekyll
           cp "$HELM_SIGNING_PUBLIC_KEY" _site/chart-signing-key.asc
 
-          if curl -fsSL "$REPO_URL/index.yaml" -o _site/index.yaml; then
+          if index_status="$(curl "${CURL_OPTIONS[@]}" --write-out '%{http_code}' "$REPO_URL/index.yaml" -o _site/index.yaml)"; then
             grep -Eo 'https?://[^[:space:]]+\.tgz' _site/index.yaml | sort -u | while read -r package_url; do
               package_name="$(basename "$package_url")"
               if [ ! -f "_site/$package_name" ]; then
-                curl -fsSL "$package_url" -o "_site/$package_name"
+                curl "${CURL_OPTIONS[@]}" "$package_url" -o "_site/$package_name"
               fi
 
               provenance_name="${package_name}.prov"
               if [ ! -f "_site/$provenance_name" ]; then
-                if ! curl -fsSL "${package_url}.prov" -o "_site/$provenance_name" 2>/dev/null; then
+                if provenance_status="$(curl "${CURL_OPTIONS[@]}" --write-out '%{http_code}' "${package_url}.prov" -o "_site/$provenance_name")"; then
+                  :
+                elif [ "$provenance_status" = "404" ]; then
                   echo "No existing provenance file found for ${package_name}; it will be created if this chart version is still in charts/."
                   rm -f "_site/$provenance_name"
+                else
+                  echo "::error::Could not restore provenance for ${package_name} (HTTP ${provenance_status}); refusing to publish incomplete history."
+                  exit 1
                 fi
               fi
             done
+          elif [ "$index_status" = "404" ]; then
+            echo "No previous index found; preparing a new Helm repository."
+            rm -f _site/index.yaml
+          else
+            echo "::error::Could not restore the existing index (HTTP ${index_status}); refusing to publish incomplete history."
+            exit 1
           fi
 
       - name: Restore chart release assets
@@ -188,7 +218,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          REPO_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          REPO_URL="$HELM_REPOSITORY_URL"
 
           for chart in charts/*; do
             if [ -d "$chart" ]; then
@@ -283,7 +313,7 @@ jobs:
             const path = require('path');
             const { execFileSync } = require('child_process');
 
-            const repoUrl = `https://${context.repo.owner}.github.io/${context.repo.repo}`;
+            const repoUrl = process.env.HELM_REPOSITORY_URL;
             const ociRepo = `oci://ghcr.io/${context.repo.owner.toLowerCase()}/${context.repo.repo.toLowerCase()}`;
             const chartsDir = 'charts';
             const chartDirs = fs.readdirSync(chartsDir, { withFileTypes: true })
