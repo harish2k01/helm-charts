@@ -220,8 +220,8 @@
       "name": "Sonarr",
       "slug": "sonarr",
       "category": "Media",
-      "version": "0.1.2",
-      "appVersion": "4.0.17",
+      "version": "0.2.0",
+      "appVersion": "4.0.20",
       "description": "Deploys Sonarr TV automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/sonarr.png"
     },

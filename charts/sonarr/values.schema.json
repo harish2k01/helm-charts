@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "4.0.17"
+          "default": "4.0.20"
         },
         "pullPolicy": {
           "type": "string",
@@ -491,6 +491,15 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "envFrom": {
+      "type": "array",
+      "description": "Existing Secret/ConfigMap environment sources; explicit env entries take precedence.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
     }
   }
 }

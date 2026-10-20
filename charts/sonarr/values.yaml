@@ -18,10 +18,17 @@ securityContext: {}
 
 # LinuxServer.io images use PUID/PGID to choose the user that owns app files.
 # Match these to the permissions on your config and media volumes.
+# New server settings are opt-in: list your external/service DNS names and only
+# the ingress proxy CIDRs you control. Do not trust every address.
+# SONARR__SERVER__ALLOWEDHOSTS: "sonarr.example.com,sonarr,sonarr.default.svc.cluster.local"
+# SONARR__SERVER__TRUSTEDNETWORKS: "192.0.2.0/24"
 env:
   PUID: "3000"
   PGID: "3000"
   TZ: Asia/Kolkata
+
+# Load credentials from existing Secrets or shared ConfigMaps. Explicit env wins.
+envFrom: []
 
 # Main HTTP service for the Sonarr web UI/API.
 service:
@@ -90,6 +97,10 @@ livenessProbe:
   httpGet:
     path: /
     port: http
+    # Upstream always permits loopback hostnames, even with AllowedHosts set.
+    httpHeaders:
+      - name: Host
+        value: localhost
   initialDelaySeconds: 45
   periodSeconds: 30
   timeoutSeconds: 5
@@ -99,6 +110,10 @@ readinessProbe:
   httpGet:
     path: /
     port: http
+    # Upstream always permits loopback hostnames, even with AllowedHosts set.
+    httpHeaders:
+      - name: Host
+        value: localhost
   initialDelaySeconds: 20
   periodSeconds: 10
   timeoutSeconds: 5
