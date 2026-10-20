@@ -65,7 +65,7 @@ cloudflared:
   #   TUNNEL_LOGDIRECTORY: /var/log/cloudflared # Unset no log-directory output.
   #   TUNNEL_TRACE_OUTPUT: /var/log/cloudflared.trace # Unset no diagnostic trace file.
   #   TUNNEL_MANAGEMENT_DIAGNOSTICS: "true" # Default true; management debug routes.
-  #   TUNNEL_MANAGEMENT_HOSTNAME: region1.v2.argotunnel.com # Default management endpoint.
+  #   TUNNEL_MANAGEMENT_HOSTNAME: management.argotunnel.com # Default management endpoint.
   # Origin settings normally belong in the remotely managed tunnel configuration.
   # Optional locally managed/quick-tunnel overrides (unset unless explicitly needed):
   #   TUNNEL_URL: http://origin:8080 # Origin URL; not needed for token/remote ingress.
