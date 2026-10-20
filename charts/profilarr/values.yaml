@@ -1,0 +1,142 @@
+# Profilarr uses SQLite and local Git repositories; run a single writer.
+replicaCount: 1
+
+# Keep the app and optional parser on compatible, pinned upstream releases.
+image:
+  repository: ghcr.io/dictionarry-hub/profilarr
+  tag: "2.2.0"
+  pullPolicy: IfNotPresent
+
+# Use these for private registries or to align release resource names.
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+podLabels: {}
+
+# The upstream image supports starting directly as UID/GID 1000. fsGroup
+# grants access to a fresh PVC without a privileged ownership init container.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+
+# Keep authentication enabled. Set ORIGIN to the browser-facing HTTPS URL
+# when using a reverse proxy. PORT is derived from service.targetPort.
+env:
+  TZ: Etc/UTC
+  HOST: "0.0.0.0"
+  AUTH: "on"
+  UMASK: "022"
+# Reference existing Secrets for optional OIDC credentials or an API key.
+# Configure Arr connections and their API keys in Profilarr after installation.
+envFrom: []
+
+service:
+  type: ClusterIP
+  port: 6868
+  targetPort: 6868
+  portName: http
+  extraPorts: []
+
+# Stores SQLite state, cloned profile databases, logs, and local backups.
+# Back up this volume independently. Disabling persistence uses emptyDir.
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: ""
+    accessModes: [ReadWriteOnce]
+    size: 2Gi
+    storageClassName: ""
+
+# The optional .NET parser powers custom-format tests and profile simulations.
+# It shares the app pod and is not exposed through the Service or public route.
+# Disable it for sync-only use, or set env.PARSER_HOST/PARSER_PORT to an external
+# parser when this sidecar is disabled.
+parser:
+  enabled: true
+  image:
+    repository: ghcr.io/dictionarry-hub/profilarr-parser
+    tag: "2.2.0"
+    pullPolicy: IfNotPresent
+  port: 5000
+  resources: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: [ALL]
+  startupProbe:
+    httpGet:
+      path: /health
+      port: parser
+    periodSeconds: 5
+    failureThreshold: 30
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: parser
+    periodSeconds: 30
+    timeoutSeconds: 5
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: parser
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+# Extra mounts are available for certificates or other advanced integrations.
+# Profilarr manages Arr apps through APIs and does not need your media PVC.
+extraVolumes: []
+extraVolumeMounts: []
+
+# Choose Ingress or Gateway API to publish the web UI. Both are off by default.
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs: []
+  hostnames: []
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# Size requests after observing profile database size and concurrent operations.
+resources: {}
+# Startup and liveness check the listener; upstream health also checks profile
+# databases, so repository outages should affect readiness, not restart the app.
+startupProbe:
+  tcpSocket:
+    port: http
+  periodSeconds: 5
+  failureThreshold: 60
+livenessProbe:
+  tcpSocket:
+    port: http
+  periodSeconds: 30
+  timeoutSeconds: 5
+readinessProbe:
+  httpGet:
+    path: /api/v1/health
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+# Use scheduling controls for storage locality or dedicated application nodes.
+nodeSelector: {}
+tolerations: []
+affinity: {}

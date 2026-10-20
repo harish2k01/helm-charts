@@ -80,7 +80,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Vaultwarden replicas |
 | `image.repository` | string | `vaultwarden/server` | Container image repository |
-| `image.tag` | string | `1.36.0` | Container image tag |
+| `image.tag` | string | `1.37.1` | Container image tag |
 | `env.DOMAIN` | string | `""` | Public Vaultwarden URL |
 | `env.SIGNUPS_ALLOWED` | string | `false` | Enable or disable public signups |
 | `secretEnv.create` | bool | `false` | Create a Secret from `secretEnv.values` |
