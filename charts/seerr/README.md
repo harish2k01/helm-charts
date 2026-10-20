@@ -18,7 +18,7 @@ helm install seerr harish2k01/seerr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.1.2
+helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.2.0
 ```
 
 ## Install With Gateway API HTTPRoute
@@ -52,7 +52,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Seerr replicas |
 | `image.repository` | string | `ghcr.io/seerr-team/seerr` | Container image repository |
-| `image.tag` | string | `v3.2.0` | Container image tag |
+| `image.tag` | string | `v3.5.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.TZ` | string | `Asia/Kolkata` | Container timezone |
 | `env.PORT` | string | `5055` | Seerr HTTP port |
@@ -69,3 +69,13 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+### Additional configuration controls
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `envFrom` | list | `[]` | Existing Secret or ConfigMap environment sources; explicit `env` takes precedence. |
+
+## Configuration and releases
+
+See [runtime configuration](CONFIGURATION.md) for supported environment variables, upstream defaults, persisted settings and Secret examples. See [CHANGELOG.md](CHANGELOG.md) for application release changes, chart changes and upgrade notes.
