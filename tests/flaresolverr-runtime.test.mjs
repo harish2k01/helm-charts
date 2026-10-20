@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { parseAllDocuments } from 'yaml';
 const render = (...args) => parseAllDocuments(execFileSync('helm', ['template', 'review', 'charts/flaresolverr', ...args], { encoding: 'utf8' })).map(d => d.toJSON()).filter(Boolean);
 test('browser wait tuning and proxy credentials do not enable public routing or storage', () => {
-  const docs = render('--set-string', 'env.BROWSER_WAIT_TIMEOUT=3', '--set', 'envFrom[0].secretRef.name=proxy-credentials');
+  const docs = render('--set', 'env.BROWSER_WAIT_TIMEOUT=3', '--set', 'envFrom[0].secretRef.name=proxy-credentials');
   const c = docs.find(d => d.kind === 'Deployment').spec.template.spec.containers[0];
   assert.deepEqual(c.env.find(e => e.name === 'BROWSER_WAIT_TIMEOUT'), {name:'BROWSER_WAIT_TIMEOUT',value:'3'});
   assert.deepEqual(c.envFrom,[{secretRef:{name:'proxy-credentials'}}]);

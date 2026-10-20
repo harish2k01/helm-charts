@@ -98,10 +98,14 @@
           "default": "Asia/Kolkata"
         },
         "BROWSER_WAIT_TIMEOUT": {
-          "type": "string",
+          "type": [
+            "string",
+            "integer"
+          ],
           "pattern": "^[0-9]+$",
           "description": "Seconds per browser state/challenge wait attempt. Increase for slow hosts or websites.",
-          "default": "1"
+          "default": "1",
+          "minimum": 0
         }
       }
     },

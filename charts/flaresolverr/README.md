@@ -63,7 +63,7 @@ httpRoute:
 | `env.LOG_LEVEL` | string | `info` | FlareSolverr log level |
 | `env.LOG_HTML` | string | `false` | Log HTML responses |
 | `env.CAPTCHA_SOLVER` | string | `none` | Captcha solver backend |
-| `env.BROWSER_WAIT_TIMEOUT` | string | `1` | Seconds per browser state/challenge wait attempt; increase on slow hosts or sites |
+| `env.BROWSER_WAIT_TIMEOUT` | string/int | `1` | Seconds per browser state/challenge wait attempt; increase on slow hosts or sites |
 | `env.TZ` | string | `Asia/Kolkata` | Container timezone |
 | `envFrom` | list | `[]` | Secret/ConfigMap environment sources, including proxy credentials |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |

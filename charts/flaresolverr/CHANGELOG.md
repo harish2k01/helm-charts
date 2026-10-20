@@ -17,3 +17,5 @@ Sources: [intervening changelog](https://github.com/FlareSolverr/FlareSolverr/bl
 The values comments cover all 17 documented target environment variables, including existing logging, proxy, browser, host/port, startup test, and metrics settings. Add optional `envFrom` so proxy credentials can come from Secrets rather than committed literal values. Document matching metrics port hooks without enabling metrics. The app is stateless and has no database schema migration; browser sessions are in memory. Request-only API fields and app-initialized certificate variables are classified separately from deployment settings.
 
 Sources: [complete target environment table](https://github.com/FlareSolverr/FlareSolverr/blob/v3.5.2/README.md#environment-variables), [app environment parser](https://github.com/FlareSolverr/FlareSolverr/blob/v3.5.2/src/flaresolverr.py), and [browser configuration](https://github.com/FlareSolverr/FlareSolverr/blob/v3.5.2/src/utils.py).
+
+The BROWSER_WAIT_TIMEOUT schema accepts both nonnegative integer values and integer strings. Existing numeric env overrides remain valid and are quoted as Kubernetes environment strings when rendered.
