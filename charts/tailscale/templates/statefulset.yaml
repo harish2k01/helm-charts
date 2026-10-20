@@ -103,6 +103,10 @@ spec:
               value: {{ .Values.tailscale.enableMetrics | quote }}
             - name: TS_LOCAL_ADDR_PORT
               value: {{ .Values.tailscale.localAddrPort | quote }}
+            {{- with .Values.tailscale.bootTimeout }}
+            - name: TS_BOOT_TIMEOUT
+              value: {{ . | quote }}
+            {{- end }}
             {{- with .Values.tailscale.routes }}
             - name: TS_ROUTES
               value: {{ join "," . | quote }}

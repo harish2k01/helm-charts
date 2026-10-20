@@ -6,7 +6,7 @@ replicaCount: 1
 # so Renovate can detect and raise PRs for new Tailscale releases.
 image:
   repository: tailscale/tailscale
-  tag: "v1.96.5"
+  tag: "v1.104.1"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -62,6 +62,9 @@ tailscale:
   enableHealthCheck: true
   enableMetrics: true
   localAddrPort: "[::]:9002"
+  # Optional initial control-plane connection timeout, for example 90s or 3m.
+  # Empty keeps the image default (60s); coordinate longer waits with probes.
+  bootTimeout: ""
   advertiseExitNode: true
   routes:
     - 192.168.0.0/24

@@ -20,7 +20,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.2
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.3
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -99,7 +99,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of independent Tailscale router pods |
 | `image.repository` | string | `tailscale/tailscale` | Container image repository |
-| `image.tag` | string | `v1.96.5` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `v1.104.1` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `securityContext.privileged` | bool | `true` | Enables privileges required for tun/kernel networking |
 | `sysctl.enabled` | bool | `true` | Runs an init container to enable IP forwarding |
@@ -116,6 +116,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `tailscale.acceptDns` | bool | `false` | Accept DNS settings from the tailnet |
 | `tailscale.authOnce` | bool | `true` | Authenticate only when state is not already present |
 | `tailscale.advertiseExitNode` | bool | `true` | Add `--advertise-exit-node` to `TS_EXTRA_ARGS` |
+| `tailscale.bootTimeout` | string | `""` | Optional initial control-plane connection timeout, such as `90s` or `3m`; empty keeps the upstream `60s` default |
 | `tailscale.routes` | list | `[192.168.0.0/24]` | Subnet routes advertised to the tailnet through `TS_ROUTES` |
 | `tailscale.extraArgs` | list | `[]` | Additional flags appended to `TS_EXTRA_ARGS` |
 | `tailscale.tailscaledExtraArgs` | list | `[]` | Additional flags passed through `TS_TAILSCALED_EXTRA_ARGS` |
@@ -131,3 +132,11 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
 | `topologySpreadConstraints` | list | `[]` | Pod topology spread constraints for separating replicas across zones or nodes |
+
+## Upgrading from v1.96.5 to v1.104.1
+
+The intervening client and container releases include routing, DNS, security, connection recovery, and memory improvements. The container now supports `TS_BOOT_TIMEOUT`; set `tailscale.bootTimeout: "90s"` for slow control-plane connections and increase probe delays when necessary. Leave it empty to retain the upstream 60-second timeout. Do not also set `TS_BOOT_TIMEOUT` in `tailscale.extraEnv`.
+
+The chart keeps PVC-backed state and explicitly renders an empty `TS_KUBE_SECRET`, which the target image still supports as disabling Kubernetes Secret state storage. Existing auth, routing, health (`/healthz`), metrics, and kernel-networking settings remain supported. No operator CRDs are installed by this chart; upstream operator-only features need the separate Tailscale operator. For custom Serve configurations, review the target release's interface-binding behavior and use `tailscale.extraEnv` for supported optional container variables.
+
+Sources: [client/container changelog](https://tailscale.com/changelog), [complete source comparison](https://github.com/tailscale/tailscale/compare/v1.96.5...v1.104.1), and [container environment parsing](https://github.com/tailscale/tailscale/blob/v1.104.1/cmd/containerboot/settings.go).
