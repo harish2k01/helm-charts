@@ -85,3 +85,5 @@ The default database is image-bundled SQLite in `/config`; this chart embeds no 
 ## Verified container build
 
 The 2.6.5 amd64 image manifest identifies [wrapper source fd19558fc530](https://github.com/linuxserver/docker-prowlarr/tree/fd19558fc5301624dc589603fb2e9439f2faac9b) and build `Linuxserver.io version:- 2.6.5.5623-ls164 Build-date:- 2026-10-18T23:10:20+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.
+
+The [official prowlarr PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/prowlarr/postgres-setup.md) explicitly lists PostgreSQL 14–18 as supported and identifies PostgreSQL 13 as end-of-life. This is the application's published guidance, not an inference from the driver. Its SQLite-to-PostgreSQL loader steps were written against PostgreSQL 14 and may require changes on newer majors; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server or certify your existing dataset.
