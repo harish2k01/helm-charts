@@ -2,6 +2,8 @@
 
 This repository publishes reusable Helm charts through GitHub Pages, GitHub Releases, and GHCR OCI. When adding or changing charts, keep the repository consistent with the existing chart catalog.
 
+For application/dependency upgrade reviews, read [UPGRADE_REVIEW.md](UPGRADE_REVIEW.md) first. It records the datastore evidence policy, configuration audit, targeted review-time checks and delivery requirements used for manual and scheduled reviews.
+
 ## Chart Structure
 
 Every chart under `charts/<chart-name>/` should include:
@@ -176,6 +178,14 @@ Preserve the approved app catalog design for catalog-only updates: all matching 
 For website changes, verify desktop/mobile layouts, light/dark appearance including the first paint, search and empty states, keyboard dialog navigation, both installation sources and copying, plus icon/catalog load failures. Do not redesign the page for catalog-only changes.
 
 ## Validation
+
+### Tests for new and changed charts
+
+When adding a chart, add the relevant `tests/<chart-name>*.test.mjs` coverage using Node's built-in test runner and the existing Helm-rendering test patterns. Test the default workload and important supported options, especially Secret references, persistence, service/probe ports, routing and any special startup/configuration behavior. Exercise schema rejection of meaningful invalid inputs where applicable. Prefer assertions about user-visible behavior and regressions over snapshots or checks that merely repeat implementation details.
+
+When changing an existing chart, update its relevant tests and add coverage for new behavior or a fixed bug. If it has no dedicated test yet, add focused coverage for the behavior being introduced or changed. Keep test fixtures and assumptions aligned with values/templates; do not weaken assertions solely to make a failure pass. Review supporting scripts, schema, README, changelog, metadata and generated catalog together as applicable. A new catalog entry does not establish application-specific test coverage.
+
+`Lint Charts` discovers `tests/*.test.mjs` automatically, so use that location and filename suffix; do not add a separate GitHub workflow for each chart. The chart-coverage check requires a file named `<chart-name>.test.mjs` or `<chart-name>-<purpose>.test.mjs` for every chart. That presence check is a minimum guard, not proof of meaningful or exhaustive coverage. Run `node --test tests/*.test.mjs` before delivery and report failures or unavailable tools. Use disposable runtime checks only where the change needs them, following `UPGRADE_REVIEW.md`; never test against production state. Do not equate Helm rendering tests with upstream application runtime or migration compatibility.
 
 Before finishing chart work, run:
 

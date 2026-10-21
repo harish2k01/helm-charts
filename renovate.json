@@ -25,7 +25,9 @@
       "matchPackageNames": [
         "postgres",
         "mysql",
-        "mariadb"
+        "mariadb",
+        "redis",
+        "influxdb"
       ],
       "enabled": false
     },
@@ -41,7 +43,7 @@
       "allowedVersions": "/^[4-9]\\.[0-9]+\\.[0-9]+$/"
     },
     {
-      "description": "Redis and InfluxDB upgrades need app/server and persisted-format compatibility review.",
+      "description": "Datastore changes require version-specific upstream support; compatibility testing alone is insufficient.",
       "matchDatasources": [
         "docker"
       ],
