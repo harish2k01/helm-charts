@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this for repeatable installs.",
-          "default": "v0.107.76"
+          "default": "v0.107.79"
         },
         "pullPolicy": {
           "type": "string",

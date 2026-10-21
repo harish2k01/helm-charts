@@ -8,7 +8,7 @@ This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) us
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install adguard-home harish2k01/adguard-home
 ```
@@ -18,7 +18,7 @@ helm install adguard-home harish2k01/adguard-home
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.2
+helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.1.3
 ```
 
 ## First Run
@@ -150,7 +150,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of AdGuard Home replicas |
 | `image.repository` | string | `adguard/adguardhome` | Container image repository |
-| `image.tag` | string | `v0.107.76` | Container image tag |
+| `image.tag` | string | `v0.107.79` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.annotations` | object | `{}` | Service annotations |
@@ -172,3 +172,7 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
