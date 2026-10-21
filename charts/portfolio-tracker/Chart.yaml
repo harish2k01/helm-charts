@@ -2,8 +2,8 @@ apiVersion: v2
 name: portfolio-tracker
 description: Deploys the self-hosted Portfolio Tracker with PostgreSQL
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.2.0
+appVersion: "0.7.0"
 keywords:
   - finance
   - investments
@@ -17,7 +17,7 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: portfolio-tracker
-      image: ghcr.io/harish2k01/portfolio-tracker:0.1.0
+      image: ghcr.io/harish2k01/portfolio-tracker:0.7.0
     - name: postgresql
       image: postgres:16-alpine
 maintainers:
