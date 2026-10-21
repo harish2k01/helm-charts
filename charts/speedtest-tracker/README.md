@@ -10,7 +10,7 @@ This chart deploys [Speedtest Tracker](https://github.com/alexjustesen/speedtest
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.1.3
+helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.2.0
 ```
 
 ## Database Configuration
@@ -645,3 +645,7 @@ Common patterns:
 - `0 */6 * * *` - Every 6 hours
 - `0 3 * * 0` - Weekly on Sunday at 3 AM
 - `0 9,17 * * 1-5` - Weekdays at 9 AM and 5 PM
+
+## Optional runtime settings
+
+`speedtestTracker.env` contains commented application/Laravel configuration examples. Put sensitive keys in `speedtestTracker.secrets.existingSecret` or `secrets.inline`; the Secret is imported without embedding credentials in the Deployment. `startupProbe` controls the initialization budget before liveness checks begin. See [CHANGELOG.md](CHANGELOG.md) for upgrade and database compatibility details.

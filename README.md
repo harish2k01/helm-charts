@@ -92,7 +92,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`scrutiny`](charts/scrutiny) | `0.2.4` | `v0.9.2-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
 | [`seerr`](charts/seerr) | `0.1.2` | `v3.2.0` | Media | Deploys Seerr media request management for shared libraries. |
 | [`sonarr`](charts/sonarr) | `0.1.2` | `4.0.17` | Media | Deploys Sonarr TV automation with PVC and ingress options. |
-| [`speedtest-tracker`](charts/speedtest-tracker) | `0.1.3` | `1.14.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
+| [`speedtest-tracker`](charts/speedtest-tracker) | `0.2.0` | `1.15.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
 | [`syncthing`](charts/syncthing) | `0.1.0` | `2.1.0` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
 | [`tailscale`](charts/tailscale) | `0.1.4` | `v1.104.1` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
