@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: ghcr.io/seerr-team/seerr
-  tag: "v3.2.0"
+  tag: "v3.5.0"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -17,9 +17,70 @@ podSecurityContext: {}
 securityContext: {}
 
 # Non-secret application environment variables.
+# Optional PostgreSQL connection-pool size, newly supported in Seerr 3.3.
+# DB_POOL_SIZE: "10"
+# HOST supports IPv6 literals; leave unset for the image default.
 env:
   TZ: Asia/Kolkata
   PORT: "5055"
+
+# Load credentials from existing Secrets or shared ConfigMaps. Explicit env wins.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # HTTP bind address, IPv6 literals supported Upstream default: unset (listen on all interfaces).
+  # HOST: "0.0.0.0"
+  # Database/settings/log/cache path; mount persistent storage before changing Upstream default: config relative to /app.
+  # CONFIG_DIRECTORY: "/app/config"
+  # Application log threshold Upstream default: debug.
+  # LOG_LEVEL: "info"
+  # API key override; use an existing Secret Upstream default: generated/persisted.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # API_KEY: ""
+  # Database engine; postgres is external Upstream default: sqlite.
+  # DB_TYPE: "postgres"
+  # External PostgreSQL hostname Upstream default: localhost (driver default).
+  # DB_HOST: "postgresql.database.svc"
+  # External PostgreSQL TCP port Upstream default: 5432.
+  # DB_PORT: "5432"
+  # Mounted Unix socket directory, takes precedence over host/port Upstream default: unset.
+  # DB_SOCKET_PATH: "/run/postgresql"
+  # External database username from Secret Upstream default: unset.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # DB_USER: ""
+  # External database password from Secret Upstream default: unset.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # DB_PASS: ""
+  # Database name Upstream default: seerr.
+  # DB_NAME: "seerr"
+  # Maximum PostgreSQL pool connections Upstream default: 10 (driver default).
+  # DB_POOL_SIZE: "10"
+  # Pool acquisition timeout milliseconds; 0 means indefinite Upstream default: 30000.
+  # DB_CONNECT_TIMEOUT_MS: "30000"
+  # Query diagnostics; may expose sensitive data Upstream default: false.
+  # DB_LOG_QUERIES: "false"
+  # Enable PostgreSQL TLS Upstream default: false.
+  # DB_USE_SSL: "false"
+  # Verify database certificate trust; keep enabled Upstream default: true.
+  # DB_SSL_REJECT_UNAUTHORIZED: "true"
+  # Database TLS CA material (inline takes precedence over _FILE) Upstream default: unset.
+  # DB_SSL_CA: ""
+  # Mounted database TLS CA file Upstream default: unset.
+  # DB_SSL_CA_FILE: "/run/database-tls/ca.pem"
+  # Database TLS KEY material (inline takes precedence over _FILE) Upstream default: unset.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # DB_SSL_KEY: ""
+  # Mounted database TLS KEY file Upstream default: unset.
+  # DB_SSL_KEY_FILE: "/run/database-tls/key.pem"
+  # Database TLS CERT material (inline takes precedence over _FILE) Upstream default: unset.
+  # DB_SSL_CERT: ""
+  # Mounted database TLS CERT file Upstream default: unset.
+  # DB_SSL_CERT_FILE: "/run/database-tls/cert.pem"
+  # Legacy one-time Jellyseerr migration selector; emby only when migrating Upstream default: unset.
+  # JELLYFIN_TYPE: "emby"
+
+envFrom: []
 
 # Main HTTP service for the Seerr web UI/API.
 service:
