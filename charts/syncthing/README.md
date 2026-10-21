@@ -8,7 +8,7 @@ This chart deploys [Syncthing](https://syncthing.net) using the official `syncth
 ## Install
 
 ```bash
-helm repo add harish2k01 https://harish2k01.github.io/helm-charts
+helm repo add harish2k01 https://charts.harish2k01.in
 helm repo update
 helm install syncthing harish2k01/syncthing
 ```
@@ -18,7 +18,7 @@ helm install syncthing harish2k01/syncthing
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.1.0
+helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.2.0
 ```
 
 ## Web UI Access
@@ -84,7 +84,7 @@ For access from devices outside the cluster, expose TCP/UDP `22000` and UDP `210
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Syncthing replicas |
 | `image.repository` | string | `syncthing/syncthing` | Container image repository |
-| `image.tag` | string | `2.1.0` | Container image tag |
+| `image.tag` | string | `2.1.6` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `1000` | File ownership user ID |
 | `env.PGID` | string | `1000` | File ownership group ID |
@@ -102,7 +102,12 @@ For access from devices outside the cluster, expose TCP/UDP `22000` and UDP `210
 | `syncFolders.mounts` | list | `[]` | Paths and optional subPaths mounted from the sync folders PVC |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress for the Web UI |
 | `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute for the Web UI |
+| `startupProbe` | object | HTTP `/rest/noauth/health`, up to 600s | Allows database startup/migration before liveness starts; set `null` to disable |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
