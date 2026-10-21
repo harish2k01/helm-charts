@@ -16,3 +16,11 @@ node --test tests/renovate.test.mjs
 ```
 
 The weekly review checks all bot PRs, audits configuration and migration compatibility, and pushes reviewable changes back to the same branches. It does not merge or deploy. Chart metadata and `docs/catalog.json` are kept consistent through the repository generator; Renovate does not execute arbitrary post-upgrade shell tasks here.
+
+## Shared runner and repository configuration
+
+The shared runner is configured by `homelab-ops/charts/renovate/values.yaml`, whose `renovate.config` JSON selects `harish2k01/helm-charts` and `harish2k01/homelab-ops`. Its shared rules disable automerging and automatic embedded PostgreSQL/MySQL/MariaDB bumps. The deployed `renovate-config` ConfigMap was checked against that source; it has no `force` configuration overriding repository rules. The deployed image at review time is Renovate 43.150.0.
+
+Each repository then supplies its own `renovate.json`. The `homelab-ops` repository restricts its own updates to Argo CD files and ignores its vendored charts; that repository-specific restriction is separate from the global runner configuration. The Helm chart repository enables Helm values, Helm dependencies and GitHub Actions. Its package rules add the application release links and qBittorrent guard on top of the shared rules. No shared runner change is required for these repository-specific improvements.
+
+The validation workflow checks both deployed Renovate 43.150.0 and 44.172.1. This verifies schema/semantic compatibility; a real Renovate run will only use the new repository configuration after this PR is merged. The shared runner remains on its existing six-hour schedule in Asia/Kolkata, separate from the weekly Codex chart-compatibility review.
