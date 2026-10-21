@@ -3,7 +3,7 @@ replicaCount: 1
 # Container image. Pin the tag for repeatable identity-provider rollouts.
 image:
   repository: ghcr.io/pocket-id/pocket-id
-  tag: "v2.7.0"
+  tag: "v2.18.0"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
@@ -33,6 +33,99 @@ env:
   TZ: Asia/Kolkata
   ANALYTICS_DISABLED: "false"
   VERSION_CHECK_DISABLED: "false"
+  # Optional process settings from the exact target env_config.go.
+  # These are examples, not active defaults. Coordinate HOST/PORT with Service/probes.
+  # TRUST_PROXY accepts false, true, or a comma-separated list of proxy IPs/CIDRs.
+  # PROXY_PROTOCOL is separate and needs a proxy that sends the PROXY protocol.
+  # APP_ENV: ""
+  # PROXY_PROTOCOL: ""
+  # TRUSTED_PLATFORM: ""
+  # AUDIT_LOG_RETENTION_DAYS: ""
+  # ALLOW_DOWNGRADE: "false"
+  # ALLOW_INSECURE_CALLBACK_URLS: "false"
+  # INTERNAL_APP_URL: ""
+  # UI_CONFIG_DISABLED: "false"
+  # DISABLE_RATE_LIMITING: "false"
+  # FILE_BACKEND: ""
+  # UPLOAD_PATH: ""
+  # PORT: ""
+  # HOST: ""
+  # UNIX_SOCKET: ""
+  # UNIX_SOCKET_MODE: ""
+  # SYSTEMD_SOCKET: "false"
+  # TLS_CERT_FILE: ""
+  # TLS_KEY_FILE: ""
+  # GEOLITE_DB_PATH: ""
+  # GEOLITE_DB_URL: ""
+  # CLOUDFLARE_LOCATION_HEADERS: "false"
+  # ICON_LIBRARY_URL: "disabled"
+  # ACTORS_PORT: "1414"
+  # ACTORS_HOST: "0.0.0.0"
+  # EXPERIMENTAL_FRANCIS_HOST: embedded
+  # EXPERIMENTAL_FRANCIS_HOST_JWT_FILE: ""
+  # LOG_LEVEL: info
+  # LOG_JSON: "false"
+  # LOG_QUERY_ARGS: "false"
+  # DISMISS_SQLITE_STORAGE_WARNING: ""
+
+  # Optional UI-backed settings from AppConfigModel. Setting these in env can
+  # override persisted UI choices; leave commented unless declaratively managed.
+  # APP_NAME: ""
+  # SESSION_DURATION: ""
+  # HOME_PAGE_URL: ""
+  # EMAILS_VERIFIED: ""
+  # ACCENT_COLOR: ""
+  # DISABLE_ANIMATIONS: ""
+  # ALLOW_OWN_ACCOUNT_EDIT: ""
+  # ALLOW_USER_SIGNUPS: ""
+  # SIGNUP_DEFAULT_USER_GROUP_IDS: ""
+  # SIGNUP_DEFAULT_CUSTOM_CLAIMS: ""
+  # REQUIRE_USER_EMAIL: ""
+  # SMTP_HOST: ""
+  # SMTP_PORT: ""
+  # SMTP_FROM: ""
+  # SMTP_USER: ""
+  # SMTP_TLS: ""
+  # SMTP_SKIP_CERT_VERIFY: ""
+  # EMAIL_LOGIN_NOTIFICATION_ENABLED: ""
+  # EMAIL_ONE_TIME_ACCESS_AS_UNAUTHENTICATED_ENABLED: ""
+  # EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: ""
+  # EMAIL_API_KEY_EXPIRATION_ENABLED: ""
+  # EMAIL_VERIFICATION_ENABLED: ""
+  # LDAP_ENABLED: ""
+  # LDAP_URL: ""
+  # LDAP_BIND_DN: ""
+  # LDAP_BASE: ""
+  # LDAP_USER_SEARCH_FILTER: ""
+  # LDAP_USER_GROUP_SEARCH_FILTER: ""
+  # LDAP_SKIP_CERT_VERIFY: ""
+  # LDAP_ATTRIBUTE_USER_UNIQUE_IDENTIFIER: ""
+  # LDAP_ATTRIBUTE_USER_USERNAME: ""
+  # LDAP_ATTRIBUTE_USER_EMAIL: ""
+  # LDAP_ATTRIBUTE_USER_FIRST_NAME: ""
+  # LDAP_ATTRIBUTE_USER_LAST_NAME: ""
+  # LDAP_ATTRIBUTE_USER_DISPLAY_NAME: ""
+  # LDAP_ATTRIBUTE_USER_PROFILE_PICTURE: ""
+  # LDAP_ATTRIBUTE_GROUP_MEMBER: ""
+  # LDAP_ATTRIBUTE_GROUP_UNIQUE_IDENTIFIER: ""
+  # LDAP_ATTRIBUTE_GROUP_NAME: ""
+  # LDAP_ADMIN_GROUP_NAME: ""
+  # LDAP_SOFT_DELETE_USERS: ""
+  # WEBAUTHN_USER_VERIFICATION: ""
+  # WEBAUTHN_ALLOW_SYNCED_PASSKEYS: ""
+  # WEBAUTHN_AUTHENTICATOR_ATTACHMENT: ""
+  # CIMD_URL_ALLOWLIST: ""
+  # AUTO_CREATE_OIDC_CLIENT_SECRET: ""
+
+  # OpenTelemetry replaces removed METRICS_ENABLED and TRACING_ENABLED.
+  # OTEL_METRICS_EXPORTER: otlp
+  # OTEL_TRACES_EXPORTER: otlp
+  # OTEL_LOGS_EXPORTER: none
+  # OTEL_EXPORTER_OTLP_ENDPOINT: "https://collector.example.com:4318"
+  # OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+  # OTEL_SERVICE_NAME: pocket-id
+  # OTEL_RESOURCE_ATTRIBUTES: "deployment.environment.name=production"
+
 
 # Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
 envFrom: []
@@ -44,6 +137,19 @@ secretEnv:
   name: ""
   values:
     ENCRYPTION_KEY: ""
+    # Optional secrets, preferably supplied via existingSecret.keys below.
+    # DB_CONNECTION_STRING: ""
+    # STATIC_API_KEY: ""
+    # S3_ACCESS_KEY_ID: ""
+    # S3_SECRET_ACCESS_KEY: ""
+    # MAXMIND_LICENSE_KEY: ""
+    # SMTP_PASSWORD: ""
+    # LDAP_BIND_PASSWORD: ""
+    # TLS_CERT: "" # Inline PEM; paths belong in TLS_CERT_FILE/TLS_KEY_FILE.
+    # TLS_KEY: ""
+    # EXPERIMENTAL_FRANCIS_HOST_PSK: ""
+    # EXPERIMENTAL_FRANCIS_CA: ""
+    # OTEL_EXPORTER_OTLP_HEADERS: ""
     MAXMIND_LICENSE_KEY: ""
     SMTP_PASSWORD: ""
     STATIC_API_KEY: ""
@@ -110,6 +216,15 @@ httpRoute:
             value: /
 
 resources: {}
+
+startupProbe:
+  exec:
+    command:
+      - /app/pocket-id
+      - healthcheck
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 120
 
 livenessProbe:
   exec:

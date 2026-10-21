@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "v2.7.0"
+          "default": "v2.18.0"
         },
         "pullPolicy": {
           "type": "string",
@@ -84,7 +84,7 @@
         },
         "TRUST_PROXY": {
           "type": "string",
-          "description": "Whether Pocket ID should trust reverse proxy forwarding headers.",
+          "description": "Trust proxy headers from false/true or a comma-separated list of IPs/CIDRs. Prefer an explicit proxy list.",
           "default": "false"
         },
         "PUID": {
@@ -405,6 +405,22 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "startupProbe": {
+      "type": "object",
+      "description": "Binary healthcheck budget for initial database/actor migrations.",
+      "additionalProperties": true,
+      "default": {
+        "exec": {
+          "command": [
+            "/app/pocket-id",
+            "healthcheck"
+          ]
+        },
+        "periodSeconds": 10,
+        "timeoutSeconds": 5,
+        "failureThreshold": 120
+      }
     }
   }
 }

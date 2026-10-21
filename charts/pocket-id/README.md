@@ -18,7 +18,7 @@ helm install pocket-id harish2k01/pocket-id
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install pocket-id oci://ghcr.io/harish2k01/helm-charts/pocket-id --version 0.1.0
+helm install pocket-id oci://ghcr.io/harish2k01/helm-charts/pocket-id --version 0.2.0
 ```
 
 ## Required Configuration
@@ -115,7 +115,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Pocket ID replicas |
 | `image.repository` | string | `ghcr.io/pocket-id/pocket-id` | Container image repository |
-| `image.tag` | string | `v2.7.0` | Container image tag |
+| `image.tag` | string | `v2.18.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.APP_URL` | string | `http://localhost:1411` | Public URL where users access Pocket ID |
 | `env.TRUST_PROXY` | string | `false` | Trust reverse proxy forwarding headers |
@@ -147,3 +147,7 @@ persistence:
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Optional process and application configuration
+
+`values.yaml` lists commented process/runtime settings and UI-backed application settings from the exact target source. Keep UI-backed examples commented to preserve settings stored in the database. Use `env` for non-secret settings, `envFrom` for existing Secret/ConfigMap sources, and `secretEnv.existingSecret.keys` for individual Secret key mappings. TLS file paths and projected JWT files use `extraVolumes` and `extraVolumeMounts`. The public Service exposes only the OIDC/web listener; configure the embedded actor or experimental external runtime separately. See [CHANGELOG.md](CHANGELOG.md) for compatibility and migration details.
