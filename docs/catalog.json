@@ -112,8 +112,8 @@
       "name": "ownCloud",
       "slug": "owncloud",
       "category": "Storage",
-      "version": "0.1.0",
-      "appVersion": "10.16.2",
+      "version": "0.1.1",
+      "appVersion": "10.16.6",
       "description": "Deploys ownCloud Server with MariaDB and Redis on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/owncloud.png"
     },
