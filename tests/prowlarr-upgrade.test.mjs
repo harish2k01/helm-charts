@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {readFileSync} from 'node:fs';
+import YAML from 'yaml';
+const chart='charts/prowlarr';
+const values=YAML.parse(readFileSync(chart+'/values.yaml','utf8'));
+const render=(args=[])=>YAML.parseAllDocuments(execFileSync('helm',['template','upgrade',chart,'--namespace','upgrade',...args],{encoding:'utf8'})).map(d=>d.toJSON()).find(d=>d?.kind==='Deployment').spec.template.spec.containers[0];
+test('prowlarr configuration stays opt-in and metadata matches the deployable image',()=>{const pod=render();const meta=YAML.parse(readFileSync(chart+'/Chart.yaml','utf8'));assert.equal(values.image.tag,String(meta.appVersion));assert(pod.image.endsWith(':'+values.image.tag));const schema=JSON.parse(readFileSync(chart+'/values.schema.json','utf8'));assert.equal(schema.properties.image.properties.tag.default,values.image.tag);});
+test('prowlarr references runtime Secrets without creating credentials',()=>{const pod=render(['--set','envFrom[0].secretRef.name=runtime-existing']);assert.deepEqual(pod.envFrom,[{secretRef:{name:'runtime-existing'}}]);});
+test('prowlarr health checks remain valid with a host allowlist',()=>{const pod=render(['--set','env.PROWLARR__SERVER__ALLOWEDHOSTS=prowlarr.example.com']);for(const key of ['livenessProbe','readinessProbe'])assert.deepEqual(pod[key].httpGet.httpHeaders,[{name:'Host',value:'localhost'}]);});
