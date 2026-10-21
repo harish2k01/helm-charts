@@ -142,6 +142,8 @@ Apply standard labels to all resources:
 
 Prefer values-driven optional resources. Gate optional ServiceAccounts, RBAC, PVCs, Ingress, HTTPRoute, Secrets, and SealedSecrets behind explicit values.
 
+Keep StatefulSet volumeClaimTemplates metadata stable across chart/app upgrades. Do not use the common version-bearing labels helper inside claim templates. Use stable identity labels and explicit pinned compatibility values for existing installations; removing historical labels is also an immutable change. Add tests comparing complete claim templates across simulated chart/app-version changes, while verifying normal workload version labels still update. Do not use destructive resource replacement or cluster-dependent lookup as an automatic workaround.
+
 Avoid cluster-specific defaults such as personal domains, private storage classes, fixed namespaces, or environment-specific Secret names unless the chart exists only for that cluster-specific purpose.
 
 ## Repository README
