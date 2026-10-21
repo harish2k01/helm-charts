@@ -175,8 +175,8 @@
       "name": "qBittorrent",
       "slug": "qbittorrent",
       "category": "Media",
-      "version": "0.1.2",
-      "appVersion": "5.2.0",
+      "version": "0.2.0",
+      "appVersion": "5.2.4",
       "description": "Deploys qBittorrent on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png"
     },

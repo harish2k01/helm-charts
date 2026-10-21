@@ -3,8 +3,8 @@ name: qbittorrent
 description: Deploys qBittorrent on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png
-version: 0.1.2
-appVersion: "5.2.0"
+version: 0.2.0
+appVersion: "5.2.4"
 home: https://www.qbittorrent.org
 sources:
   - https://github.com/qbittorrent/qBittorrent
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: qbittorrent
-      image: lscr.io/linuxserver/qbittorrent:5.2.0
+      image: lscr.io/linuxserver/qbittorrent:5.2.4
 maintainers:
   - name: harish2k01
