@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: ghcr.io/flaresolverr/flaresolverr
-  tag: "v3.4.6"
+  tag: "v3.5.2"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -21,7 +21,48 @@ env:
   LOG_LEVEL: info
   LOG_HTML: "false"
   CAPTCHA_SOLVER: none
+  # Seconds per browser state/challenge wait; increase on slow hosts or sites.
+  BROWSER_WAIT_TIMEOUT: "1"
   TZ: Asia/Kolkata
+
+# Optional app variables (commented; retain existing/upstream behavior):
+# env:
+#   LOG_LEVEL: info # Default info; debug may include sensitive request details.
+#   LOG_HTML: "false" # Default false; HTML diagnostics only at debug level.
+#   LOG_FILE: /config/flaresolverr.log # Default unset; needs writable volume.
+#   PROXY_URL: http://proxy.example.com:8080 # Default unset; per-request proxy wins.
+#   CAPTCHA_SOLVER: none # Default none; upstream currently has no working adapters.
+#   TZ: UTC # Upstream UTC; chart retains its existing Asia/Kolkata default.
+#   LANG: en_GB # Default unset; browser language.
+#   HEADLESS: "true" # Default true; keep enabled for container operation.
+#   DISABLE_MEDIA: "false" # Default false; optionally block images/CSS/fonts.
+#   BROWSER_WAIT_TIMEOUT: "1" # Default 1 second per state wait, not maxTimeout.
+#   TEST_URL: https://www.google.com # Default startup browser-check URL.
+#   PORT: "8191" # Default listener port; align Service/container ports if changed.
+#   HOST: 0.0.0.0 # Default pod-network listener; localhost breaks Service/probes.
+#   PROMETHEUS_ENABLED: "false" # Default false; set true only with metrics ports below.
+#   PROMETHEUS_PORT: "8192" # Default optional metrics listener.
+# Sensitive proxy settings belong in a Secret, not literal env values in Git:
+envFrom: []
+# envFrom:
+#   - secretRef:
+#       name: flaresolverr-proxy-credentials
+# Secret keys: PROXY_USERNAME, PROXY_PASSWORD (both unset by default).
+# Example optional Prometheus port declarations when PROMETHEUS_ENABLED=true:
+# extraContainerPorts:
+#   - name: metrics
+#     containerPort: 8192
+#     protocol: TCP
+# service:
+#   extraPorts:
+#     - name: metrics
+#       port: 8192
+#       targetPort: metrics
+#       protocol: TCP
+# Request-only options (maxTimeout, waitInSeconds, tabs_till_verify, proxy,
+# returnOnlyCookies, returnScreenshot, disableMedia) are supplied by API clients.
+# REQUESTS_CA_BUNDLE/SSL_CERT_FILE are initialized by the app from certifi;
+# Python/Chromium package and Docker build settings are not runtime chart options.
 
 # Main HTTP service. FlareSolverr is commonly kept internal and referenced by
 # Prowlarr as http://flaresolverr.<namespace>.svc.cluster.local:8191.
