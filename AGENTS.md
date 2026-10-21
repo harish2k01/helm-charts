@@ -179,6 +179,14 @@ For website changes, verify desktop/mobile layouts, light/dark appearance includ
 
 ## Validation
 
+### Tests for new and changed charts
+
+When adding a chart, add the relevant `tests/<chart-name>*.test.mjs` coverage using Node's built-in test runner and the existing Helm-rendering test patterns. Test the default workload and important supported options, especially Secret references, persistence, service/probe ports, routing and any special startup/configuration behavior. Exercise schema rejection of meaningful invalid inputs where applicable. Prefer assertions about user-visible behavior and regressions over snapshots or checks that merely repeat implementation details.
+
+When changing an existing chart, update its relevant tests and add coverage for new behavior or a fixed bug. If it has no dedicated test yet, add focused coverage for the behavior being introduced or changed. Keep test fixtures and assumptions aligned with values/templates; do not weaken assertions solely to make a failure pass. Review supporting scripts, schema, README, changelog, metadata and generated catalog together as applicable. A new catalog entry does not establish application-specific test coverage.
+
+`Lint Charts` discovers `tests/*.test.mjs` automatically, so use that location and filename suffix; do not add a separate GitHub workflow for each chart. Run `node --test tests/*.test.mjs` before delivery and report failures or unavailable tools. Use disposable runtime checks only where the change needs them, following `UPGRADE_REVIEW.md`; never test against production state. Existing charts have uneven dedicated test coverage, so do not claim every chart has app-specific tests merely because the repository-wide checks pass.
+
 Before finishing chart work, run:
 
 ```bash
