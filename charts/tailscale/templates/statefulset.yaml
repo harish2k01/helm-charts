@@ -75,12 +75,14 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             {{- end }}
+            {{- if .Values.authKey.enabled }}
             - name: TS_AUTHKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tailscale.authSecretName" . }}
                   key: {{ .Values.authKey.existingSecretKey }}
                   optional: false
+            {{- end }}
             - name: TS_HOSTNAME
               {{- if .Values.tailscale.hostnameFromPodName }}
               value: {{ printf "%s$(POD_NAME)" .Values.tailscale.hostnamePrefix | quote }}
@@ -103,6 +105,10 @@ spec:
               value: {{ .Values.tailscale.enableMetrics | quote }}
             - name: TS_LOCAL_ADDR_PORT
               value: {{ .Values.tailscale.localAddrPort | quote }}
+            {{- with .Values.tailscale.bootTimeout }}
+            - name: TS_BOOT_TIMEOUT
+              value: {{ . | quote }}
+            {{- end }}
             {{- with .Values.tailscale.routes }}
             - name: TS_ROUTES
               value: {{ join "," . | quote }}
