@@ -1,5 +1,15 @@
 # Upgrade notes
 
+## 0.2.5
+
+### Application changes
+
+None. Application, database and init-image versions are unchanged.
+
+### Chart changes
+
+Use stable identity labels in StatefulSet claim templates instead of chart/app-version labels. Add the documented persistence.claimTemplateLabels maps (under each affected component's persistence settings) for deterministic preservation of existing immutable template labels. Existing installations must pin their current labels before the first upgrade; simply removing historical labels is also an immutable change. No StatefulSet/PVC replacement or database migration is performed. Regression tests compare complete claim templates across simulated chart/app version upgrades and verify legacy-label overrides.
+
 ## 0.2.4 — 6.71.0-alpine
 
 Upgrade from 6.39.0-alpine. Reviewed every published release from6.40.0 through6.71.0 (including patch releases and6.66.0's failed npm publication), the [source comparison](https://github.com/TryGhost/Ghost/compare/v6.39.0...v6.71.0), and exact old/new defaults.json and overrides.json. The official image retains port2368 and /var/lib/ghost/content.

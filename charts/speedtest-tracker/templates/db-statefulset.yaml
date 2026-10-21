@@ -244,7 +244,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "speedtest-tracker.labels" . | nindent 10 }}
+          {{- include "speedtest-tracker.claimTemplateLabels" (dict "root" . "labels" .Values.database.mariadb.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.database.mariadb.persistence.accessModes | nindent 10 }}
@@ -258,7 +258,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "speedtest-tracker.labels" . | nindent 10 }}
+          {{- include "speedtest-tracker.claimTemplateLabels" (dict "root" . "labels" .Values.database.mysql.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.database.mysql.persistence.accessModes | nindent 10 }}
@@ -272,7 +272,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "speedtest-tracker.labels" . | nindent 10 }}
+          {{- include "speedtest-tracker.claimTemplateLabels" (dict "root" . "labels" .Values.database.postgresql.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.database.postgresql.persistence.accessModes | nindent 10 }}

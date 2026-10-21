@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.5
+
+### Application changes
+
+None. Application, database and init-image versions are unchanged.
+
+### Chart changes
+
+Use stable identity labels in StatefulSet claim templates instead of chart/app-version labels. Add the documented persistence.claimTemplateLabels maps (under each affected component's persistence settings) for deterministic preservation of existing immutable template labels. Existing installations must pin their current labels before the first upgrade; simply removing historical labels is also an immutable change. No StatefulSet/PVC replacement or database migration is performed. Regression tests compare complete claim templates across simulated chart/app version upgrades and verify legacy-label overrides.
+
 ## 0.1.4 — BusyBox 1.38.0
 
 ### App changes

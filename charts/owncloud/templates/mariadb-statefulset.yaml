@@ -124,8 +124,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "owncloud.labels" . | nindent 10 }}
-          app.kubernetes.io/component: mariadb
+          {{- include "owncloud.claimTemplateLabels" (dict "root" . "labels" .Values.mariadb.persistence.claimTemplateLabels "component" "mariadb") | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.mariadb.persistence.accessModes | nindent 10 }}

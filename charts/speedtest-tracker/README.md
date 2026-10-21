@@ -10,7 +10,7 @@ This chart deploys [Speedtest Tracker](https://github.com/alexjustesen/speedtest
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.2.0
+helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.2.1
 ```
 
 ## Database Configuration
@@ -649,3 +649,13 @@ Common patterns:
 ## Optional runtime settings
 
 `speedtestTracker.env` contains commented application/Laravel configuration examples. Put sensitive keys in `speedtestTracker.secrets.existingSecret` or `secrets.inline`; the Secret is imported without embedding credentials in the Deployment. `startupProbe` controls the initialization budget before liveness checks begin. See [CHANGELOG.md](CHANGELOG.md) for upgrade and database compatibility details.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `database.mariadb.persistence.claimTemplateLabels`
+- `database.mysql.persistence.claimTemplateLabels`
+- `database.postgresql.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

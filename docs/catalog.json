@@ -67,7 +67,7 @@
       "name": "Ghost",
       "slug": "ghost",
       "category": "Publishing",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "appVersion": "6.71.0-alpine",
       "description": "Deploys Ghost publishing platform on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png"
@@ -112,7 +112,7 @@
       "name": "ownCloud",
       "slug": "owncloud",
       "category": "Storage",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "10.16.6",
       "description": "Deploys ownCloud Server with MariaDB and Redis on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/owncloud.png"
@@ -139,7 +139,7 @@
       "name": "Portfolio Tracker",
       "slug": "portfolio-tracker",
       "category": "Finance",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "0.7.0",
       "description": "Deploys the self-hosted Portfolio Tracker with PostgreSQL",
       "icon": null
@@ -229,7 +229,7 @@
       "name": "Speedtest Tracker",
       "slug": "speedtest-tracker",
       "category": "Monitoring",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "1.15.0",
       "description": "A Helm chart for deploying Speedtest Tracker on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/speedtest-tracker.png"
@@ -247,7 +247,7 @@
       "name": "Tailscale",
       "slug": "tailscale",
       "category": "Network",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "appVersion": "v1.104.1",
       "description": "Deploys Tailscale as a Kubernetes subnet router and exit node",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/tailscale.png"
@@ -265,7 +265,7 @@
       "name": "Umami",
       "slug": "umami",
       "category": "Analytics",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "3.4.0",
       "description": "A Helm chart for Umami, a privacy-focused web analytics platform",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/umami.png"
@@ -274,7 +274,7 @@
       "name": "Uptime Kuma",
       "slug": "uptime-kuma",
       "category": "Monitoring",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "2.5.6-slim",
       "description": "A Helm chart for Uptime Kuma - a self-hosted monitoring tool",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/uptime-kuma.png"

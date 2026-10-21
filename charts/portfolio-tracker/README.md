@@ -110,3 +110,11 @@ portfolioTracker:
 ```
 
 The existing Secret must contain `NEXTAUTH_SECRET` and may include `LOGO_DEV_TOKEN` or `BRANDFETCH_CLIENT_ID`, plus optional SMTP credentials. For local evaluation the same logo keys are supported under `portfolioTracker.secrets.inline`; their defaults are empty. Use publishable provider identifiers because logo URLs are sent to browsers. See [CHANGELOG.md](CHANGELOG.md) for upgrade details.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `database.postgresql.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

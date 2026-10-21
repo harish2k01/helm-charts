@@ -74,15 +74,15 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`feishin`](charts/feishin) | `0.1.1` | `1.17.0` | Media | Deploys Feishin music streaming client on Kubernetes. |
 | [`firefly-iii`](charts/firefly-iii) | `0.1.3` | `version-6.6.6` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.1.3` | `v3.5.2` | Media | Deploys FlareSolverr request solving for automation stacks. |
-| [`ghost`](charts/ghost) | `0.2.4` | `6.71.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
+| [`ghost`](charts/ghost) | `0.2.5` | `6.71.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
 | [`homepage`](charts/homepage) | `0.1.1` | `1.13.2` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.2.0` | `10.11.11` | Media | Deploys Jellyfin media server with library mount support. |
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.1` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.2.0` | `0.64.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
-| [`owncloud`](charts/owncloud) | `0.2.0` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
+| [`owncloud`](charts/owncloud) | `0.2.1` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.2.0` | `v2.18.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`portfolio-next`](charts/portfolio-next) | `0.1.0` | `v0.1.0` | Publishing | Deploys the static Astro portfolio with digest-pinned NGINX and optional Gateway API routing. |
-| [`portfolio-tracker`](charts/portfolio-tracker) | `0.2.0` | `0.7.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
+| [`portfolio-tracker`](charts/portfolio-tracker) | `0.2.1` | `0.7.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |
 | [`profilarr`](charts/profilarr) | `0.1.1` | `2.2.0` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
 | [`prowlarr`](charts/prowlarr) | `0.2.0` | `2.6.5` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`pve-exporter`](charts/pve-exporter) | `0.2.0` | `3.10.1` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
@@ -92,12 +92,12 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`scrutiny`](charts/scrutiny) | `0.2.4` | `v0.9.2-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
 | [`seerr`](charts/seerr) | `0.2.0` | `v3.5.0` | Media | Deploys Seerr media request management for shared libraries. |
 | [`sonarr`](charts/sonarr) | `0.2.0` | `4.0.20` | Media | Deploys Sonarr TV automation with PVC and ingress options. |
-| [`speedtest-tracker`](charts/speedtest-tracker) | `0.2.0` | `1.15.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
+| [`speedtest-tracker`](charts/speedtest-tracker) | `0.2.1` | `1.15.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
 | [`syncthing`](charts/syncthing) | `0.2.0` | `2.1.6` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
-| [`tailscale`](charts/tailscale) | `0.1.4` | `v1.104.1` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
+| [`tailscale`](charts/tailscale) | `0.1.5` | `v1.104.1` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
-| [`umami`](charts/umami) | `0.2.0` | `3.4.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
-| [`uptime-kuma`](charts/uptime-kuma) | `0.2.0` | `2.5.6-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
+| [`umami`](charts/umami) | `0.2.1` | `3.4.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
+| [`uptime-kuma`](charts/uptime-kuma) | `0.2.1` | `2.5.6-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
 | [`vaultwarden`](charts/vaultwarden) | `0.1.1` | `1.37.1` | Security | Deploys Vaultwarden password management on Kubernetes. |
 
 ## Media Automation Pattern

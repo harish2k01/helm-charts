@@ -468,6 +468,9 @@ mariadb:
     - --innodb-log-file-size=64M
   persistence:
     enabled: true
+    # Immutable claim labels: pin the current template labels for existing installs.
+    # Keep historical version labels fixed; new installs use stable defaults.
+    claimTemplateLabels: {}
     existingClaim: ""
     accessModes:
       - ReadWriteOnce
@@ -528,6 +531,9 @@ redis:
     - "1"
   persistence:
     enabled: true
+    # Immutable claim labels: pin the current template labels for existing installs.
+    # Keep historical version labels fixed; new installs use stable defaults.
+    claimTemplateLabels: {}
     existingClaim: ""
     accessModes:
       - ReadWriteOnce

@@ -47,3 +47,13 @@ Selector labels.
 app.kubernetes.io/name: {{ include "speedtest-tracker.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/* Stable labels for immutable StatefulSet claim templates; overrides are pinned at install time. */}}
+{{- define "speedtest-tracker.claimTemplateLabels" -}}
+{{- $labels := include "speedtest-tracker.selectorLabels" .root | fromYaml -}}
+{{- $_ := set $labels "app.kubernetes.io/managed-by" .root.Release.Service -}}
+{{- if .component -}}
+{{- $_ := set $labels "app.kubernetes.io/component" .component -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite $labels (default dict .labels)) -}}
+{{- end }}

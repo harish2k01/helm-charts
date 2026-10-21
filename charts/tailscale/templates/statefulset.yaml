@@ -194,7 +194,7 @@ spec:
     - metadata:
         name: state
         labels:
-          {{- include "tailscale.labels" . | nindent 10 }}
+          {{- include "tailscale.claimTemplateLabels" (dict "root" . "labels" .Values.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.persistence.accessModes | nindent 10 }}

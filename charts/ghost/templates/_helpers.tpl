@@ -89,3 +89,13 @@ ServiceAccount name.
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/* Stable labels for immutable StatefulSet claim templates; overrides are pinned at install time. */}}
+{{- define "ghost.claimTemplateLabels" -}}
+{{- $labels := include "ghost.selectorLabels" .root | fromYaml -}}
+{{- $_ := set $labels "app.kubernetes.io/managed-by" .root.Release.Service -}}
+{{- if .component -}}
+{{- $_ := set $labels "app.kubernetes.io/component" .component -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite $labels (default dict .labels)) -}}
+{{- end }}

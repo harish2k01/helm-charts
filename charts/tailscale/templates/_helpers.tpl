@@ -72,3 +72,13 @@ Build TS_EXTRA_ARGS from structured exit-node values and raw extras.
 {{- end }}
 {{- join " " $args -}}
 {{- end }}
+
+{{/* Stable labels for immutable StatefulSet claim templates; overrides are pinned at install time. */}}
+{{- define "tailscale.claimTemplateLabels" -}}
+{{- $labels := include "tailscale.selectorLabels" .root | fromYaml -}}
+{{- $_ := set $labels "app.kubernetes.io/managed-by" .root.Release.Service -}}
+{{- if .component -}}
+{{- $_ := set $labels "app.kubernetes.io/component" .component -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite $labels (default dict .labels)) -}}
+{{- end }}

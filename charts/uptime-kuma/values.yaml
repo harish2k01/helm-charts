@@ -66,6 +66,9 @@ database:
       accessModes:
         - ReadWriteOnce
       size: 2Gi
+      # Immutable claim labels: pin the current template labels for existing installs.
+      # Keep historical version labels fixed; new installs use stable defaults.
+      claimTemplateLabels: {}
       existingClaim: ""
     resources: {}
     nodeSelector: {}

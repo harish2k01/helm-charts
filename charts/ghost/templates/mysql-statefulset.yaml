@@ -122,8 +122,7 @@ spec:
       metadata:
         name: data
         labels:
-          {{- include "ghost.labels" . | nindent 10 }}
-          app.kubernetes.io/component: mysql
+          {{- include "ghost.claimTemplateLabels" (dict "root" . "labels" .Values.mysql.persistence.claimTemplateLabels "component" "mysql") | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.mysql.persistence.accessModes | nindent 10 }}
