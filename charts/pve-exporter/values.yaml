@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: prompve/prometheus-pve-exporter
-  tag: "3.8.2"
+  tag: "3.10.1"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -22,6 +22,8 @@ proxmox:
     - 10.10.10.100
 
   config:
+    # Disable the config-file Secret mount only when PVE_USER is supplied via env/envFrom.
+    enabled: true
     # Name of an existing Secret containing the exporter config. Empty uses the
     # release fullname when createSecret is true.
     existingSecret: ""
@@ -81,7 +83,47 @@ readinessProbe:
   failureThreshold: 3
 
 extraContainerPorts: []
+# QDevice collection is enabled by upstream and requires cluster=1 scrapes.
+collectors:
+  qdevice: true
+
+# Additional exporter CLI flags, for example --no-collector.replication.
+extraArgs: []
+# Optional CLI flags (all commented, upstream defaults shown):
+# extraArgs:
+#   - --no-collector.status # Default true: node/VM/container status.
+#   - --no-collector.version # Default true: Proxmox version.
+#   - --no-collector.node # Default true: cluster node information.
+#   - --no-collector.cluster # Default true: cluster information.
+#   - --no-collector.resources # Default true: resource inventory.
+#   - --no-collector.backup-info # Default true: uncovered backup guests.
+#   - --no-collector.config # Default true: per-guest onboot config.
+#   - --no-collector.replication # Default true: replication information.
+#   - --no-collector.subscription # Default true: node subscription information.
+#   - --collector.pve-api-metrics # Default false: API request timing.
+#   - --collector.target-metrics # Default false: per-target scrape timing.
+#   - --web.listen-address=[::]:9221 # Default listener; align Service/probes if changed.
+#   - --server.certfile=/etc/tls/tls.crt # Default no TLS; mount certificate.
+#   - --server.keyfile=/etc/tls/tls.key # Default no TLS; mount key from Secret.
+# Set collectors.qdevice instead of duplicating its flag in extraArgs.
 extraEnv: {}
+# Optional alternative environment configuration; defaults are unset except
+# PVE_MODULE=default and upstream TLS verification enabled. Defining PVE_USER
+# selects environment mode instead of reading the mounted YAML file.
+# Set proxmox.config.enabled=false for this mode, and provide the Secret below.
+# extraEnv:
+#   PVE_MODULE: default # Module name; align serviceMonitor.params.module.
+#   PVE_VERIFY_SSL: "true" # false/0 disables TLS verification; prefer trusted CA.
+# envFrom:
+#   - secretRef:
+#       name: pve-api-credentials
+# Secret keys: PVE_USER plus PVE_PASSWORD OR PVE_TOKEN_NAME/PVE_TOKEN_VALUE.
+# Keep all passwords/tokens out of extraEnv and Git; reference Secrets instead.
+# File mode remains recommended for multiple named modules. Its keys are user,
+# password OR token_name/token_value, and verify_ssl; extra ProxmoxAPI options
+# may be added in the Secret-backed YAML without chart schema changes.
+# The exporter is a read-only API client; there is no database to migrate.
+# Python/Gunicorn dependencies are supplied by the image, not runtime build settings.
 envFrom: []
 extraVolumes: []
 extraVolumeMounts: []
