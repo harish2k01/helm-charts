@@ -3,7 +3,7 @@ name: umami
 description: A Helm chart for Umami, a privacy-focused web analytics platform
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/umami.png
-version: 0.2.0
+version: 0.2.1
 appVersion: "3.4.0"
 keywords:
   - analytics

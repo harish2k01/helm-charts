@@ -20,7 +20,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.4
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.5
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -137,3 +137,11 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 ## Upgrade history
 
 See [CHANGELOG.md](CHANGELOG.md) for application changes and compatibility notes.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

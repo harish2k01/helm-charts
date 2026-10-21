@@ -1,5 +1,15 @@
 # Upgrade notes
 
+## 0.2.1
+
+### Application changes
+
+None. Application, database and init-image versions are unchanged.
+
+### Chart changes
+
+Use stable identity labels in StatefulSet claim templates instead of chart/app-version labels. Add the documented persistence.claimTemplateLabels maps (under each affected component's persistence settings) for deterministic preservation of existing immutable template labels. Existing installations must pin their current labels before the first upgrade; simply removing historical labels is also an immutable change. No StatefulSet/PVC replacement or database migration is performed. Regression tests compare complete claim templates across simulated chart/app version upgrades and verify legacy-label overrides.
+
 ## 0.2.0 — Redis 8.10.2
 
 Merge the ownCloud app update [PR #75](https://github.com/harish2k01/helm-charts/pull/75) before this dependency update [PR #90](https://github.com/harish2k01/helm-charts/pull/90). This branch includes the app update so its chart metadata stays at ownCloud 10.16.6 and uses a distinct chart version. The chart's default Redis image moves from floating 6 to pinned 8.10.2, the version resolved by the proposed floating 8 tag at review time.

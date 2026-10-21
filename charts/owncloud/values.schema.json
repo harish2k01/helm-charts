@@ -444,6 +444,14 @@
               "type": "string",
               "description": "MariaDB PVC StorageClass name.",
               "default": ""
+            },
+            "claimTemplateLabels": {
+              "type": "object",
+              "default": {},
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Pinned labels merged into the immutable StatefulSet volume claim template. Preserve existing labels on upgrade; keep version labels fixed if migrating from older charts."
             }
           }
         },
@@ -640,6 +648,14 @@
               "type": "string",
               "description": "Redis PVC StorageClass name.",
               "default": ""
+            },
+            "claimTemplateLabels": {
+              "type": "object",
+              "default": {},
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Pinned labels merged into the immutable StatefulSet volume claim template. Preserve existing labels on upgrade; keep version labels fixed if migrating from older charts."
             }
           }
         },

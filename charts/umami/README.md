@@ -16,7 +16,7 @@ helm install umami harish2k01/umami
 ## Install From OCI
 
 ```bash
-helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.2.0
+helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.2.1
 ```
 
 ## Database Configuration
@@ -155,3 +155,11 @@ umami:
 ```
 
 The 2FA key must be 64 hexadecimal characters and stable across pod replacements. MCP requires an Umami API key. `startupProbe` defaults to a 20-minute migration/startup budget and may be customized as a Kubernetes probe. Build-time frontend options require a custom image. See [CHANGELOG.md](CHANGELOG.md) for release and migration details.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `database.postgresql.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

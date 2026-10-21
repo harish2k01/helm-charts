@@ -347,6 +347,14 @@
                   "type": "string",
                   "description": "Existing PersistentVolumeClaim name to reuse instead of creating a new PVC.",
                   "default": ""
+                },
+                "claimTemplateLabels": {
+                  "type": "object",
+                  "default": {},
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Pinned labels merged into the immutable StatefulSet volume claim template. Preserve existing labels on upgrade; keep version labels fixed if migrating from older charts."
                 }
               }
             },

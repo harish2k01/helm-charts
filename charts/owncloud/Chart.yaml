@@ -3,7 +3,7 @@ name: owncloud
 description: Deploys ownCloud Server with MariaDB and Redis on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/owncloud.png
-version: 0.2.0
+version: 0.2.1
 appVersion: "10.16.6"
 home: https://owncloud.com
 sources:

@@ -18,7 +18,7 @@ helm install uptime-kuma harish2k01/uptime-kuma
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.2.0
+helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.2.1
 ```
 
 By default, Uptime Kuma stores data in SQLite under `/app/data` with a persistent volume.
@@ -167,3 +167,11 @@ Database-related environment variables are managed by the chart when `database.m
 ## Additional runtime configuration
 
 `env` supports non-secret runtime tuning. Use `extraEnv` for individual `valueFrom.secretKeyRef` entries, `envFrom` for complete Secret/ConfigMap sources, and `extraVolumes`/`extraVolumeMounts` for TLS certificates or sockets. Set `service.targetPort` together with `env.UPTIME_KUMA_PORT` when changing the listener port. See [CHANGELOG.md](CHANGELOG.md) for upgrade details.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `database.mariadb.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

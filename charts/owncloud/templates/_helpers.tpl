@@ -144,3 +144,13 @@ Comma-separated trusted domains for the container env var.
 {{- .Values.owncloud.domain }}
 {{- end }}
 {{- end }}
+
+{{/* Stable labels for immutable StatefulSet claim templates; overrides are pinned at install time. */}}
+{{- define "owncloud.claimTemplateLabels" -}}
+{{- $labels := include "owncloud.selectorLabels" .root | fromYaml -}}
+{{- $_ := set $labels "app.kubernetes.io/managed-by" .root.Release.Service -}}
+{{- if .component -}}
+{{- $_ := set $labels "app.kubernetes.io/component" .component -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite $labels (default dict .labels)) -}}
+{{- end }}

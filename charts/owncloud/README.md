@@ -18,7 +18,7 @@ helm install owncloud harish2k01/owncloud
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.2.0
+helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.2.1
 ```
 
 ## Initial Configuration
@@ -233,3 +233,12 @@ Use `extraInitContainers`, `sidecars`, `extraEnv`, `extraVolumes`, `extraVolumeM
 | `affinity` | object | `{}` | Pod affinity |
 
 Redis 8.10.2 uses the same Service port, /data mount, database 0 and existing Redis integration. A new `redis.startupProbe` allows up to ten minutes for RDB/AOF loading before liveness starts. Customize it for large datasets or set it to `{}` to disable. Existing `redis.args` exposes Redis configuration flags, `redis.extraEnv` accepts official image entrypoint settings and Secret references, and `redis.extraVolumes` / `redis.extraVolumeMounts` support ACL/TLS/config files. Do not put passwords in plain-text arguments.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `mariadb.persistence.claimTemplateLabels`
+- `redis.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.

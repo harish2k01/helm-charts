@@ -1,5 +1,15 @@
 # Upgrade notes
 
+## 0.2.1
+
+### Application changes
+
+None. Application, database and init-image versions are unchanged.
+
+### Chart changes
+
+Use stable identity labels in StatefulSet claim templates instead of chart/app-version labels. Add the documented persistence.claimTemplateLabels maps (under each affected component's persistence settings) for deterministic preservation of existing immutable template labels. Existing installations must pin their current labels before the first upgrade; simply removing historical labels is also an immutable change. No StatefulSet/PVC replacement or database migration is performed. Regression tests compare complete claim templates across simulated chart/app version upgrades and verify legacy-label overrides.
+
 ## 0.2.0 — 0.7.0
 
 Upgrade from 0.1.0. Reviewed all releases 0.1.1, 0.2.0, 0.3.0, 0.4.0, 0.4.1, 0.5.0, 0.6.0, 0.6.1, 0.6.2 and 0.7.0, plus the [complete source comparison](https://github.com/harish2k01/portfolio-tracker/compare/v0.1.0...v0.7.0). Includes SIP calculation fixes, UI revamps, provider changes, graph fixes, XIRR and asset-logo support.
