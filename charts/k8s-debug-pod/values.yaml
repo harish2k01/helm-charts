@@ -6,7 +6,7 @@ replicaCount: 1
 # every install gets the same toolbox version.
 image:
   repository: ghcr.io/harish2k01/k8s-debug-pod
-  tag: "0.1.0"
+  tag: "0.1.1"
   pullPolicy: IfNotPresent
 
 # Add pull secrets here if you make the GHCR image private.
@@ -60,6 +60,19 @@ args: []
 # Use env/envFrom for temporary endpoints, proxy settings, or credentials
 # supplied from Secrets/ConfigMaps. Avoid committing secret values directly.
 env: {}
+# Optional client settings (all unset by this chart; no custom app env is required):
+# env:
+#   KUBECONFIG: /workspace/kubeconfig # Optional file path; mount it with extraVolumes.
+#   HTTP_PROXY: http://proxy.example.com:3128 # HTTP client proxy, if required.
+#   HTTPS_PROXY: http://proxy.example.com:3128 # HTTPS client proxy, if required.
+#   NO_PROXY: localhost,127.0.0.1,.svc,.cluster.local # Keep cluster access direct.
+#   SSL_CERT_FILE: /etc/custom-ca/ca.crt # Optional mounted CA bundle.
+# Credentials for kubectl/psql/mysql/redis-cli belong in a referenced Secret.
+# envFrom:
+#   - secretRef:
+#       name: debug-client-credentials
+# The Secret may contain PGPASSWORD, MYSQL_PWD, or REDISCLI_AUTH when needed.
+# Prefer mounted client credential files where supported; avoid literal secrets.
 envFrom: []
 
 # Conservative defaults keep the pod cheap while leaving enough room for common
