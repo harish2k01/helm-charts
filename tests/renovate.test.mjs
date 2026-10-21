@@ -12,6 +12,6 @@ test('database compatibility protection and manual chart review remain enabled',
   assert.equal(config.automerge,false);
   assert.equal(config.ignoreUnstable,true);
   const embedded=config.packageRules.find(r=>r.enabled===false);
-  assert.deepEqual(embedded.matchPackageNames,['postgres','mysql','mariadb']);
+  assert.deepEqual(embedded.matchPackageNames,['postgres','mysql','mariadb','redis','influxdb']);
   assert.ok(config.packageRules.some(r=>r.matchPackageNames?.includes('influxdb')&&r.prBodyNotes?.length));
 });

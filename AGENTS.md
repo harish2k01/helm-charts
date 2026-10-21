@@ -2,6 +2,8 @@
 
 This repository publishes reusable Helm charts through GitHub Pages, GitHub Releases, and GHCR OCI. When adding or changing charts, keep the repository consistent with the existing chart catalog.
 
+For application/dependency upgrade reviews, read [UPGRADE_REVIEW.md](UPGRADE_REVIEW.md) first. It records the datastore evidence policy, configuration audit, targeted review-time checks and delivery requirements used for manual and scheduled reviews.
+
 ## Chart Structure
 
 Every chart under `charts/<chart-name>/` should include:
