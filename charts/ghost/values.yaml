@@ -3,7 +3,7 @@ replicaCount: 1
 # Official Ghost image. Pin the tag so upgrades are intentional.
 image:
   repository: ghost
-  tag: "6.39.0-alpine"
+  tag: "6.71.0-alpine"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
@@ -61,6 +61,37 @@ topologySpreadConstraints: []
 env:
   url: http://localhost:2368
   NODE_ENV: production
+  # Optional upstream configuration; uncomment only to override app defaults.
+  # admin__sessionMaxAgeMs: "15552000000" # Admin session lifetime in milliseconds.
+  # privacy__useGravatar: "false"
+  # mail__transport: SMTP
+  # mail__options__host: smtp.example.com
+  # mail__options__port: "587"
+  # mail__options__secure: "false"
+  # mail__options__auth__user: user@example.com
+  # mail__from: noreply@example.com
+  # klipy__contentFilter: off # Tenor has been removed upstream.
+  # paths__installedAdaptersPath: /var/lib/ghost/content/adapters
+  # adapters__jobs__active: InMemoryJobsBackend
+  # adapters__jobs__InMemoryJobsBackend__concurrency: "3"
+  # storage__imports__adapter: LocalStorageBase
+  # storage__imports__staticFileURLPrefix: content/imports
+  # externalRequest__maxSockets: "256"
+  # externalRequest__maxFreeSockets: "256"
+  # externalRequest__keepAlive: "true"
+  # externalRequest__keepAliveMsecs: "60000"
+  # logging__level: info
+  # logging__logClientErrorsAsError: "true"
+  # caching__assets__contentBasedHash__enabled: "true"
+  # caching__llms__maxAge: "3600"
+  # members__metafields__maxDefinitions: "100"
+  # members__importer__inlineThreshold: "500"
+  # bulkEmail__batchCreationConcurrency: "2"
+  # bulkEmail__perRecipientMessageId: "false"
+  # verifyRequestIntegrity: "true"
+  # queryParameterFiltering__enabled: "false"
+  # remoteFlags__enabled: "false" # Needs upstream URL/poll configuration.
+  # disableMigrationBackups: "false" # Keep automatic migration backups enabled.
 
 # Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
 envFrom: []
@@ -76,6 +107,9 @@ secretEnv:
   name: ""
   values:
     mail__options__auth__pass: ""
+    # Optional upstream secrets; add only when the integration is configured.
+    # klipy__apiKey: ""
+    # machinePayments__mpp__secretKey: ""
   existingSecret:
     name: ""
     keys: []
