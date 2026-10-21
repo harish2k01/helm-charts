@@ -3,8 +3,8 @@ name: jellyfin
 description: Deploys Jellyfin media server on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/jellyfin.png
-version: 0.1.2
-appVersion: "10.11.8"
+version: 0.2.0
+appVersion: "10.11.11"
 home: https://jellyfin.org
 sources:
   - https://github.com/jellyfin/jellyfin
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: jellyfin
-      image: lscr.io/linuxserver/jellyfin:10.11.8
+      image: lscr.io/linuxserver/jellyfin:10.11.11
 maintainers:
   - name: harish2k01
