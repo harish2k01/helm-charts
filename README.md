@@ -79,7 +79,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`jellyfin`](charts/jellyfin) | `0.1.2` | `10.11.8` | Media | Deploys Jellyfin media server with library mount support. |
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.0` | `0.1.0` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.1.0` | `0.61.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
-| [`owncloud`](charts/owncloud) | `0.1.1` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
+| [`owncloud`](charts/owncloud) | `0.2.0` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.1.0` | `v2.7.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`portfolio-next`](charts/portfolio-next) | `0.1.0` | `v0.1.0` | Publishing | Deploys the static Astro portfolio with digest-pinned NGINX and optional Gateway API routing. |
 | [`portfolio-tracker`](charts/portfolio-tracker) | `0.1.0` | `0.1.0` | Finance | Deploys the self-hosted Portfolio Tracker with PostgreSQL. |

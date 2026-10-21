@@ -576,7 +576,7 @@
             "tag": {
               "type": "string",
               "description": "Redis image tag.",
-              "default": "6"
+              "default": "8.10.2"
             },
             "pullPolicy": {
               "type": "string",
@@ -736,6 +736,22 @@
           "description": "Redis pod affinity and anti-affinity rules.",
           "additionalProperties": true,
           "properties": {}
+        },
+        "startupProbe": {
+          "type": "object",
+          "description": "Startup probe allowing Redis to load persisted RDB/AOF before liveness checks. Empty disables it.",
+          "additionalProperties": true,
+          "default": {
+            "exec": {
+              "command": [
+                "redis-cli",
+                "ping"
+              ]
+            },
+            "periodSeconds": 10,
+            "timeoutSeconds": 5,
+            "failureThreshold": 60
+          }
         }
       }
     },

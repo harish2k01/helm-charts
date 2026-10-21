@@ -18,7 +18,7 @@ helm install owncloud harish2k01/owncloud
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.1.1
+helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.2.0
 ```
 
 ## Initial Configuration
@@ -40,7 +40,7 @@ The admin credentials are only used when ownCloud initializes a fresh data volum
 
 ## Database And Redis
 
-The default values deploy MariaDB 10.11 and Redis 6, matching the upstream Docker Compose deployment pattern.
+The default values deploy MariaDB 10.11 and Redis 8.10.2. Read [the Redis upgrade notes](CHANGELOG.md) before upgrading an existing Redis 6 volume.
 
 ```yaml
 database:
@@ -205,7 +205,7 @@ Use `extraInitContainers`, `sidecars`, `extraEnv`, `extraVolumes`, `extraVolumeM
 | `redis.internal` | bool | `true` | Deploy a chart-managed Redis StatefulSet |
 | `redis.host` | string | `""` | External Redis host when `redis.internal=false` |
 | `redis.image.repository` | string | `redis` | Redis image repository |
-| `redis.image.tag` | string | `6` | Redis image tag |
+| `redis.image.tag` | string | `8.10.2` | Redis image tag |
 | `redis.persistence.enabled` | bool | `true` | Persist Redis data |
 | `redis.persistence.size` | string | `1Gi` | Redis PVC size |
 | `redis.resources` | object | `{}` | Redis resource requests and limits |
@@ -231,3 +231,5 @@ Use `extraInitContainers`, `sidecars`, `extraEnv`, `extraVolumes`, `extraVolumeM
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+Redis 8.10.2 uses the same Service port, /data mount, database 0 and existing Redis integration. A new `redis.startupProbe` allows up to ten minutes for RDB/AOF loading before liveness starts. Customize it for large datasets or set it to `{}` to disable. Existing `redis.args` exposes Redis configuration flags, `redis.extraEnv` accepts official image entrypoint settings and Secret references, and `redis.extraVolumes` / `redis.extraVolumeMounts` support ACL/TLS/config files. Do not put passwords in plain-text arguments.
