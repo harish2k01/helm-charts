@@ -274,8 +274,8 @@
       "name": "Uptime Kuma",
       "slug": "uptime-kuma",
       "category": "Monitoring",
-      "version": "0.1.2",
-      "appVersion": "2.2.1-slim",
+      "version": "0.2.0",
+      "appVersion": "2.5.6-slim",
       "description": "A Helm chart for Uptime Kuma - a self-hosted monitoring tool",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/uptime-kuma.png"
     },
