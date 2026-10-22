@@ -10,13 +10,13 @@ Deploys [Profilarr](https://github.com/Dictionarry-Hub/profilarr) for managing R
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
-helm install profilarr harish2k01/profilarr --version 0.1.1
+helm install profilarr harish2k01/profilarr --version 0.2.0
 ```
 
 ## Install From OCI
 
 ```bash
-helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.1.1
+helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.0
 ```
 
 ## Gateway API HTTPRoute
@@ -137,3 +137,45 @@ For OIDC on the pinned 2.2.0 release, supply the upstream OIDC environment varia
 | `startupProbe` / `livenessProbe` / `readinessProbe` | object | See values.yaml | App health probes |
 | `nodeSelector` / `affinity` | object | `{}` | Scheduling constraints |
 | `tolerations` | list | `[]` | Scheduling tolerations |
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to attach separate hostnames to separate Gateways. The existing
+`httpRoute` configuration remains supported and independent; disable it when
+replacing it with named routes to avoid overlapping rules.
+
+```yaml
+httpRoute:
+  enabled: false
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | `{}` | Additional named HTTPRoutes; empty creates none. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Named routes do not inherit hostnames, attachments, annotations, or rules from
+`httpRoute`. They retain chart-specific backend behavior, including Ghost's
+ActivityPub endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.

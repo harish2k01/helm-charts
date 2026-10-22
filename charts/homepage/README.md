@@ -16,7 +16,7 @@ helm install homepage harish2k01/homepage
 ## Install From OCI
 
 ```bash
-helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.1.1
+helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.2.0
 ```
 
 ## Web UI Access
@@ -151,3 +151,45 @@ persistence:
 ## Optional runtime settings
 
 `env` includes commented logging, proxy and config-directory examples. Use `envFrom` for `HOMEPAGE_VAR_*` Secret values or `HOMEPAGE_FILE_*` paths with `extraVolumes`/`extraVolumeMounts`; placeholders are substituted in Homepage YAML. Keep widget credentials in Secrets. See [CHANGELOG.md](CHANGELOG.md) for release details.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to attach separate hostnames to separate Gateways. The existing
+`httpRoute` configuration remains supported and independent; disable it when
+replacing it with named routes to avoid overlapping rules.
+
+```yaml
+httpRoute:
+  enabled: false
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | `{}` | Additional named HTTPRoutes; empty creates none. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Named routes do not inherit hostnames, attachments, annotations, or rules from
+`httpRoute`. They retain chart-specific backend behavior, including Ghost's
+ActivityPub endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.

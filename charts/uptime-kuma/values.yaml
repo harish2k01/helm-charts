@@ -197,3 +197,8 @@ extraVolumeMounts: []
   # UPTIME_KUMA_DB_USERNAME: "uptime_kuma"         # DB Username
   # UPTIME_KUMA_DB_SSL: "false"                    # Enable SSL for DB
   # UPTIME_KUMA_DB_CA: ""                          # Path to DB CA Cert
+
+# Additional named HTTPRoutes, each with its own Gateway and hostname list.
+# Entries are enabled unless enabled: false; the legacy httpRoute is independent.
+# See README.md for an internal/external example.
+httpRoutes: {}

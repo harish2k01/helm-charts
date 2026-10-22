@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.4
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.0
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -134,3 +134,45 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 See [CHANGELOG.md](CHANGELOG.md) before upgrading persistent databases. The commented runtime reference in [values.yaml](values.yaml) lists Scrutiny and InfluxDB configuration, including Secret-backed token/password examples. Optional overrides are omitted by default to preserve existing file configuration.
 
 The `env`, `envFrom`, `extraEnv` and `extraVolumeMounts` hooks configure Scrutiny. Their `influxdb.*` equivalents configure the database sidecar; `influxdb.args` adds influxd flags. Use `extraVolumes` to define mounted Secret/config files. `deploymentStrategy.type` defaults to `Recreate` to avoid overlapping database writers.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to attach separate hostnames to separate Gateways. The existing
+`httpRoute` configuration remains supported and independent; disable it when
+replacing it with named routes to avoid overlapping rules.
+
+```yaml
+httpRoute:
+  enabled: false
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | `{}` | Additional named HTTPRoutes; empty creates none. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Named routes do not inherit hostnames, attachments, annotations, or rules from
+`httpRoute`. They retain chart-specific backend behavior, including Ghost's
+ActivityPub endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.

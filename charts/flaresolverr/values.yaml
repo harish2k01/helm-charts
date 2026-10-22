@@ -148,3 +148,8 @@ readinessProbe:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# Additional named HTTPRoutes, each with its own Gateway and hostname list.
+# Entries are enabled unless enabled: false; the legacy httpRoute is independent.
+# See README.md for an internal/external example.
+httpRoutes: {}

@@ -421,6 +421,88 @@
         "timeoutSeconds": 5,
         "failureThreshold": 120
       }
+    },
+    "httpRoutes": {
+      "type": "object",
+      "default": {},
+      "description": "Additional named HTTPRoutes. Each entry targets the app Service and has independent Gateway references and hostnames.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+        "maxLength": 40
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Create this named route."
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Annotations for this route."
+          },
+          "parentRefs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Gateway and optional listener attachments for this route."
+          },
+          "hostnames": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Explicit hostnames served by this route."
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "description": "Gateway API rules and filters; backendRefs are supplied by the chart. Defaults to PathPrefix /."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "enabled": {
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            "then": {},
+            "else": {
+              "required": [
+                "parentRefs",
+                "hostnames"
+              ]
+            }
+          }
+        ]
+      }
     }
   }
 }

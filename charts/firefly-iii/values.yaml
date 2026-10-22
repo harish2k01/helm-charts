@@ -269,3 +269,8 @@ firefly:
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 30
+
+# Additional named HTTPRoutes, each with its own Gateway and hostname list.
+# Entries are enabled unless enabled: false; the legacy httpRoute is independent.
+# See README.md for an internal/external example.
+httpRoutes: {}

@@ -18,7 +18,7 @@ helm install owncloud harish2k01/owncloud
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.2.1
+helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.3.0
 ```
 
 ## Initial Configuration
@@ -242,3 +242,45 @@ Claim templates use stable identity labels so chart/app version changes do not m
 - `redis.persistence.claimTemplateLabels`
 
 For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to attach separate hostnames to separate Gateways. The existing
+`httpRoute` configuration remains supported and independent; disable it when
+replacing it with named routes to avoid overlapping rules.
+
+```yaml
+httpRoute:
+  enabled: false
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | `{}` | Additional named HTTPRoutes; empty creates none. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Named routes do not inherit hostnames, attachments, annotations, or rules from
+`httpRoute`. They retain chart-specific backend behavior, including Ghost's
+ActivityPub endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.

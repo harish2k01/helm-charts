@@ -123,7 +123,7 @@
         },
         "FS_GENERAL_ALBUM_BACKGROUND": {
           "type": "string",
-          "description": "general.albumBackground: true / false — Show album background image. Upstream default when unset: false."
+          "description": "general.albumBackground: true / false \u2014 Show album background image. Upstream default when unset: false."
         },
         "FS_GENERAL_ALBUM_BACKGROUND_BLUR": {
           "type": "string",
@@ -131,7 +131,7 @@
         },
         "FS_GENERAL_ARTIST_BACKGROUND": {
           "type": "string",
-          "description": "general.artistBackground: true / false — Show artist background image. Upstream default when unset: true."
+          "description": "general.artistBackground: true / false \u2014 Show artist background image. Upstream default when unset: true."
         },
         "FS_GENERAL_ARTIST_BACKGROUND_BLUR": {
           "type": "string",
@@ -139,31 +139,31 @@
         },
         "FS_GENERAL_BLUR_EXPLICIT_IMAGES": {
           "type": "string",
-          "description": "general.blurExplicitImages: true / false — Blur explicit images. Upstream default when unset: false."
+          "description": "general.blurExplicitImages: true / false \u2014 Blur explicit images. Upstream default when unset: false."
         },
         "FS_GENERAL_COMBINED_LYRICS_AND_VISUALIZER": {
           "type": "string",
-          "description": "general.combinedLyricsAndVisualizer: true / false — Combine lyrics and visualizer panel. Upstream default when unset: false."
+          "description": "general.combinedLyricsAndVisualizer: true / false \u2014 Combine lyrics and visualizer panel. Upstream default when unset: false."
         },
         "FS_GENERAL_ENABLE_GRID_MULTI_SELECT": {
           "type": "string",
-          "description": "general.enableGridMultiSelect: true / false — Enable multi-select in grid views. Upstream default when unset: false."
+          "description": "general.enableGridMultiSelect: true / false \u2014 Enable multi-select in grid views. Upstream default when unset: false."
         },
         "FS_GENERAL_EXTERNAL_LINKS": {
           "type": "string",
-          "description": "general.externalLinks: true / false — Show external links in UI. Upstream default when unset: true."
+          "description": "general.externalLinks: true / false \u2014 Show external links in UI. Upstream default when unset: true."
         },
         "FS_GENERAL_FOLLOW_CURRENT_SONG": {
           "type": "string",
-          "description": "general.followCurrentSong: true / false — Follow current song in list. Upstream default when unset: true."
+          "description": "general.followCurrentSong: true / false \u2014 Follow current song in list. Upstream default when unset: true."
         },
         "FS_GENERAL_FOLLOW_SYSTEM_THEME": {
           "type": "string",
-          "description": "general.followSystemTheme: true / false — Use OS light/dark preference. Upstream default when unset: false."
+          "description": "general.followSystemTheme: true / false \u2014 Use OS light/dark preference. Upstream default when unset: false."
         },
         "FS_GENERAL_HOME_FEATURE": {
           "type": "string",
-          "description": "general.homeFeature: true / false — Show home featured carousel. Upstream default when unset: true."
+          "description": "general.homeFeature: true / false \u2014 Show home featured carousel. Upstream default when unset: true."
         },
         "FS_GENERAL_HOME_FEATURE_STYLE": {
           "type": "string",
@@ -195,19 +195,19 @@
         },
         "FS_GENERAL_LAST_FM": {
           "type": "string",
-          "description": "general.lastFM: true / false — Enable Last.fm. Upstream default when unset: true."
+          "description": "general.lastFM: true / false \u2014 Enable Last.fm. Upstream default when unset: true."
         },
         "FS_GENERAL_LISTEN_BRAINZ": {
           "type": "string",
-          "description": "general.listenBrainz: true / false — ListenBrainz links. Upstream default when unset: true."
+          "description": "general.listenBrainz: true / false \u2014 ListenBrainz links. Upstream default when unset: true."
         },
         "FS_GENERAL_MUSIC_BRAINZ": {
           "type": "string",
-          "description": "general.musicBrainz: true / false — MusicBrainz links. Upstream default when unset: true."
+          "description": "general.musicBrainz: true / false \u2014 MusicBrainz links. Upstream default when unset: true."
         },
         "FS_GENERAL_NATIVE_ASPECT_RATIO": {
           "type": "string",
-          "description": "general.nativeAspectRatio: true / false — Use native cover art aspect ratio. Upstream default when unset: false."
+          "description": "general.nativeAspectRatio: true / false \u2014 Use native cover art aspect ratio. Upstream default when unset: false."
         },
         "FS_GENERAL_PATH_REPLACE": {
           "type": "string",
@@ -219,47 +219,47 @@
         },
         "FS_GENERAL_PLAYERBAR_OPEN_DRAWER": {
           "type": "string",
-          "description": "general.playerbarOpenDrawer: true / false — Open queue/lyrics as drawer from player bar. Upstream default when unset: false."
+          "description": "general.playerbarOpenDrawer: true / false \u2014 Open queue/lyrics as drawer from player bar. Upstream default when unset: false."
         },
         "FS_GENERAL_PRIMARY_SHADE": {
           "type": "string",
-          "description": "general.primaryShade: Mantine primary shade 0–9 (number). Upstream default when unset: 6."
+          "description": "general.primaryShade: Mantine primary shade 0\u20139 (number). Upstream default when unset: 6."
         },
         "FS_GENERAL_QOBUZ": {
           "type": "string",
-          "description": "general.qobuz: true / false — Qobuz links. Upstream default when unset: true."
+          "description": "general.qobuz: true / false \u2014 Qobuz links. Upstream default when unset: true."
         },
         "FS_GENERAL_RESUME": {
           "type": "string",
-          "description": "general.resume: true / false — Resume playback on load. Upstream default when unset: true."
+          "description": "general.resume: true / false \u2014 Resume playback on load. Upstream default when unset: true."
         },
         "FS_GENERAL_SHOW_LYRICS_IN_SIDEBAR": {
           "type": "string",
-          "description": "general.showLyricsInSidebar: true / false — Show lyrics in sidebar. Upstream default when unset: true."
+          "description": "general.showLyricsInSidebar: true / false \u2014 Show lyrics in sidebar. Upstream default when unset: true."
         },
         "FS_GENERAL_SHOW_RATINGS": {
           "type": "string",
-          "description": "general.showRatings: true / false — Show star ratings. Upstream default when unset: true."
+          "description": "general.showRatings: true / false \u2014 Show star ratings. Upstream default when unset: true."
         },
         "FS_GENERAL_SHOW_VISUALIZER_IN_SIDEBAR": {
           "type": "string",
-          "description": "general.showVisualizerInSidebar: true / false — Show visualizer in sidebar. Upstream default when unset: true."
+          "description": "general.showVisualizerInSidebar: true / false \u2014 Show visualizer in sidebar. Upstream default when unset: true."
         },
         "FS_GENERAL_SIDEBAR_COLLAPSED_NAVIGATION": {
           "type": "string",
-          "description": "general.sidebarCollapsedNavigation: true / false — Start with collapsed sidebar nav. Upstream default when unset: true."
+          "description": "general.sidebarCollapsedNavigation: true / false \u2014 Start with collapsed sidebar nav. Upstream default when unset: true."
         },
         "FS_GENERAL_SIDEBAR_COLLAPSE_SHARED": {
           "type": "string",
-          "description": "general.sidebarCollapseShared: true / false — Share sidebar collapse state. Upstream default when unset: false."
+          "description": "general.sidebarCollapseShared: true / false \u2014 Share sidebar collapse state. Upstream default when unset: false."
         },
         "FS_GENERAL_SIDEBAR_IMAGE_EXPAND": {
           "type": "string",
-          "description": "general.sidebarImageExpand: true / false — Show the player-bar album-art button that expands art into the sidebar. Upstream default when unset: false."
+          "description": "general.sidebarImageExpand: true / false \u2014 Show the player-bar album-art button that expands art into the sidebar. Upstream default when unset: false."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_FOLDERS": {
           "type": "string",
-          "description": "general.sidebarPlaylistFolders: true / false — Group playlists into folders by name separator. Upstream default when unset: true."
+          "description": "general.sidebarPlaylistFolders: true / false \u2014 Group playlists into folders by name separator. Upstream default when unset: true."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_SEPARATOR": {
           "type": "string",
@@ -267,7 +267,7 @@
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_TREE_INDENT": {
           "type": "string",
-          "description": "general.sidebarPlaylistFolderTreeIndent: Pixels each tree level is indented (0–64). Upstream default when unset: 16."
+          "description": "general.sidebarPlaylistFolderTreeIndent: Pixels each tree level is indented (0\u201364). Upstream default when unset: 16."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_TREE_LINE_COLOR": {
           "type": "string",
@@ -275,35 +275,35 @@
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_FOLDER_VIEW": {
           "type": "string",
-          "description": "general.sidebarPlaylistFolderView: single / tree / navigation — How folders are displayed in the sidebar. Upstream default when unset: tree."
+          "description": "general.sidebarPlaylistFolderView: single / tree / navigation \u2014 How folders are displayed in the sidebar. Upstream default when unset: tree."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_LIST": {
           "type": "string",
-          "description": "general.sidebarPlaylistList: true / false — Show playlist list in sidebar. Upstream default when unset: true."
+          "description": "general.sidebarPlaylistList: true / false \u2014 Show playlist list in sidebar. Upstream default when unset: true."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_MODE": {
           "type": "string",
-          "description": "general.sidebarPlaylistMode: compact / expanded — Sidebar playlist row layout. Upstream default when unset: expanded."
+          "description": "general.sidebarPlaylistMode: compact / expanded \u2014 Sidebar playlist row layout. Upstream default when unset: expanded."
         },
         "FS_GENERAL_SIDEBAR_PLAYLIST_SORTING": {
           "type": "string",
-          "description": "general.sidebarPlaylistSorting: true / false — Enable playlist sorting in sidebar. Upstream default when unset: false."
+          "description": "general.sidebarPlaylistSorting: true / false \u2014 Enable playlist sorting in sidebar. Upstream default when unset: false."
         },
         "FS_GENERAL_SIDE_QUEUE_TYPE": {
           "type": "string",
-          "description": "general.sideQueueType: sideDrawerQueue / sideQueue — Side play queue style. Upstream default when unset: sideQueue."
+          "description": "general.sideQueueType: sideDrawerQueue / sideQueue \u2014 Side play queue style. Upstream default when unset: sideQueue."
         },
         "FS_GENERAL_SIDE_QUEUE_LAYOUT": {
           "type": "string",
-          "description": "general.sideQueueLayout: horizontal / vertical — Attached side queue layout orientation. Upstream default when unset: horizontal."
+          "description": "general.sideQueueLayout: horizontal / vertical \u2014 Attached side queue layout orientation. Upstream default when unset: horizontal."
         },
         "FS_GENERAL_USE_THEME_ACCENT_COLOR": {
           "type": "string",
-          "description": "general.useThemeAccentColor: true / false — Use theme’s accent color instead of custom. Upstream default when unset: false."
+          "description": "general.useThemeAccentColor: true / false \u2014 Use theme\u2019s accent color instead of custom. Upstream default when unset: false."
         },
         "FS_GENERAL_USE_THEME_PRIMARY_SHADE": {
           "type": "string",
-          "description": "general.useThemePrimaryShade: true / false — Use theme’s primary shade. Upstream default when unset: true."
+          "description": "general.useThemePrimaryShade: true / false \u2014 Use theme\u2019s primary shade. Upstream default when unset: true."
         },
         "FS_GENERAL_ZOOM_FACTOR": {
           "type": "string",
@@ -311,27 +311,27 @@
         },
         "FS_PLAYBACK_MEDIA_SESSION": {
           "type": "string",
-          "description": "playback.mediaSession: true / false — Media Session API (e.g. browser/media keys). Upstream default when unset: false."
+          "description": "playback.mediaSession: true / false \u2014 Media Session API (e.g. browser/media keys). Upstream default when unset: false."
         },
         "FS_PLAYBACK_WEB_AUDIO": {
           "type": "string",
-          "description": "playback.webAudio: true / false — Use Web Audio for playback. Upstream default when unset: true."
+          "description": "playback.webAudio: true / false \u2014 Use Web Audio for playback. Upstream default when unset: true."
         },
         "FS_PLAYBACK_AUDIO_FADE_ON_STATUS_CHANGE": {
           "type": "string",
-          "description": "playback.audioFadeOnStatusChange: true / false — Fade on play/pause. Upstream default when unset: true."
+          "description": "playback.audioFadeOnStatusChange: true / false \u2014 Fade on play/pause. Upstream default when unset: true."
         },
         "FS_PLAYBACK_PRESERVE_PITCH": {
           "type": "string",
-          "description": "playback.preservePitch: true / false — Preserve pitch when changing speed. Upstream default when unset: true."
+          "description": "playback.preservePitch: true / false \u2014 Preserve pitch when changing speed. Upstream default when unset: true."
         },
         "FS_PLAYBACK_SCROBBLE_ENABLED": {
           "type": "string",
-          "description": "playback.scrobble.enabled: true / false — Enable scrobbling. Upstream default when unset: true."
+          "description": "playback.scrobble.enabled: true / false \u2014 Enable scrobbling. Upstream default when unset: true."
         },
         "FS_PLAYBACK_SCROBBLE_NOTIFY": {
           "type": "string",
-          "description": "playback.scrobble.notify: true / false — Scrobble notifications. Upstream default when unset: false."
+          "description": "playback.scrobble.notify: true / false \u2014 Scrobble notifications. Upstream default when unset: false."
         },
         "FS_PLAYBACK_SCROBBLE_AT_DURATION": {
           "type": "string",
@@ -343,7 +343,7 @@
         },
         "FS_PLAYBACK_TRANSCODE_ENABLED": {
           "type": "string",
-          "description": "playback.transcode.enabled: true / false — Enable transcoding. Upstream default when unset: false."
+          "description": "playback.transcode.enabled: true / false \u2014 Enable transcoding. Upstream default when unset: false."
         },
         "FS_PLAYBACK_TRANSCODE_FORMAT": {
           "type": "string",
@@ -359,7 +359,7 @@
         },
         "FS_DISCORD_ENABLED": {
           "type": "string",
-          "description": "discord.enabled: true / false — Discord rich presence. Upstream default when unset: false."
+          "description": "discord.enabled: true / false \u2014 Discord rich presence. Upstream default when unset: false."
         },
         "FS_DISCORD_CLIENT_ID": {
           "type": "string",
@@ -379,7 +379,7 @@
         },
         "FS_DISCORD_SHOW_PAUSED": {
           "type": "string",
-          "description": "discord.showPaused: true / false — Show paused state. Upstream default when unset: true."
+          "description": "discord.showPaused: true / false \u2014 Show paused state. Upstream default when unset: true."
         },
         "FS_DISCORD_SHOW_SERVER_IMAGE": {
           "type": "string",
@@ -391,11 +391,11 @@
         },
         "FS_LYRICS_FETCH": {
           "type": "string",
-          "description": "lyrics.fetch: true / false — Fetch lyrics. Upstream default when unset: true."
+          "description": "lyrics.fetch: true / false \u2014 Fetch lyrics. Upstream default when unset: true."
         },
         "FS_LYRICS_FOLLOW": {
           "type": "string",
-          "description": "lyrics.follow: true / false — Follow current line. Upstream default when unset: true."
+          "description": "lyrics.follow: true / false \u2014 Follow current line. Upstream default when unset: true."
         },
         "FS_LYRICS_DELAY_MS": {
           "type": "string",
@@ -411,7 +411,7 @@
         },
         "FS_LYRICS_PREFER_LOCAL": {
           "type": "string",
-          "description": "lyrics.preferLocalLyrics: true / false — Prefer local lyric files. Upstream default when unset: true."
+          "description": "lyrics.preferLocalLyrics: true / false \u2014 Prefer local lyric files. Upstream default when unset: true."
         },
         "FS_LYRICS_SHOW_MATCH": {
           "type": "string",
@@ -439,11 +439,11 @@
         },
         "FS_LYRICS_PADDING_LEFT": {
           "type": "string",
-          "description": "lyricsDisplay.default.paddingLeft: Left content padding as a percentage (0–20). Upstream default when unset: 0."
+          "description": "lyricsDisplay.default.paddingLeft: Left content padding as a percentage (0\u201320). Upstream default when unset: 0."
         },
         "FS_LYRICS_PADDING_RIGHT": {
           "type": "string",
-          "description": "lyricsDisplay.default.paddingRight: Right content padding as a percentage (0–20). Upstream default when unset: 0."
+          "description": "lyricsDisplay.default.paddingRight: Right content padding as a percentage (0\u201320). Upstream default when unset: 0."
         },
         "FS_AUTO_DJ_ALBUM_STRATEGY": {
           "type": "string",
@@ -451,7 +451,7 @@
         },
         "FS_AUTO_DJ_ALLOW_DUPLICATES": {
           "type": "string",
-          "description": "autoDJ.allowDuplicates: true / false — Allow songs or albums already in the queue to be added again. Upstream default when unset: false."
+          "description": "autoDJ.allowDuplicates: true / false \u2014 Allow songs or albums already in the queue to be added again. Upstream default when unset: false."
         },
         "FS_AUTO_DJ_ENABLED": {
           "type": "string",
@@ -467,7 +467,7 @@
         },
         "FS_AUTO_DJ_ONLY_SIMILAR": {
           "type": "string",
-          "description": "autoDJ.onlySimilar: true / false — Treat item count as a maximum; use the first non-empty source (similar, then genre, artist, or random) and do not fill from later sources. Upstream default when unset: false."
+          "description": "autoDJ.onlySimilar: true / false \u2014 Treat item count as a maximum; use the first non-empty source (similar, then genre, artist, or random) and do not fill from later sources. Upstream default when unset: false."
         },
         "FS_AUTO_DJ_SONG_STRATEGY": {
           "type": "string",
@@ -483,7 +483,7 @@
         },
         "FS_CSS_ENABLED": {
           "type": "string",
-          "description": "css.enabled: true / false — Enable custom CSS. Upstream default when unset: false."
+          "description": "css.enabled: true / false \u2014 Enable custom CSS. Upstream default when unset: false."
         },
         "FS_FONT_TYPE": {
           "type": "string",
@@ -669,6 +669,88 @@
       "description": "Pod affinity and anti-affinity rules for advanced scheduling control.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "httpRoutes": {
+      "type": "object",
+      "default": {},
+      "description": "Additional named HTTPRoutes. Each entry targets the app Service and has independent Gateway references and hostnames.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+        "maxLength": 40
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Create this named route."
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Annotations for this route."
+          },
+          "parentRefs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Gateway and optional listener attachments for this route."
+          },
+          "hostnames": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Explicit hostnames served by this route."
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "description": "Gateway API rules and filters; backendRefs are supplied by the chart. Defaults to PathPrefix /."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "enabled": {
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            "then": {},
+            "else": {
+              "required": [
+                "parentRefs",
+                "hostnames"
+              ]
+            }
+          }
+        ]
+      }
     }
   }
 }
