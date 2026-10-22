@@ -3,7 +3,7 @@ name: firefly-iii
 description: A Helm chart for deploying Firefly III with PostgreSQL
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/firefly-iii.png
-version: 0.1.3
+version: 0.2.0
 appVersion: "version-6.6.6"
 home: https://www.firefly-iii.org/
 sources:

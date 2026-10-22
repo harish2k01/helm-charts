@@ -4,7 +4,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 
 const chart = 'charts/profilarr';
 const render = (...args) => execFileSync('helm', ['template', 'profilarr', chart, '--namespace', 'media', ...args], { encoding: 'utf8' });
-const resource = (manifest, kind) => manifest.split(/^---\s*$/m).find(doc => doc.includes(`kind: ${kind}\n`));
+const resource = (manifest, kind) => manifest.replace(/\r\n/g, '\n').split(/^---\s*$/m).find(doc => doc.includes(`kind: ${kind}\n`));
 
 test('default install keeps state persistent and parser internal with authenticated app', () => {
   const manifest = render();
@@ -48,7 +48,7 @@ test('listener overrides propagate through app and sidecar configuration', () =>
 });
 
 test('Gateway and Ingress route only to the app Service', () => {
-  const gateway = render('--set', 'httpRoute.enabled=true,httpRoute.parentRefs[0].name=edge,httpRoute.hostnames[0]=profilarr.example.com,env.ORIGIN=https://profilarr.example.com');
+  const gateway = render('--set', 'httpRoutes.main.enabled=true,httpRoutes.main.parentRefs[0].name=edge,httpRoutes.main.hostnames[0]=profilarr.example.com,env.ORIGIN=https://profilarr.example.com');
   assert.match(resource(gateway, 'HTTPRoute'), /backendRefs:\s+- name: profilarr\s+port: 6868/);
   assert.match(gateway, /name: ORIGIN\s+value: "https:\/\/profilarr.example.com"/);
   const ingress = render('--set', 'ingress.enabled=true,ingress.hosts[0].host=profilarr.example.com,ingress.hosts[0].paths[0].path=/,ingress.hosts[0].paths[0].pathType=Prefix');
@@ -58,8 +58,8 @@ test('Gateway and Ingress route only to the app Service', () => {
 test('unsafe topology and invalid values fail before deployment', () => {
   for (const settings of [
     'replicaCount=2',
-    'httpRoute.enabled=true',
-    'httpRoute.enabled=true,ingress.enabled=true',
+    'httpRoutes.main.enabled=true',
+    'httpRoutes.main.enabled=true,ingress.enabled=true',
     'parser.port=6868',
     'service.targetPort=0',
     'persistence.config.mountPath=/data',

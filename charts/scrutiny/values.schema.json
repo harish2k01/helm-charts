@@ -312,63 +312,6 @@
         }
       }
     },
-    "httpRoute": {
-      "type": "object",
-      "description": "Gateway API HTTPRoute configuration for exposing the application through a Gateway.",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Whether to create a Gateway API HTTPRoute resource.",
-          "default": false
-        },
-        "annotations": {
-          "type": "object",
-          "description": "Additional annotations applied to the HTTPRoute resource.",
-          "additionalProperties": true,
-          "properties": {}
-        },
-        "parentRefs": {
-          "type": "array",
-          "description": "Gateway parentRefs that attach this HTTPRoute to one or more Gateways.",
-          "default": [
-            {
-              "name": "traefik",
-              "namespace": "kube-system"
-            }
-          ],
-          "items": {
-            "type": "object",
-            "description": "Gateway API parent reference that attaches the HTTPRoute to a Gateway or listener.",
-            "additionalProperties": true,
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "Name assigned to this Kubernetes object, port, reference, or setting.",
-                "default": "traefik"
-              },
-              "namespace": {
-                "type": "string",
-                "description": "Optional Kubernetes namespace for the referenced object.",
-                "default": "kube-system"
-              }
-            }
-          }
-        },
-        "hostnames": {
-          "type": "array",
-          "description": "Hostnames matched by the HTTPRoute.",
-          "default": [
-            "scrutiny.local"
-          ],
-          "items": {
-            "type": "string",
-            "description": "Hostname matched by the HTTPRoute.",
-            "default": "scrutiny.local"
-          }
-        }
-      }
-    },
     "resources": {
       "type": "object",
       "description": "CPU and memory requests and limits for the main application container.",
@@ -446,6 +389,113 @@
         "additionalProperties": true
       },
       "default": []
+    },
+    "httpRoutes": {
+      "type": "object",
+      "default": {
+        "main": {
+          "enabled": false,
+          "annotations": {},
+          "parentRefs": [],
+          "hostnames": [],
+          "rules": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "description": "Named HTTPRoutes with independent Gateway references, hostname lists, annotations and rules.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+        "maxLength": 40
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Create this named route."
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Annotations for this route."
+          },
+          "parentRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Gateway and optional listener attachments for this route."
+          },
+          "hostnames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Explicit hostnames served by this route."
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "description": "Gateway API rules and filters; backendRefs are supplied by the chart. Defaults to PathPrefix /."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "enabled": {
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            "then": {},
+            "else": {
+              "required": [
+                "parentRefs",
+                "hostnames"
+              ],
+              "properties": {
+                "parentRefs": {
+                  "minItems": 1
+                },
+                "hostnames": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   }
 }

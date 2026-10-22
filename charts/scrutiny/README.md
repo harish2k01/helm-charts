@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.2.4
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.0
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -40,14 +40,15 @@ helm install scrutiny harish2k01/scrutiny -f values.yaml
 ## Install With Gateway API HTTPRoute
 
 ```yaml
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - scrutiny.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - scrutiny.example.com
 ```
 
 ## Persistence
@@ -124,7 +125,7 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress |
 | `ingress.className` | string | `traefik` | Ingress class |
 | `ingress.host` | string | `scrutiny.local` | Ingress hostname |
-| `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
+| `httpRoutes.main.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
 | `resources` | object | `{}` | Scrutiny container resource requests and limits |
 | `influxdb.resources` | object | `{}` | InfluxDB container resource requests and limits |
 | `probes.enabled` | bool | `true` | Enable Scrutiny HTTP liveness and readiness probes |
@@ -134,3 +135,52 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 See [CHANGELOG.md](CHANGELOG.md) before upgrading persistent databases. The commented runtime reference in [values.yaml](values.yaml) lists Scrutiny and InfluxDB configuration, including Secret-backed token/password examples. Optional overrides are omitted by default to preserve existing file configuration.
 
 The `env`, `envFrom`, `extraEnv` and `extraVolumeMounts` hooks configure Scrutiny. Their `influxdb.*` equivalents configure the database sidecar; `influxdb.args` adds influxd flags. Use `extraVolumes` to define mounted Secret/config files. `deploymentStrategy.type` defaults to `Recreate` to avoid overlapping database writers.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

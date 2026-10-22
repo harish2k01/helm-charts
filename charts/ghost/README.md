@@ -18,7 +18,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.5
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.0
 ```
 
 ## Database Configuration
@@ -105,14 +105,15 @@ Expose Ghost with Gateway API:
 env:
   url: https://blog.example.com
 
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - blog.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - blog.example.com
 ```
 
 Or with Ingress:
@@ -207,7 +208,7 @@ persistence:
 | `extraVolumes` | list | `[]` | Additional pod volumes |
 | `extraVolumeMounts` | list | `[]` | Additional container volume mounts |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress |
-| `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
+| `httpRoutes.main.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
 | `podDisruptionBudget.enabled` | bool | `false` | Create a PodDisruptionBudget |
 | `networkPolicy.enabled` | bool | `false` | Create a NetworkPolicy |
 | `resources` | object | `{}` | Container resource requests and limits |
@@ -218,7 +219,7 @@ persistence:
 
 ## Social Web (ActivityPub)
 
-Enable `activityPub.enabled` with `httpRoute.enabled` to route
+Enable `activityPub.enabled` with an enabled `httpRoutes` entry to route
 `/.ghost/activitypub/`, `/.well-known/webfinger`, and `/.well-known/nodeinfo`
 through a small Caddy proxy. The upstream defaults to Ghost's hosted service
 (`https://ap.ghost.org`); `activityPub.target` may point to a separately managed
@@ -226,11 +227,12 @@ ActivityPub service. The public Host header and request paths are retained.
 The proxy does not deploy an ActivityPub database or server.
 
 ```yaml
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: public-gateway
-  hostnames: [blog.example.com]
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: public-gateway
+    hostnames: [blog.example.com]
 activityPub:
   enabled: true
 ```
@@ -268,3 +270,52 @@ Claim templates use stable identity labels so chart/app version changes do not m
 - `mysql.persistence.claimTemplateLabels`
 
 For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

@@ -119,7 +119,7 @@ env: {}
 #   OWNCLOUD_CROND_SCHEDULE: "\"*/1 * * * *\""
 #   # Define logging if cron ran successfully
 #   OWNCLOUD_CRON_LOG: ""
-#   # Enable or disable ownCloud’s built-in CSRF protection mechanism
+#   # Enable or disable ownCloudâ€™s built-in CSRF protection mechanism
 #   OWNCLOUD_CSRF_DISABLED: ""
 #   # Define the DAV chunk base directory
 #   OWNCLOUD_DAV_CHUNK_BASE_DIR: ""
@@ -233,7 +233,7 @@ env: {}
 #   OWNCLOUD_MEMCACHE_LOCKING: ""
 #   # Sets PHP option max_execution_time. It is recommended to keep the default
 #   OWNCLOUD_MAX_EXECUTION_TIME: "3600"
-#   # Define the maximum filesize for animated GIF´s
+#   # Define the maximum filesize for animated GIFÂ´s
 #   OWNCLOUD_MAX_FILESIZE_ANIMATED_GIFS_PUBLIC_SHARING: ""
 #   # Sets PHP option max_input_time. It is recommended to keep the default
 #   OWNCLOUD_MAX_INPUT_TIME: "3600"
@@ -627,16 +627,61 @@ ingress:
   tls: []
 
 # Optional Gateway API HTTPRoute for exposing ownCloud through a Gateway.
-httpRoute:
-  enabled: false
-  annotations: {}
-  parentRefs: []
-  hostnames: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
+# Gateway API routing. Requires Gateway API CRDs and a compatible controller.
+# Map keys (main, internal, external, etc.) are names you choose, not access policies.
+# Every enabled entry creates one HTTPRoute named <app-fullname>-<key>.
+httpRoutes:
+  main:
+    # Keep disabled until you provide Gateway references and application hostnames.
+    # Additional entries default to enabled when their enabled field is omitted.
+    enabled: false
+    # Per-route metadata, for example controller-specific annotations.
+    annotations: {}
+    # Attach this route to one or more Gateways/listeners. The Gateway must allow
+    # routes from this app's namespace. Omit namespace for a same-namespace Gateway;
+    # omit sectionName to target compatible listeners on that Gateway.
+    parentRefs: []
+    #  - name: internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    #  - name: second-internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    # Requests can match ANY hostname below, on ANY compatible parent above.
+    # These lists do not pair hostnames with individual Gateways by position.
+    hostnames: []
+    #  - app.internal.example.com
+    #  - app-alias.internal.example.com
+    # Match request paths/headers/methods and optionally apply Gateway API filters.
+    # Rules default to PathPrefix / when omitted. Backend references are generated
+    # from this chart's application Service and HTTP port, not supplied here.
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       set:
+        #         - name: X-Route
+        #           value: internal
+  # Use a separate entry when public hostnames should attach to another Gateway.
+  # external:
+  #   enabled: true
+  #   annotations: {}
+  #   parentRefs:
+  #     - name: external-gateway
+  #       namespace: ingress
+  #       sectionName: https
+  #   hostnames:
+  #     - app.example.com
+  #     - app-alias.example.com
+  #   rules:
+  #     - matches:
+  #         - path:
+  #             type: PathPrefix
+  #             value: /
 
 resources: {}
 

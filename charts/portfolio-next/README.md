@@ -10,11 +10,11 @@ Deploys [Harish's Astro portfolio](https://github.com/harish2k01/portfolio-next)
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
-helm install portfolio-next harish2k01/portfolio-next --version 0.1.0
+helm install portfolio-next harish2k01/portfolio-next --version 0.2.0
 ```
 
 ```bash
-helm install portfolio-next oci://ghcr.io/harish2k01/helm-charts/portfolio-next --version 0.1.0
+helm install portfolio-next oci://ghcr.io/harish2k01/helm-charts/portfolio-next --version 0.2.0
 ```
 
 The image must already be published. A chart release does not build the application image. The default image release is `v0.1.0`; override it with a successfully published tag or digest.
@@ -25,14 +25,15 @@ The image must already be published. A chart release does not build the applicat
 image:
   tag: v0.1.0
   # Set digest to the sha256:... value from the release's image.json.
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: public-gateway
-      namespace: ingress
-      sectionName: https
-  hostnames:
-    - portfolio.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: public-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames:
+      - portfolio.example.com
 ```
 
 Configure DNS and the Gateway's TLS certificate separately. Enable either HTTPRoute or Ingress, not both. The HTTPRoute backend targets this chart's Service on port 80, which forwards to NGINX on port 8080. Probes use `/healthz`.
@@ -62,10 +63,59 @@ The image contains static HTML and its article snapshot. No runtime environment 
 | `ingress.enabled` | boolean | `false` | Enable Ingress routing. |
 | `ingress.className`, `ingress.annotations` | string / object | `""` / `{}` | Controller selection and annotations. |
 | `ingress.hosts`, `ingress.tls` | list | Example host / `[]` | HTTP and TLS mappings. |
-| `httpRoute.enabled` | boolean | `false` | Enable Gateway API routing. |
-| `httpRoute.parentRefs`, `httpRoute.hostnames` | list | `[]` | Gateway attachments and DNS names. |
-| `httpRoute.annotations` | object | `{}` | Route annotations. |
+| `httpRoutes.main.enabled` | boolean | `false` | Enable Gateway API routing. |
+| `httpRoutes.main.parentRefs`, `httpRoutes.main.hostnames` | list | `[]` | Gateway attachments and DNS names. |
+| `httpRoutes.main.annotations` | object | `{}` | Route annotations. |
 | `resources` | object | Requests 10m/32Mi, limits 250m/128Mi | CPU and memory budget. |
 | `livenessProbe`, `readinessProbe` | object | HTTP `/healthz` | Container health probes. |
 | `nodeSelector`, `affinity` | object | `{}` | Scheduling constraints. |
 | `tolerations` | list | `[]` | Allowed node taints. |
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

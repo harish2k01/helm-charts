@@ -3,7 +3,7 @@ name: syncthing
 description: Deploys Syncthing continuous file synchronization on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/syncthing.png
-version: 0.2.0
+version: 0.3.0
 appVersion: "2.1.6"
 home: https://syncthing.net
 sources:

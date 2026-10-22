@@ -29,7 +29,7 @@ test('digest overrides mutable tags and a blog-only digest change changes the po
 });
 
 test('Gateway API and Ingress render distinct correctly targeted routes', () => {
-  const gateway = render('--set','httpRoute.enabled=true,httpRoute.parentRefs[0].name=test-gateway,httpRoute.parentRefs[0].namespace=edge,httpRoute.hostnames[0]=portfolio.example.com');
+  const gateway = render('--set','httpRoutes.main.enabled=true,httpRoutes.main.parentRefs[0].name=test-gateway,httpRoutes.main.parentRefs[0].namespace=edge,httpRoutes.main.hostnames[0]=portfolio.example.com');
   assert.match(gateway,/kind: HTTPRoute/);
   assert.match(gateway,/name: test-gateway/);
   assert.match(gateway,/portfolio.example.com/);
@@ -41,7 +41,7 @@ test('Gateway API and Ingress render distinct correctly targeted routes', () => 
 });
 
 test('invalid digests, missing Gateway attachment and conflicting routes fail before deployment', () => {
-  for (const settings of ['image.digest=sha256:invalid','httpRoute.enabled=true','httpRoute.enabled=true,ingress.enabled=true','replicaCount=0']) {
+  for (const settings of ['image.digest=sha256:invalid','httpRoutes.main.enabled=true','httpRoutes.main.enabled=true,ingress.enabled=true','replicaCount=0']) {
     const result = spawnSync('helm',['template','portfolio-next',chart,'--set',settings],{encoding:'utf8'});
     assert.notEqual(result.status,0,settings);
     assert.match(result.stderr,/Error/);

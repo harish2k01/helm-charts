@@ -3,7 +3,7 @@ name: bazarr
 description: Deploys Bazarr subtitle automation on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/bazarr.png
-version: 0.2.0
+version: 0.3.0
 appVersion: "1.6.2"
 home: https://www.bazarr.media
 sources:

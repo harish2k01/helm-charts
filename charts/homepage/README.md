@@ -16,7 +16,7 @@ helm install homepage harish2k01/homepage
 ## Install From OCI
 
 ```bash
-helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.1.1
+helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.2.0
 ```
 
 ## Web UI Access
@@ -30,14 +30,15 @@ homepage:
   allowedHosts:
     - homepage.example.com
 
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - homepage.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - homepage.example.com
 ```
 
 Or with Ingress:
@@ -142,7 +143,7 @@ persistence:
 | `persistence.config.size` | string | `1Gi` | Config PVC size |
 | `persistence.config.storageClassName` | string | `""` | Config PVC storage class |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress |
-| `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
+| `httpRoutes.main.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
@@ -151,3 +152,52 @@ persistence:
 ## Optional runtime settings
 
 `env` includes commented logging, proxy and config-directory examples. Use `envFrom` for `HOMEPAGE_VAR_*` Secret values or `HOMEPAGE_FILE_*` paths with `extraVolumes`/`extraVolumeMounts`; placeholders are substituted in Homepage YAML. Keep widget credentials in Secrets. See [CHANGELOG.md](CHANGELOG.md) for release details.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

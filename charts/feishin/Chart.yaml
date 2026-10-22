@@ -3,7 +3,7 @@ name: feishin
 description: Deploys Feishin music streaming client on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/feishin.png
-version: 0.1.1
+version: 0.2.0
 appVersion: "1.17.0"
 home: https://github.com/jeffvli/feishin
 sources:

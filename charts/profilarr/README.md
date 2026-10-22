@@ -10,13 +10,13 @@ Deploys [Profilarr](https://github.com/Dictionarry-Hub/profilarr) for managing R
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
-helm install profilarr harish2k01/profilarr --version 0.1.1
+helm install profilarr harish2k01/profilarr --version 0.2.0
 ```
 
 ## Install From OCI
 
 ```bash
-helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.1.1
+helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.0
 ```
 
 ## Gateway API HTTPRoute
@@ -26,14 +26,15 @@ Set `ORIGIN` to the URL used by the browser so the application handles reverse-p
 ```yaml
 env:
   ORIGIN: https://profilarr.example.com
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - profilarr.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - profilarr.example.com
 ```
 
 Ingress is also supported:
@@ -129,11 +130,60 @@ For OIDC on the pinned 2.2.0 release, supply the upstream OIDC environment varia
 | `parser.startupProbe` / `parser.livenessProbe` / `parser.readinessProbe` | object | See values.yaml | Parser health probes |
 | `extraVolumes` / `extraVolumeMounts` | list | `[]` | Additional application mounts |
 | `ingress.enabled` | bool | `false` | Publish using Ingress |
-| `httpRoute.enabled` | bool | `false` | Publish using Gateway API |
-| `httpRoute.parentRefs` | list | `[]` | Required Gateway references when enabled |
-| `httpRoute.hostnames` | list | `[]` | Route hostnames |
-| `httpRoute.rules` | list | Root path prefix | HTTP matches and optional filters |
+| `httpRoutes.main.enabled` | bool | `false` | Publish using Gateway API |
+| `httpRoutes.main.parentRefs` | list | `[]` | Required Gateway references when enabled |
+| `httpRoutes.main.hostnames` | list | `[]` | Route hostnames |
+| `httpRoutes.main.rules` | list | Root path prefix | HTTP matches and optional filters |
 | `resources` | object | `{}` | App resource requests/limits |
 | `startupProbe` / `livenessProbe` / `readinessProbe` | object | See values.yaml | App health probes |
 | `nodeSelector` / `affinity` | object | `{}` | Scheduling constraints |
 | `tolerations` | list | `[]` | Scheduling tolerations |
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

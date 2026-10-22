@@ -3,7 +3,7 @@ name: uptime-kuma
 description: A Helm chart for Uptime Kuma - a self-hosted monitoring tool
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/uptime-kuma.png
-version: 0.2.1
+version: 0.3.0
 appVersion: "2.5.6-slim"
 keywords:
   - uptime
