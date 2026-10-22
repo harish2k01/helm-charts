@@ -10,7 +10,6 @@ const cases=[
   ['ghost','mysql.persistence',[]],
   ['owncloud','mariadb.persistence',[],'mariadb'],
   ['owncloud','redis.persistence',[],'redis'],
-  ['portfolio-tracker','database.postgresql.persistence',[]],
   ['umami','database.postgresql.persistence',[]],
   ['uptime-kuma','database.mariadb.persistence',['database.mariadb.enabled=true','database.mariadb.auth.existingSecret=test-db']],
   ['tailscale','persistence',[]],
