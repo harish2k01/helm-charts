@@ -8,6 +8,8 @@ on:
       - charts/**
       - docs/**
       - scripts/build-catalog.mjs
+      - scripts/prune-retired-charts.mjs
+      - scripts/retired-charts.json
       - package.json
       - package-lock.json
       - README.md
@@ -147,6 +149,7 @@ jobs:
           cp "$HELM_SIGNING_PUBLIC_KEY" _site/chart-signing-key.asc
 
           if index_status="$(curl "${CURL_OPTIONS[@]}" --write-out '%{http_code}' "$REPO_URL/index.yaml" -o _site/index.yaml)"; then
+            node "$GITHUB_WORKSPACE/scripts/prune-retired-charts.mjs" _site
             grep -Eo 'https?://[^[:space:]]+\.tgz' _site/index.yaml | sort -u | while read -r package_url; do
               package_name="$(basename "$package_url")"
               if [ ! -f "_site/$package_name" ]; then
@@ -181,6 +184,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
+            const { isRetiredAsset } = await import(`${process.env.GITHUB_WORKSPACE}/scripts/prune-retired-charts.mjs`);
 
             const releases = await github.paginate(github.rest.repos.listReleases, {
               owner: context.repo.owner,
@@ -189,7 +193,9 @@ jobs:
             });
 
             for (const release of releases) {
+              if (isRetiredAsset(`${release.tag_name}.tgz`)) continue;
               for (const asset of release.assets || []) {
+                if (isRetiredAsset(asset.name)) continue;
                 if (!asset.name.endsWith('.tgz') && !asset.name.endsWith('.tgz.prov')) {
                   continue;
                 }
@@ -232,6 +238,7 @@ jobs:
             fi
           done
 
+          node "$GITHUB_WORKSPACE/scripts/prune-retired-charts.mjs" _site
           if [ -f _site/index.yaml ]; then
             cp _site/index.yaml _site/previous-index.yaml
             helm repo index _site --url "$REPO_URL" --merge _site/previous-index.yaml

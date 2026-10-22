@@ -94,8 +94,3 @@ test('AdGuard and Syncthing named routes follow configurable HTTP Service ports'
     assert.equal(actual.spec.rules[0].backendRefs[0].port, 8888);
   }
 });
-
-test('Portfolio Next rejects Ingress combined with enabled named routes', () => {
-  assert.throws(() => render('portfolio-next', { ingress: { enabled: true }, httpRoutes: { external: route('external', 'app.example.com') } }), /Enable only one/);
-  assert.equal(routes(render('portfolio-next', { ingress: { enabled: true }, httpRoutes: { external: { enabled: false } } })).length, 0);
-});

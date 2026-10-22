@@ -127,24 +127,6 @@
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/pocket-id.png"
     },
     {
-      "name": "Portfolio Next",
-      "slug": "portfolio-next",
-      "category": "Publishing",
-      "version": "0.2.0",
-      "appVersion": "v0.1.0",
-      "description": "Static Astro portfolio served by unprivileged NGINX",
-      "icon": null
-    },
-    {
-      "name": "Portfolio Tracker",
-      "slug": "portfolio-tracker",
-      "category": "Finance",
-      "version": "0.3.0",
-      "appVersion": "0.7.0",
-      "description": "Deploys the self-hosted Portfolio Tracker with PostgreSQL",
-      "icon": null
-    },
-    {
       "name": "Profilarr",
       "slug": "profilarr",
       "category": "Media",

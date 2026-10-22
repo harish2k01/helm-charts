@@ -20,8 +20,6 @@ const names = {
   "k8s-debug-pod": "K8s Debug Pod",
   owncloud: "ownCloud",
   "pocket-id": "Pocket ID",
-  "portfolio-next": "Portfolio Next",
-  "portfolio-tracker": "Portfolio Tracker",
   "pve-exporter": "Proxmox VE Exporter",
   qbittorrent: "qBittorrent",
   "qbittorrent-exporter": "qBittorrent Exporter",

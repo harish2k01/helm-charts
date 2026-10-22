@@ -40,7 +40,7 @@ async function runRestore(t, scenario) {
   const result = await new Promise((done, reject) => {
     const child = spawn(bash, ["-e", "-o", "pipefail"], {
       cwd: directory,
-      env: { ...process.env, HELM_REPOSITORY_URL: base, HELM_SIGNING_PUBLIC_KEY: signingKey.replaceAll("\\", "/"), NO_PROXY: "127.0.0.1" },
+      env: { ...process.env, GITHUB_WORKSPACE: resolve(".").replaceAll("\\", "/"), HELM_REPOSITORY_URL: base, HELM_SIGNING_PUBLIC_KEY: signingKey.replaceAll("\\", "/"), NO_PROXY: "127.0.0.1" },
       stdio: ["pipe", "pipe", "pipe"],
     });
     let output = "";
