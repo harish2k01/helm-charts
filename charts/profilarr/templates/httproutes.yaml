@@ -1,10 +1,10 @@
+{{- if hasKey .Values "httpRoute" -}}
+{{- fail "httpRoute has been removed; migrate to httpRoutes.<name> (see chart README)" -}}
+{{- end -}}
 {{- $root := . -}}
 {{- $fullName := include "profilarr.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $names := dict -}}
-{{- if .Values.httpRoute.enabled -}}
-{{- $_ := set $names $fullName true -}}
-{{- end -}}
 {{- range $key, $route := .Values.httpRoutes }}
 {{- if or (not (hasKey $route "enabled")) $route.enabled }}
 {{- $parentRefs := required (printf "httpRoutes.%s.parentRefs must identify a Gateway" $key) $route.parentRefs -}}
@@ -15,6 +15,9 @@
 {{- end -}}
 {{- $_ := set $names $name true -}}
 {{- with $root }}
+{{- if .Values.ingress.enabled }}
+{{- fail "Enable only one of ingress.enabled or Gateway API routes" }}
+{{- end }}
 
 ---
 apiVersion: gateway.networking.k8s.io/v1

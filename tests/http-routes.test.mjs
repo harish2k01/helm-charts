@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseAllDocuments } from 'yaml';
 
-const charts = readdirSync('charts').filter(name => existsSync(`charts/${name}/templates/httproute.yaml`));
+const charts = readdirSync('charts').filter(name => existsSync(`charts/${name}/templates/httproutes.yaml`));
 const route = (gateway, host, extra = {}) => ({ parentRefs: [{ name: gateway, namespace: 'edge', sectionName: 'https' }], hostnames: [host], ...extra });
 function render(chart, values = {}, extra = []) {
   const dir = mkdtempSync(join(tmpdir(), 'helm-http-routes-'));
@@ -19,12 +19,12 @@ function render(chart, values = {}, extra = []) {
 const routes = output => parseAllDocuments(output).map(doc => doc.toJSON()).filter(doc => doc?.kind === 'HTTPRoute');
 
 for (const chart of charts) {
-  test(`${chart}: independent named routes retain the legacy backend and isolate attachments`, () => {
-    const legacy = routes(render(chart, { httpRoute: { enabled: true, ...route('legacy', 'legacy.example.com') } }))[0];
+  test(`${chart}: independent routes support multiple hostnames and Gateways without leaking attachments`, () => {
+    const services = parseAllDocuments(render(chart)).map(d => d.toJSON()).filter(d => d?.kind === 'Service');
     const output = routes(render(chart, {
       httpRoutes: {
         internal: route('internal', 'app.internal.example.com', { annotations: { 'example.com/scope': 'internal' } }),
-        external: route('external', 'app.example.com'),
+        external: route('external', 'app.example.com', { hostnames: ['app.example.com', 'alias.example.com'], parentRefs: [{ name: 'external', namespace: 'edge', sectionName: 'https' }, { name: 'external-secondary', namespace: 'edge', sectionName: 'https' }] }),
         disabled: { enabled: false },
       },
     }));
@@ -33,16 +33,19 @@ for (const chart of charts) {
       const actual = output.find(r => r.metadata.name.endsWith(`-${key}`));
       assert.equal(actual.metadata.namespace, 'apps');
       assert.equal(actual.spec.parentRefs[0].name, key);
-      assert.deepEqual(actual.spec.hostnames, [key === 'internal' ? 'app.internal.example.com' : 'app.example.com']);
-      assert.deepEqual(actual.spec.rules[0].backendRefs, legacy.spec.rules[0].backendRefs.map(b => ({ ...b, weight: 1 })));
+      assert.deepEqual(actual.spec.hostnames, key === 'internal' ? ['app.internal.example.com'] : ['app.example.com', 'alias.example.com']);
+      assert.equal(actual.spec.parentRefs.length, key === 'internal' ? 1 : 2);
+      const backend = actual.spec.rules[0].backendRefs[0];
+      const service = services.find(s => s.metadata.name === backend.name);
+      assert.ok(service, 'route targets the chart application Service');
+      assert.ok(service.spec.ports.some(p => p.port === backend.port));
+      assert.equal(backend.weight, 1);
       assert.equal(actual.metadata.labels['app.kubernetes.io/instance'], 'example');
     }
     assert.equal(output.find(r => r.metadata.name.endsWith('-internal')).metadata.annotations['example.com/scope'], 'internal');
     assert.equal(output.find(r => r.metadata.name.endsWith('-external')).metadata.annotations, undefined);
-    const together = routes(render(chart, { httpRoute: { enabled: true, ...route('legacy', 'legacy.example.com') }, httpRoutes: { external: route('external', 'app.example.com') } }));
-    assert.equal(together.length, 2);
-    assert.deepEqual(together.find(r => r.metadata.name === legacy.metadata.name), legacy);
     assert.equal(routes(render(chart)).length, 0);
+    assert.throws(() => render(chart, { httpRoute: { enabled: false } }), /httpRoute has been removed/);
   });
 
   test(`${chart}: named route filters, matches, and long resource names render correctly`, () => {
@@ -75,7 +78,7 @@ test('Ghost named routes retain ActivityPub endpoints and app backend', () => {
   assert.equal(actual.spec.rules[0].backendRefs[0].port, 8080);
   assert.ok(actual.spec.rules[0].matches.some(m => m.path.value === '/.well-known/webfinger'));
   assert.equal(actual.spec.rules[1].backendRefs[0].name, 'example-ghost');
-  assert.throws(() => render('ghost', { activityPub: { enabled: true }, httpRoutes: { external: { enabled: false } } }), /requires httpRoute.enabled/);
+  assert.throws(() => render('ghost', { activityPub: { enabled: true }, httpRoutes: { external: { enabled: false } } }), /requires an enabled httpRoutes entry/);
 });
 
 test('route names that collide after shortening fail instead of emitting duplicate objects', () => {

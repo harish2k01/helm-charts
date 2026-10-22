@@ -190,44 +190,6 @@
         }
       }
     },
-    "httpRoute": {
-      "type": "object",
-      "description": "Optional Gateway API routing.",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Create an HTTPRoute."
-        },
-        "annotations": {
-          "type": "object",
-          "default": {},
-          "description": "HTTPRoute annotations.",
-          "additionalProperties": true
-        },
-        "parentRefs": {
-          "type": "array",
-          "default": [],
-          "description": "Gateway attachment references.",
-          "items": {
-            "type": "object",
-            "default": {},
-            "description": "Kubernetes configuration entry.",
-            "additionalProperties": true
-          }
-        },
-        "hostnames": {
-          "type": "array",
-          "default": [],
-          "description": "DNS names served by this site.",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
-      }
-    },
     "resources": {
       "type": "object",
       "default": {
@@ -291,8 +253,27 @@
     },
     "httpRoutes": {
       "type": "object",
-      "default": {},
-      "description": "Additional named HTTPRoutes. Each entry targets the app Service and has independent Gateway references and hostnames.",
+      "default": {
+        "main": {
+          "enabled": false,
+          "annotations": {},
+          "parentRefs": [],
+          "hostnames": [],
+          "rules": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "description": "Named HTTPRoutes with independent Gateway references, hostname lists, annotations and rules.",
       "propertyNames": {
         "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
         "maxLength": 40
@@ -313,7 +294,6 @@
           },
           "parentRefs": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "object",
               "additionalProperties": true,
@@ -331,7 +311,6 @@
           },
           "hostnames": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "string",
               "minLength": 1
@@ -365,7 +344,15 @@
               "required": [
                 "parentRefs",
                 "hostnames"
-              ]
+              ],
+              "properties": {
+                "parentRefs": {
+                  "minItems": 1
+                },
+                "hostnames": {
+                  "minItems": 1
+                }
+              }
             }
           }
         ]

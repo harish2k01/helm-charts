@@ -323,42 +323,6 @@
         }
       }
     },
-    "httpRoute": {
-      "type": "object",
-      "description": "Gateway API HTTPRoute configuration.",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Create an HTTPRoute resource.",
-          "default": false
-        },
-        "annotations": {
-          "type": "object",
-          "description": "Additional HTTPRoute annotations.",
-          "additionalProperties": true,
-          "properties": {}
-        },
-        "parentRefs": {
-          "type": "array",
-          "description": "Gateway parentRefs.",
-          "default": [],
-          "items": {}
-        },
-        "hostnames": {
-          "type": "array",
-          "description": "HTTPRoute hostnames.",
-          "default": [],
-          "items": {}
-        },
-        "rules": {
-          "type": "array",
-          "description": "HTTPRoute rules.",
-          "default": [],
-          "items": {}
-        }
-      }
-    },
     "resources": {
       "type": "object",
       "description": "Container CPU and memory requests and limits.",
@@ -397,8 +361,27 @@
     },
     "httpRoutes": {
       "type": "object",
-      "default": {},
-      "description": "Additional named HTTPRoutes. Each entry targets the app Service and has independent Gateway references and hostnames.",
+      "default": {
+        "main": {
+          "enabled": false,
+          "annotations": {},
+          "parentRefs": [],
+          "hostnames": [],
+          "rules": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "description": "Named HTTPRoutes with independent Gateway references, hostname lists, annotations and rules.",
       "propertyNames": {
         "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
         "maxLength": 40
@@ -419,7 +402,6 @@
           },
           "parentRefs": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "object",
               "additionalProperties": true,
@@ -437,7 +419,6 @@
           },
           "hostnames": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "string",
               "minLength": 1
@@ -471,7 +452,15 @@
               "required": [
                 "parentRefs",
                 "hostnames"
-              ]
+              ],
+              "properties": {
+                "parentRefs": {
+                  "minItems": 1
+                },
+                "hostnames": {
+                  "minItems": 1
+                }
+              }
             }
           }
         ]

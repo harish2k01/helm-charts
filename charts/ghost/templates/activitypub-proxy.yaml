@@ -1,12 +1,12 @@
 {{- if .Values.activityPub.enabled }}
-{{- $hasRoute := .Values.httpRoute.enabled -}}
+{{- $hasRoute := false -}}
 {{- range .Values.httpRoutes -}}
 {{- if or (not (hasKey . "enabled")) .enabled -}}
 {{- $hasRoute = true -}}
 {{- end -}}
 {{- end -}}
 {{- if not $hasRoute }}
-{{- fail "activityPub.enabled requires httpRoute.enabled or an enabled httpRoutes entry" }}
+{{- fail "activityPub.enabled requires an enabled httpRoutes entry" }}
 {{- end }}
 {{- $name := printf "%s-activitypub" (include "ghost.fullname" .) | trunc 63 | trimSuffix "-" }}
 apiVersion: v1

@@ -94,14 +94,15 @@ ingress:
 ## Gateway API HTTPRoute
 
 ```yaml
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - umami.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - umami.example.com
 ```
 
 ## Helm Values Reference
@@ -116,7 +117,7 @@ httpRoute:
 | `service.port` | int | `3000` | Service port. |
 | `service.targetPort` | int | `3000` | Umami container port. |
 | `ingress.enabled` | bool | `false` | Create an Ingress resource. |
-| `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute. |
+| `httpRoutes.main.enabled` | bool | `false` | Create a Gateway API HTTPRoute. |
 | `database.postgresql.enabled` | bool | `true` | Deploy bundled PostgreSQL. |
 | `database.postgresql.auth.database` | string | `umami` | Bundled PostgreSQL database name. |
 | `database.postgresql.auth.username` | string | `umami` | Bundled PostgreSQL username. |
@@ -166,13 +167,10 @@ For an existing StatefulSet created by an older chart, copy the labels from its 
 
 ## Multiple HTTPRoutes
 
-Use `httpRoutes` to attach separate hostnames to separate Gateways. The existing
-`httpRoute` configuration remains supported and independent; disable it when
-replacing it with named routes to avoid overlapping rules.
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
 
 ```yaml
-httpRoute:
-  enabled: false
 httpRoutes:
   internal:
     parentRefs:
@@ -194,14 +192,24 @@ shortened to keep the suffix and stay within 63 characters; collisions fail rend
 
 | Key | Default | Description |
 |---|---|---|
-| `httpRoutes` | `{}` | Additional named HTTPRoutes; empty creates none. |
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
 | `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
 | `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
 | `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
 | `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
 | `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
 
-Named routes do not inherit hostnames, attachments, annotations, or rules from
-`httpRoute`. They retain chart-specific backend behavior, including Ghost's
-ActivityPub endpoints when enabled. Gateway API CRDs and a compatible controller
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
 are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.
