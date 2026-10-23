@@ -185,6 +185,16 @@ gpg --dearmor < chart-signing-key.asc > chart-signing-key.gpg
 helm verify bentopdf-0.1.3.tgz --keyring ./chart-signing-key.gpg
 ```
 
+## Release Publishing
+
+Published chart versions are immutable. Changes anywhere inside a chart directory, including its README and schema, require a chart version bump. CI checks this on pull requests and pushes to main.
+
+The release workflow reuses existing signed archives, packages new versions, and repairs incomplete GitHub release assets. Historical packages remain available through the Helm index. History downloads run four at a time, and any failed restoration stops deployment.
+
+Successful OCI checks and publications are recorded by archive SHA-256 in the site's `release-state.json`. Later releases skip confirmed versions; a missing state file triggers a full check. The state is deployed only after OCI publishing and GitHub release creation succeed. Chart source fingerprints also prevent an existing version from being reused after its source changes.
+
+To repair OCI versions removed outside the workflow, run **Release Charts** manually with **reconcile** enabled. This checks all historical versions even when publication receipts exist. The first optimized release performs that same full OCI check to establish the initial state.
+
 ## Catalog Website
 
 The catalog is a static website served by GitHub Pages at `https://charts.harish2k01.in`. It includes app logos from chart metadata, light and dark themes, search/category filters, and installation details for every chart in one scrolling list. The H/home/server mark identifies Harish's homelab and serves as the favicon.
