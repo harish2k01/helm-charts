@@ -1,6 +1,12 @@
 name: Release Charts
 
 on:
+  workflow_dispatch:
+    inputs:
+      reconcile:
+        description: Check all historical OCI versions and repair missing publications
+        type: boolean
+        default: false
   push:
     branches:
       - main
@@ -10,6 +16,9 @@ on:
       - scripts/build-catalog.mjs
       - scripts/prune-retired-charts.mjs
       - scripts/retired-charts.json
+      - scripts/release-plan.mjs
+      - scripts/package-charts.mjs
+      - scripts/publish-oci.mjs
       - package.json
       - package-lock.json
       - README.md
@@ -48,6 +57,19 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Require chart version bumps
+        env:
+          CHART_BASE_SHA: ${{ github.event.before }}
+        run: |
+          npm ci --ignore-scripts
+          node scripts/release-plan.mjs check-versions
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
@@ -124,14 +146,8 @@ jobs:
             echo "HELM_SIGNING_PUBLIC_KEY=${RUNNER_TEMP}/helm-chart-signing-key.asc"
           } >> "$GITHUB_ENV"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-
       - name: Generate chart catalog
         run: |
-          npm ci --ignore-scripts
           npm run build:catalog
 
       - name: Prepare Helm repository site
@@ -150,12 +166,13 @@ jobs:
 
           if index_status="$(curl "${CURL_OPTIONS[@]}" --write-out '%{http_code}' "$REPO_URL/index.yaml" -o _site/index.yaml)"; then
             node "$GITHUB_WORKSPACE/scripts/prune-retired-charts.mjs" _site
-            grep -Eo 'https?://[^[:space:]]+\.tgz' _site/index.yaml | sort -u | while read -r package_url; do
+            restore_package() {
+              local package_url="$1"
+              local package_name provenance_name provenance_status
               package_name="$(basename "$package_url")"
               if [ ! -f "_site/$package_name" ]; then
                 curl "${CURL_OPTIONS[@]}" "$package_url" -o "_site/$package_name"
               fi
-
               provenance_name="${package_name}.prov"
               if [ ! -f "_site/$provenance_name" ]; then
                 if provenance_status="$(curl "${CURL_OPTIONS[@]}" --write-out '%{http_code}' "${package_url}.prov" -o "_site/$provenance_name")"; then
@@ -165,15 +182,44 @@ jobs:
                   rm -f "_site/$provenance_name"
                 else
                   echo "::error::Could not restore provenance for ${package_name} (HTTP ${provenance_status}); refusing to publish incomplete history."
-                  exit 1
+                  return 1
                 fi
               fi
-            done
+            }
+
+            # Four downloads at a time; wait for every worker and propagate any failure.
+            pids=()
+            failed=0
+            while read -r package_url; do
+              restore_package "$package_url" &
+              pids+=("$!")
+              if [ "${#pids[@]}" -eq 4 ]; then
+                for pid in "${pids[@]}"; do wait "$pid" || failed=1; done
+                pids=()
+                if [ "$failed" -ne 0 ]; then exit 1; fi
+              fi
+            done < <(grep -Eo 'https?://[^[:space:]]+\.tgz' _site/index.yaml | sort -u || true)
+            for pid in "${pids[@]}"; do wait "$pid" || failed=1; done
+            if [ "$failed" -ne 0 ]; then exit 1; fi
           elif [ "$index_status" = "404" ]; then
             echo "No previous index found; preparing a new Helm repository."
             rm -f _site/index.yaml
           else
             echo "::error::Could not restore the existing index (HTTP ${index_status}); refusing to publish incomplete history."
+            exit 1
+          fi
+
+      - name: Restore publication state
+        shell: bash
+        run: |
+          set -euo pipefail
+          if status="$(curl -fsSL --retry 5 --retry-delay 2 --retry-max-time 120 --connect-timeout 15 --max-time 60 --write-out '%{http_code}' "$HELM_REPOSITORY_URL/release-state.json" -o _site/release-state.json)"; then
+            :
+          elif [ "$status" = "404" ]; then
+            rm -f _site/release-state.json
+            echo "No publication state found; checking all existing OCI versions once."
+          else
+            echo "::error::Could not restore publication state (HTTP ${status}); refusing to continue."
             exit 1
           fi
 
@@ -191,6 +237,18 @@ jobs:
               repo: context.repo.repo,
               per_page: 100,
             });
+
+            for (const release of releases) {
+              if ((release.assets || []).length >= 30) {
+                release.assets = await github.paginate(github.rest.repos.listReleaseAssets, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: release.id,
+                  per_page: 100,
+                });
+              }
+            }
+            fs.writeFileSync('.release-inventory.json', JSON.stringify(releases));
 
             for (const release of releases) {
               if (isRetiredAsset(`${release.tag_name}.tgz`)) continue;
@@ -220,23 +278,16 @@ jobs:
             }
 
       - name: Package and index Helm repository
+        env:
+          RECONCILE: ${{ inputs.reconcile || false }}
         shell: bash
         run: |
           set -euo pipefail
 
           REPO_URL="$HELM_REPOSITORY_URL"
 
-          for chart in charts/*; do
-            if [ -d "$chart" ]; then
-              helm dependency update "$chart"
-              helm package "$chart" \
-                --destination _site \
-                --sign \
-                --key "$HELM_SIGNING_KEY_NAME" \
-                --keyring "$HELM_SIGNING_KEYRING" \
-                --passphrase-file "$HELM_SIGNING_PASSPHRASE_FILE"
-            fi
-          done
+          node scripts/release-plan.mjs
+          node scripts/package-charts.mjs
 
           node "$GITHUB_WORKSPACE/scripts/prune-retired-charts.mjs" _site
           if [ -f _site/index.yaml ]; then
@@ -247,69 +298,11 @@ jobs:
             helm repo index _site --url "$REPO_URL"
           fi
 
-      - name: Verify signed Helm packages
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          for chart in charts/*; do
-            if [ -d "$chart" ]; then
-              metadata="$(helm show chart "$chart")"
-              chart_name="$(printf '%s\n' "$metadata" | sed -n 's/^name:[[:space:]]*//p' | head -n 1)"
-              chart_version="$(printf '%s\n' "$metadata" | sed -n 's/^version:[[:space:]]*//p' | head -n 1)"
-              chart_name="${chart_name%\"}"
-              chart_name="${chart_name#\"}"
-              chart_name="${chart_name%\'}"
-              chart_name="${chart_name#\'}"
-              chart_version="${chart_version%\"}"
-              chart_version="${chart_version#\"}"
-              chart_version="${chart_version%\'}"
-              chart_version="${chart_version#\'}"
-
-              helm verify "_site/${chart_name}-${chart_version}.tgz" --keyring "$HELM_SIGNING_PUBLIC_KEYRING"
-            fi
-          done
-
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
 
-      - name: Push OCI charts
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
-          REPOSITORY="$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')"
-          OCI_REPOSITORY="oci://ghcr.io/${OWNER}/${REPOSITORY}"
-
-          shopt -s nullglob
-          packages=(_site/*.tgz)
-
-          for package in "${packages[@]}"; do
-            metadata="$(helm show chart "$package")"
-            chart_name="$(printf '%s\n' "$metadata" | sed -n 's/^name:[[:space:]]*//p' | head -n 1)"
-            chart_version="$(printf '%s\n' "$metadata" | sed -n 's/^version:[[:space:]]*//p' | head -n 1)"
-            chart_name="${chart_name%\"}"
-            chart_name="${chart_name#\"}"
-            chart_name="${chart_name%\'}"
-            chart_name="${chart_name#\'}"
-            chart_version="${chart_version%\"}"
-            chart_version="${chart_version#\"}"
-            chart_version="${chart_version%\'}"
-            chart_version="${chart_version#\'}"
-
-            if [ -z "$chart_name" ] || [ -z "$chart_version" ]; then
-              echo "Could not determine chart metadata for ${package}; skipping."
-              continue
-            fi
-
-            if helm show chart "${OCI_REPOSITORY}/${chart_name}" --version "$chart_version" >/dev/null 2>&1; then
-              echo "OCI chart ${chart_name}:${chart_version} already exists; skipping."
-              continue
-            fi
-
-            helm push "$package" "$OCI_REPOSITORY"
-          done
+      - name: Push pending OCI charts
+        run: node scripts/publish-oci.mjs
 
       - name: Create GitHub releases
         uses: actions/github-script@v9
@@ -318,28 +311,15 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const { execFileSync } = require('child_process');
 
             const repoUrl = process.env.HELM_REPOSITORY_URL;
             const ociRepo = `oci://ghcr.io/${context.repo.owner.toLowerCase()}/${context.repo.repo.toLowerCase()}`;
-            const chartsDir = 'charts';
-            const chartDirs = fs.readdirSync(chartsDir, { withFileTypes: true })
-              .filter((entry) => entry.isDirectory())
-              .map((entry) => path.join(chartsDir, entry.name));
-
-            function getMetadataValue(metadata, key) {
-              const prefix = `${key}:`;
-              const line = metadata.split(/\r?\n/).find((item) => item.startsWith(prefix));
-              return line ? line.slice(prefix.length).trim().replace(/^["']|["']$/g, '') : '';
-            }
+            const inventory = JSON.parse(fs.readFileSync('.release-inventory.json', 'utf8'));
+            const charts = JSON.parse(fs.readFileSync('.release-plan.json', 'utf8')).charts;
 
             async function uploadAssetIfMissing(releaseId, filePath, contentType) {
               const assetName = path.basename(filePath);
-              const assets = await github.paginate(github.rest.repos.listReleaseAssets, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: releaseId,
-              });
+              const assets = inventory.find(release => release.id === releaseId)?.assets || [];
 
               if (assets.some((asset) => asset.name === assetName)) {
                 core.info(`Release asset ${assetName} already exists; skipping.`);
@@ -360,12 +340,11 @@ jobs:
               });
             }
 
-            for (const chart of chartDirs) {
-              const metadata = execFileSync('helm', ['show', 'chart', chart], { encoding: 'utf8' });
-              const chartName = getMetadataValue(metadata, 'name');
-              const chartVersion = getMetadataValue(metadata, 'version');
-              const appVersion = getMetadataValue(metadata, 'appVersion');
-              const description = getMetadataValue(metadata, 'description');
+            for (const { directory: chart, metadata } of charts) {
+              const chartName = metadata.name;
+              const chartVersion = String(metadata.version);
+              const appVersion = metadata.appVersion || '';
+              const description = metadata.description || '';
               const tag = `${chartName}-${chartVersion}`;
               const packagePath = path.join('_site', `${chartName}-${chartVersion}.tgz`);
               const provenancePath = `${packagePath}.prov`;
@@ -375,18 +354,12 @@ jobs:
                 continue;
               }
 
-              let release;
-              try {
-                release = await github.rest.repos.getReleaseByTag({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  tag,
-                });
-                core.info(`Release ${tag} already exists; checking assets.`);
-              } catch (error) {
-                if (error.status !== 404) {
-                  throw error;
-                }
+              const existing = inventory.find(release => release.tag_name === tag);
+              let release = existing ? { data: existing } : undefined;
+              if (existing?.assets?.some(asset => asset.name === path.basename(packagePath)) &&
+                  existing.assets.some(asset => asset.name === path.basename(provenancePath))) {
+                core.info(`Release ${tag} is complete; skipping.`);
+                continue;
               }
 
               const notes = [
@@ -436,6 +409,7 @@ jobs:
                   name: `${chartName} ${chartVersion}`,
                   body: notes,
                 });
+                inventory.push({ ...release.data, assets: [] });
               }
 
               await uploadAssetIfMissing(release.data.id, packagePath, 'application/gzip');
