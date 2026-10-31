@@ -139,7 +139,7 @@
       "name": "Prowlarr",
       "slug": "prowlarr",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "2.6.5",
       "description": "Deploys Prowlarr indexer manager on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/prowlarr.png"
@@ -175,7 +175,7 @@
       "name": "Radarr",
       "slug": "radarr",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "6.4.4",
       "description": "Deploys Radarr movie automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/radarr.png"
@@ -202,7 +202,7 @@
       "name": "Sonarr",
       "slug": "sonarr",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "4.0.20",
       "description": "Deploys Sonarr TV automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/sonarr.png"

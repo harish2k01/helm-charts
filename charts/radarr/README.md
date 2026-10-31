@@ -18,7 +18,7 @@ helm install radarr harish2k01/radarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.3.0
+helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.3.1
 ```
 
 Deploy another Radarr instance by using a different release name and values file:
@@ -154,3 +154,11 @@ resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
 upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
 Multiple hostnames and parent references apply to the whole route; use separate
 entries when each hostname group must attach to a different Gateway.
+
+### Health probes
+
+Liveness and readiness probes use the unauthenticated `/ping` endpoint on the
+application HTTP port. They retain `Host: localhost` for compatibility with host
+allowlists and avoid redirects to the login page. Override
+`livenessProbe.httpGet.path` and `readinessProbe.httpGet.path` when using a custom
+URL base.

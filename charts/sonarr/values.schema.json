@@ -467,8 +467,8 @@
           "properties": {
             "path": {
               "type": "string",
-              "description": "HTTP path match configuration.",
-              "default": "/"
+              "description": "Unauthenticated health endpoint; avoids redirects to the login page.",
+              "default": "/ping"
             },
             "port": {
               "type": [
@@ -514,8 +514,8 @@
           "properties": {
             "path": {
               "type": "string",
-              "description": "HTTP path match configuration.",
-              "default": "/"
+              "description": "Unauthenticated health endpoint; avoids redirects to the login page.",
+              "default": "/ping"
             },
             "port": {
               "type": [
