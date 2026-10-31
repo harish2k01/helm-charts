@@ -235,9 +235,10 @@ httpRoutes:
 
 resources: {}
 
+# Use the unauthenticated health endpoint to avoid login redirects.
 livenessProbe:
   httpGet:
-    path: /
+    path: /ping
     port: http
     # Upstream always permits loopback hostnames, even with AllowedHosts set.
     httpHeaders:
@@ -250,7 +251,7 @@ livenessProbe:
 
 readinessProbe:
   httpGet:
-    path: /
+    path: /ping
     port: http
     # Upstream always permits loopback hostnames, even with AllowedHosts set.
     httpHeaders:

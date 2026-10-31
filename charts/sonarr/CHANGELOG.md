@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-11-01
+
+- Use `/ping` for default liveness and readiness probes to avoid login redirects and repeated kubelet `ProbeWarning` events.
+- Preserve `Host: localhost` for deployments with hostname allowlists. Application versions and probe timing are unchanged.
+
 ## 0.2.0 - 2026-10-21
 
 ### Application changes
