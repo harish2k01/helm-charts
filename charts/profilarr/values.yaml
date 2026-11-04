@@ -4,7 +4,7 @@ replicaCount: 1
 # Keep the app and optional parser on compatible, pinned upstream releases.
 image:
   repository: ghcr.io/dictionarry-hub/profilarr
-  tag: "2.2.0"
+  tag: "2.3.1"
   pullPolicy: IfNotPresent
 
 # Use these for private registries or to align release resource names.
