@@ -18,7 +18,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.0
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.1
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.
@@ -107,7 +107,7 @@ http://scrutiny.<namespace>.svc.cluster.local:8080
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `image.repository` | string | `ghcr.io/analogj/scrutiny` | Scrutiny container image repository |
-| `image.tag` | string | `v0.9.2-web` | Scrutiny container image tag |
+| `image.tag` | string | `v0.10.0-web` | Scrutiny container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Scrutiny image pull policy |
 | `influxdb.image.repository` | string | `influxdb` | InfluxDB image repository |
 | `influxdb.image.tag` | string | `2.9.1` | InfluxDB image tag |
