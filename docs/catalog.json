@@ -220,8 +220,8 @@
       "name": "Syncthing",
       "slug": "syncthing",
       "category": "Storage",
-      "version": "0.3.0",
-      "appVersion": "2.1.6",
+      "version": "0.3.1",
+      "appVersion": "2.1.7",
       "description": "Deploys Syncthing continuous file synchronization on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/syncthing.png"
     },
