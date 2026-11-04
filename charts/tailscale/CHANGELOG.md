@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.6
+
+### Application changes
+
+v1.104.1 → v1.104.4 brings SSH and Serve hardening. Container boot settings, persistent state and subnet configuration retain their current chart wiring.
+
+Source: [upstream changes](https://github.com/tailscale/tailscale/compare/v1.104.1...v1.104.4).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.1.5
 
 ### Application changes
