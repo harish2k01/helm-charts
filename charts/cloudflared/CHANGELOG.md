@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1
+
+### Application changes
+
+2026.10.2 → 2026.10.7 hardens metrics debug paths, supports stdin for config validation, adjusts container auto-update defaults and fixes an HTTP/2 stream regression. Preserve explicit chart arguments, edge configuration and Secret references.
+
+Source: [upstream changes](https://github.com/cloudflare/cloudflared/compare/2026.10.2...2026.10.7).
+
+### Chart changes
+
+Render an explicit --no-autoupdate=false when requested, since the target image exports NO_AUTOUPDATE=true. Existing true mode and other options are preserved.
+
 ## 0.2.0
 
 - Update cloudflared from 2026.3.0 to 2026.10.2 and synchronize image/app/schema/catalog metadata.

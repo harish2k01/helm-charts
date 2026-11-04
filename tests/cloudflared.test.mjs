@@ -14,3 +14,7 @@ test('Cloudflared optional metrics Service and runtime configuration stay connec
   assert.deepEqual(env(c,'TUNNEL_TOKEN').valueFrom.secretKeyRef,{name:'operator-token',key:'credential'});
   assert.deepEqual(c.envFrom,[{secretRef:{name:'runtime'}}]);
 });
+test('cloudflared false overrides the image auto-update default',()=>{
+  const docs=render('cloudflared',['cloudflared.noAutoupdate=false']);
+  assert.ok(container(docs,'cloudflared').command.includes('--no-autoupdate=false'));
+});
