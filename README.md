@@ -79,7 +79,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`jellyfin`](charts/jellyfin) | `0.3.0` | `10.11.11` | Media | Deploys Jellyfin media server with library mount support. |
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.1` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.3.0` | `0.64.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
-| [`owncloud`](charts/owncloud) | `0.3.0` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
+| [`owncloud`](charts/owncloud) | `0.3.1` | `10.16.7` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.3.0` | `v2.18.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`profilarr`](charts/profilarr) | `0.2.0` | `2.2.0` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
 | [`prowlarr`](charts/prowlarr) | `0.3.2` | `2.7.0` | Media | Deploys Prowlarr indexer management for media automation. |

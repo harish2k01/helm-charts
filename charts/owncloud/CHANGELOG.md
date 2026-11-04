@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+10.16.6 → 10.16.7 updates signature verification, PHP and JavaScript dependencies, and the CA bundle. No core runtime setting or database schema change was identified. Keep MariaDB 10.11 and Redis 8.10.2.
+
+Source: [upstream changes](https://github.com/owncloud/core/compare/v10.16.6...v10.16.7).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
 
 ## 0.2.1
 
