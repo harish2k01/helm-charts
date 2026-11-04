@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+3.4.0 → 3.4.1 updates the framework and Node base for security fixes (Next.js 16.4.2 and Node 22.23.4). No new runtime settings or migrations are required. Preserve PostgreSQL and existing authentication secrets.
+
+Source: [upstream changes](https://github.com/umami-software/umami/compare/v3.4.0...v3.4.1).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
 
 ## 0.2.1
 
