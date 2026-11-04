@@ -18,7 +18,7 @@ helm install adguard-home harish2k01/adguard-home
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.2.0
+helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.2.1
 ```
 
 ## First Run
@@ -151,7 +151,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of AdGuard Home replicas |
 | `image.repository` | string | `adguard/adguardhome` | Container image repository |
-| `image.tag` | string | `v0.107.79` | Container image tag |
+| `image.tag` | string | `v0.107.80` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.annotations` | object | `{}` | Service annotations |

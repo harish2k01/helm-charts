@@ -67,7 +67,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 
 | Chart | Chart Version | App Version | Category | Description |
 | --- | ---: | ---: | --- | --- |
-| [`adguard-home`](charts/adguard-home) | `0.2.0` | `v0.107.79` | Network | Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports. |
+| [`adguard-home`](charts/adguard-home) | `0.2.1` | `v0.107.80` | Network | Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports. |
 | [`bazarr`](charts/bazarr) | `0.3.0` | `1.6.2` | Media | Deploys Bazarr subtitle automation on Kubernetes. |
 | [`bentopdf`](charts/bentopdf) | `0.3.0` | `2.8.10` | Documents | Deploys BentoPDF document conversion on Kubernetes. |
 | [`cloudflared`](charts/cloudflared) | `0.2.1` | `2026.10.7` | Network | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes. |

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1
+
+### Application changes
+
+v0.107.79 → v0.107.80 updates Go for security fixes and disables MPTCP. The macOS support change does not affect the Linux chart. DNS settings, persisted configuration and the container contract remain unchanged.
+
+Source: [upstream changes](https://github.com/AdguardTeam/AdGuardHome/releases/tag/v0.107.80).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.1.3
 
 ### Application upgrade from v0.107.76 to v0.107.79

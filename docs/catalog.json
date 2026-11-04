@@ -4,8 +4,8 @@
       "name": "AdGuard Home",
       "slug": "adguard-home",
       "category": "Network",
-      "version": "0.2.0",
-      "appVersion": "v0.107.79",
+      "version": "0.2.1",
+      "appVersion": "v0.107.80",
       "description": "Deploys AdGuard Home DNS filtering on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/adguard-home.png"
     },
