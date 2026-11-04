@@ -13,8 +13,8 @@ test('default install keeps state persistent and parser internal with authentica
   assert.match(deployment, /type: Recreate/);
   assert.match(deployment, /automountServiceAccountToken: false/);
   assert.match(deployment, /runAsNonRoot: true/);
-  assert.match(deployment, /image: "ghcr.io\/dictionarry-hub\/profilarr:2.2.0"/);
-  assert.match(deployment, /image: "ghcr.io\/dictionarry-hub\/profilarr-parser:2.2.0"/);
+  assert.match(deployment, /image: "ghcr.io\/dictionarry-hub\/profilarr:2.3.1"/);
+  assert.match(deployment, /image: "ghcr.io\/dictionarry-hub\/profilarr-parser:2.3.1"/);
   assert.match(deployment, /name: AUTH\s+value: "on"/);
   assert.match(deployment, /name: PARSER_HOST\s+value: "127.0.0.1"/);
   assert.match(deployment, /mountPath: \/config/);
@@ -68,4 +68,10 @@ test('unsafe topology and invalid values fail before deployment', () => {
     assert.notEqual(result.status, 0, settings);
     assert.match(result.stderr, /Error/);
   }
+});
+test('parser logging overrides do not replace the chart-owned listener',()=>{
+  const d=resource(render('--set','parser.env.ParserLogging__FileLogging=true,parser.env.ASPNETCORE_URLS=bad'), 'Deployment');
+  assert.match(d,/name: ParserLogging__FileLogging\s+value: "true"/);
+  assert.match(d,/name: ASPNETCORE_URLS\s+value: "http:\/\/\+:5000"/);
+  assert.doesNotMatch(d,/value: "bad"/);
 });

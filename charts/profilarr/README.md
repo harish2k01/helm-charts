@@ -10,13 +10,13 @@ Deploys [Profilarr](https://github.com/Dictionarry-Hub/profilarr) for managing R
 ```bash
 helm repo add harish2k01 https://harish2k01.github.io/helm-charts
 helm repo update
-helm install profilarr harish2k01/profilarr --version 0.2.0
+helm install profilarr harish2k01/profilarr --version 0.2.1
 ```
 
 ## Install From OCI
 
 ```bash
-helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.0
+helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.1
 ```
 
 ## Gateway API HTTPRoute
@@ -100,7 +100,7 @@ For OIDC on the pinned 2.2.0 release, supply the upstream OIDC environment varia
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Single writer; other replica counts are rejected |
 | `image.repository` | string | `ghcr.io/dictionarry-hub/profilarr` | App image |
-| `image.tag` | string | `2.2.0` | Pinned app version |
+| `image.tag` | string | `2.3.1` | Pinned app version |
 | `image.pullPolicy` | string | `IfNotPresent` | Image pull policy |
 | `imagePullSecrets` | list | `[]` | Registry credentials |
 | `nameOverride` / `fullnameOverride` | string | `""` | Resource naming overrides |
@@ -123,7 +123,7 @@ For OIDC on the pinned 2.2.0 release, supply the upstream OIDC environment varia
 | `persistence.config.storageClassName` | string | `""` | Cluster default StorageClass |
 | `parser.enabled` | bool | `true` | Include release testing/simulation backend |
 | `parser.image.repository` | string | `ghcr.io/dictionarry-hub/profilarr-parser` | Parser image |
-| `parser.image.tag` | string | `2.2.0` | Pinned parser version |
+| `parser.image.tag` | string | `2.3.1` | Pinned parser version |
 | `parser.port` | int | `5000` | Parser listener; must differ from app listener |
 | `parser.resources` | object | `{}` | Parser resource requests/limits |
 | `parser.securityContext` | object | See values.yaml | Parser privilege restrictions |
@@ -187,3 +187,5 @@ resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
 upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
 Multiple hostnames and parent references apply to the whole route; use separate
 entries when each hostname group must attach to a different Gateway.
+
+`parser.env` passes optional .NET logging settings to the parser sidecar. Its listener and Production environment remain chart-owned. Use the app's existing `envFrom` for OIDC secrets and API keys.
