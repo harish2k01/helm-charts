@@ -18,7 +18,7 @@ helm install bentopdf harish2k01/bentopdf
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.3.0
+helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.3.1
 ```
 
 ## Install With Ingress
@@ -62,7 +62,7 @@ httpRoutes:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of BentoPDF replicas |
 | `image.repository` | string | `ghcr.io/alam00000/bentopdf-simple` | Container image repository |
-| `image.tag` | string | `2.8.10` | Container image tag |
+| `image.tag` | string | `2.8.11` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type |
 | `service.port` | int | `80` | Kubernetes Service port |
@@ -132,3 +132,5 @@ resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
 upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
 Multiple hostnames and parent references apply to the whole route; use separate
 entries when each hostname group must attach to a different Gateway.
+
+Use `extraVolumes` and `extraVolumeMounts` for optional static-file or configuration mounts. Keep any startup-mutated HTML paths writable when enabling `ROBOTS_NOINDEX`.

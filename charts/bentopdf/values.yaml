@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/alam00000/bentopdf-simple
   pullPolicy: IfNotPresent
-  tag: "2.8.10"
+  tag: "2.8.11"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -123,3 +123,6 @@ env:
 
 # Additional runtime configuration from existing ConfigMaps or Secrets.
 envFrom: []
+# Optional pod volumes and container mounts for custom static files.
+extraVolumes: []
+extraVolumeMounts: []

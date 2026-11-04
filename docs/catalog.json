@@ -22,8 +22,8 @@
       "name": "BentoPDF",
       "slug": "bentopdf",
       "category": "Documents",
-      "version": "0.3.0",
-      "appVersion": "2.8.10",
+      "version": "0.3.1",
+      "appVersion": "2.8.11",
       "description": "A Helm chart for deploying BentoPDF on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/bentopdf.png"
     },

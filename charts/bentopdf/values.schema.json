@@ -28,7 +28,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "2.8.10"
+          "default": "2.8.11"
         }
       }
     },
@@ -378,6 +378,20 @@
             }
           }
         ]
+      }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object"
+      }
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object"
       }
     }
   }

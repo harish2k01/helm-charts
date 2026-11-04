@@ -12,3 +12,8 @@ test('BentoPDF listener changes propagate to Service and pod, with runtime Secre
   assert.deepEqual(c.envFrom,[{secretRef:{name:'runtime'}}]);
   assert.equal(docs.some(d=>d.kind==='Secret'),false);
 });
+test('optional static-file mounts retain the named ConfigMap volume',()=>{
+  const docs=render('bentopdf',['extraVolumes[0].name=custom','extraVolumes[0].configMap.name=custom','extraVolumeMounts[0].name=custom','extraVolumeMounts[0].mountPath=/custom','extraVolumeMounts[0].readOnly=true']);
+  assert.equal(container(docs,'bentopdf').volumeMounts[0].mountPath,'/custom');
+  assert.equal(docs.find(d=>d.kind==='Deployment').spec.template.spec.volumes[0].configMap.name,'custom');
+});

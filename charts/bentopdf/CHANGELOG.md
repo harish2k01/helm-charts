@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+2.8.10 → 2.8.11 updates static PDF tools and dependencies. Node 26 is build-only; the image still serves Nginx on port 8080. Existing noindex, IPv6 and port overrides keep their current behavior.
+
+Source: [upstream changes](https://github.com/alam00000/BentoPDF/releases/tag/v2.8.11).
+
+### Chart changes
+
+Expose optional extraVolumes and extraVolumeMounts for custom static files and Secret/ConfigMap mounts; defaults remain empty.
 
 ## 0.2.0 — 2.8.10
 
