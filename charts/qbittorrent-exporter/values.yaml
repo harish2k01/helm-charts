@@ -79,6 +79,13 @@ qbittorrent:
     enableLabelWithTag: false
 
   # Extra non-secret environment variables passed to the exporter.
+  # QBITTORRENT_PASSWORD_FILE: /run/credentials/password # Mounted Secret; wins over literal password.
+  # CERTIFICATE_AUTHORITY_PATH: /run/ca/custom.pem # Append a mounted CA to system trust.
+  # MIN_TLS_VERSION: TLS_1_3 # TLS_1_2 is also accepted.
+  # INSECURE_SKIP_VERIFY: "false"
+  # EXPORTER_URL: https://exporter.example.com # Advertised URL; does not bind the listener.
+  # Keep DANGEROUS_SHOW_PASSWORD disabled. Use envFrom for outbound QBITTORRENT_BASIC_AUTH_*
+  # or inbound EXPORTER_BASIC_AUTH_* credentials; configure scrape auth separately.
   extraEnv: {}
   envFrom: []
 
@@ -100,7 +107,7 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /metrics
+    path: /healthz
     port: http
   initialDelaySeconds: 30
   periodSeconds: 30
@@ -109,7 +116,7 @@ livenessProbe:
 
 readinessProbe:
   httpGet:
-    path: /metrics
+    path: /healthz
     port: http
   initialDelaySeconds: 10
   periodSeconds: 10

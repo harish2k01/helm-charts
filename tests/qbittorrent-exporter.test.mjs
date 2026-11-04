@@ -9,3 +9,12 @@ test('qBittorrent exporter API key mode references an existing Secret without le
   assert.equal(docs.some(d=>d.kind==='Secret'),false);
 });
 test('qBittorrent exporter rejects cookie mode without its required cookie name',()=>rejects('qbittorrent-exporter',['qbittorrent.auth.method=cookieName'],/cookieName is required/));
+test('health probes avoid scraping and tag-label configuration reaches the upstream option',()=>{
+  const docs=render('qbittorrent-exporter',['qbittorrent.features.enableLabelWithTag=true','serviceMonitor.enabled=true']);
+  const c=container(docs,'qbittorrent-exporter');
+  assert.equal(c.livenessProbe.httpGet.path,'/healthz');
+  assert.equal(c.readinessProbe.httpGet.path,'/healthz');
+  assert.equal(env(c,'ENABLE_LABEL_WITH_TAGS').value,'true');
+  assert.equal(docs.find(d=>d.kind==='ServiceMonitor').spec.endpoints[0].path,'/metrics');
+});
+test('metrics cannot bind the reserved health endpoint',()=>rejects('qbittorrent-exporter',['qbittorrent.exporter.path=/healthz'],/path/i));

@@ -166,8 +166,8 @@
       "name": "qBittorrent Exporter",
       "slug": "qbittorrent-exporter",
       "category": "Monitoring",
-      "version": "0.1.0",
-      "appVersion": "v2.0.1",
+      "version": "0.1.1",
+      "appVersion": "v2.0.4",
       "description": "Deploys the martabal qBittorrent Prometheus exporter on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png"
     },
