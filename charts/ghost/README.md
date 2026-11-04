@@ -18,7 +18,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.0
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.1
 ```
 
 ## Database Configuration
@@ -246,7 +246,7 @@ This option currently supports Gateway API HTTPRoute, not Ingress.
 | --- | --- | --- | --- |
 | `activityPub.enabled` | bool | `false` | Enable the optional Social Web proxy and routes. |
 | `activityPub.target` | string | `https://ap.ghost.org` | ActivityPub upstream URL. |
-| `activityPub.image` | string | `caddy:2.10.2-alpine` | Proxy container image. |
+| `activityPub.image` | string | `caddy:2.11.7-alpine` | Proxy container image. |
 | `activityPub.resources` | object | See values.yaml | Proxy resource requests and limits. |
 
 The official Caddy image marks its executable with `NET_BIND_SERVICE`. The

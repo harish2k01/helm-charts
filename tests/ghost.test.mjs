@@ -15,3 +15,8 @@ test('Ghost external MySQL, credential Secret and existing content claim avoid l
   assert.equal(env(container(docs,'ghost'),'database__connection__password').valueFrom.secretKeyRef.name,'runtime');
   assert.equal(docs.some(d=>d.kind==='Secret'),false);
 });
+test('ActivityPub proxy preserves original Host for HTTPS upstreams',()=>{
+  const docs=render('ghost',['activityPub.enabled=true','httpRoutes.main.enabled=true','httpRoutes.main.parentRefs[0].name=edge','httpRoutes.main.hostnames[0]=ghost.example.com']);
+  const config=docs.find(d=>d.kind==='ConfigMap'&&d.data?.Caddyfile);
+  assert.match(config.data.Caddyfile,/header_up Host \{http\.request\.hostport\}/);
+});
