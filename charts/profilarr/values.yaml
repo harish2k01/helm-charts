@@ -65,7 +65,7 @@ parser:
   enabled: true
   image:
     repository: ghcr.io/dictionarry-hub/profilarr-parser
-    tag: "2.2.0"
+    tag: "2.3.1"
     pullPolicy: IfNotPresent
   port: 5000
   resources: {}
