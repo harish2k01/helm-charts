@@ -18,7 +18,7 @@ helm install pocket-id harish2k01/pocket-id
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install pocket-id oci://ghcr.io/harish2k01/helm-charts/pocket-id --version 0.3.0
+helm install pocket-id oci://ghcr.io/harish2k01/helm-charts/pocket-id --version 0.3.1
 ```
 
 ## Required Configuration
@@ -116,7 +116,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Pocket ID replicas |
 | `image.repository` | string | `ghcr.io/pocket-id/pocket-id` | Container image repository |
-| `image.tag` | string | `v2.18.0` | Container image tag |
+| `image.tag` | string | `v2.19.2` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.APP_URL` | string | `http://localhost:1411` | Public URL where users access Pocket ID |
 | `env.TRUST_PROXY` | string | `false` | Trust reverse proxy forwarding headers |

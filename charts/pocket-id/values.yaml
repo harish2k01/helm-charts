@@ -87,11 +87,18 @@ env:
   # SMTP_USER: ""
   # SMTP_TLS: ""
   # SMTP_SKIP_CERT_VERIFY: ""
-  # EMAIL_LOGIN_NOTIFICATION_ENABLED: ""
+  # EMAIL_LOGIN_NOTIFICATION_MODE: disabled # disabled, always, ipAndUserAgent, browserRecognition
   # EMAIL_ONE_TIME_ACCESS_AS_UNAUTHENTICATED_ENABLED: ""
   # EMAIL_ONE_TIME_ACCESS_AS_ADMIN_ENABLED: ""
   # EMAIL_API_KEY_EXPIRATION_ENABLED: ""
-  # EMAIL_VERIFICATION_ENABLED: ""
+  # EMAIL_VERIFICATION: disabled # disabled, optional, required
+  # Outbound allowlists accept comma-separated hosts/IPs/CIDRs or private,loopback,none.
+  # OUTBOUND_ALLOWED_HOSTS_CLIENT_LOGO: ""
+  # OUTBOUND_ALLOWED_HOSTS_CLIENT_METADATA: ""
+  # OUTBOUND_ALLOWED_HOSTS_SCIM: private,loopback
+  # OUTBOUND_ALLOWED_HOSTS_BACKCHANNEL_LOGOUT: private,loopback
+  # OUTBOUND_ALLOWED_HOSTS_FEDERATED_JWKS: private,loopback
+  # OUTBOUND_ALLOWED_HOSTS_LDAP_PICTURE: ""
   # LDAP_ENABLED: ""
   # LDAP_URL: ""
   # LDAP_BIND_DN: ""

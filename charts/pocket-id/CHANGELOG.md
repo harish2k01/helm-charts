@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+v2.18.0 → v2.19.2 replaces EMAIL_LOGIN_NOTIFICATION_ENABLED with EMAIL_LOGIN_NOTIFICATION_MODE and EMAIL_VERIFICATION_ENABLED with EMAIL_VERIFICATION. Both defaults are disabled. The application migrates persisted settings; update explicit env overrides before rollout. New outbound allowlists govern fetched identity metadata and endpoints. Back up the selected SQLite or PostgreSQL database before automatic schema alignment; preserve the encryption key and server image.
+
+Source: [upstream changes](https://github.com/pocket-id/pocket-id/compare/v2.18.0...v2.19.2).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
 
 ## 0.2.0 — v2.18.0
 
