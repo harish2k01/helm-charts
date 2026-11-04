@@ -99,6 +99,12 @@ spec:
               value: "http://+:{{ .Values.parser.port }}"
             - name: ASPNETCORE_ENVIRONMENT
               value: Production
+            {{- range $key, $value := .Values.parser.env }}
+            {{- if not (has $key (list "ASPNETCORE_URLS" "ASPNETCORE_ENVIRONMENT")) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.parser.startupProbe }}
           startupProbe:
             {{- toYaml . | nindent 12 }}

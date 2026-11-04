@@ -4,7 +4,7 @@ replicaCount: 1
 # Keep the app and optional parser on compatible, pinned upstream releases.
 image:
   repository: ghcr.io/dictionarry-hub/profilarr
-  tag: "2.2.0"
+  tag: "2.3.1"
   pullPolicy: IfNotPresent
 
 # Use these for private registries or to align release resource names.
@@ -35,6 +35,12 @@ env:
   HOST: "0.0.0.0"
   AUTH: "on"
   UMASK: "022"
+  # ORIGIN: https://profilarr.example.com
+  # PROFILARR_BULLETIN_URL: https://bulletin.example.com
+  # OIDC_DISCOVERY_URL: https://id.example.com/.well-known/openid-configuration
+  # OIDC_CLIENT_ID: profilarr
+  # Supply OIDC_CLIENT_SECRET and PROFILARR_API_KEY via envFrom; OIDC fields are all-or-none.
+  # HTTPS_PROXY/HTTP_PROXY/ALL_PROXY/NO_PROXY and mounted DENO_CERT are optional.
 # Reference existing Secrets for optional OIDC credentials or an API key.
 # Configure Arr connections and their API keys in Profilarr after installation.
 envFrom: []
@@ -65,9 +71,17 @@ parser:
   enabled: true
   image:
     repository: ghcr.io/dictionarry-hub/profilarr-parser
-    tag: "2.2.0"
+    tag: "2.3.1"
     pullPolicy: IfNotPresent
   port: 5000
+  # Optional .NET configuration. Listener and ASPNETCORE_ENVIRONMENT stay chart-owned.
+  env: {}
+  # env:
+  #   ParserLogging__Enabled: "true"
+  #   ParserLogging__ConsoleLogging: "true"
+  #   ParserLogging__FileLogging: "false"
+  #   ParserLogging__MinLevel: INFO
+  #   ParserLogging__LogsDir: /tmp/parser-logs
   resources: {}
   securityContext:
     allowPrivilegeEscalation: false

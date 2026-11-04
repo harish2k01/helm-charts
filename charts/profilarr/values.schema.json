@@ -24,7 +24,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "2.2.0"
+          "default": "2.3.1"
         },
         "pullPolicy": {
           "type": "string",
@@ -343,7 +343,7 @@
             "tag": {
               "type": "string",
               "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-              "default": "2.2.0"
+              "default": "2.3.1"
             },
             "pullPolicy": {
               "type": "string",
@@ -419,6 +419,17 @@
             },
             "periodSeconds": 10,
             "timeoutSeconds": 5
+          }
+        },
+        "env": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": {
+            "type": [
+              "string",
+              "boolean",
+              "number"
+            ]
           }
         }
       }
