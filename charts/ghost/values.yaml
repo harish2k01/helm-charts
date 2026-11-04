@@ -360,7 +360,7 @@ affinity: {}
 activityPub:
   enabled: false
   target: https://ap.ghost.org
-  image: caddy:2.11.7-alpine
+  image: caddy:2.11.8-alpine
   resources:
     requests:
       cpu: 25m
