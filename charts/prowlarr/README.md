@@ -18,7 +18,7 @@ helm install prowlarr harish2k01/prowlarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install prowlarr oci://ghcr.io/harish2k01/helm-charts/prowlarr --version 0.3.1
+helm install prowlarr oci://ghcr.io/harish2k01/helm-charts/prowlarr --version 0.3.2
 ```
 
 ## Install With Gateway API HTTPRoute
@@ -61,7 +61,7 @@ http://flaresolverr.<namespace>.svc.cluster.local:8191
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Prowlarr replicas |
 | `image.repository` | string | `lscr.io/linuxserver/prowlarr` | Container image repository |
-| `image.tag` | string | `2.6.5` | Container image tag |
+| `image.tag` | string | `2.7.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |

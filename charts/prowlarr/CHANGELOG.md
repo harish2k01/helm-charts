@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.2
+
+### Application changes
+
+2.6.5 → 2.7.0 changes AllowedHosts handling: wildcard bind addresses such as 0.0.0.0 and [::] are ignored as allowed hosts. Configure actual DNS names or IP addresses. Keep the chart's unauthenticated /ping probes and existing localhost Host header.
+
+Source: [upstream changes](https://github.com/Prowlarr/Prowlarr/releases/tag/v2.7.0.5723).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.3.1 - 2026-11-01
 
 - Use `/ping` for default liveness and readiness probes to avoid login redirects and repeated kubelet `ProbeWarning` events.
