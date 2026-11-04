@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+### Application changes
+
+2.1.6 → 2.1.7 fixes SQLite garbage collection and protocol limits. When SyncOwnership is enabled, CopyOwnershipFromParent is now forced off; review those persisted folder settings in the app. No external database image change is needed.
+
+Source: [upstream changes](https://github.com/syncthing/syncthing/releases/tag/v2.1.7).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.2.0
 
 ### Application upgrade from 2.1.0 to 2.1.6

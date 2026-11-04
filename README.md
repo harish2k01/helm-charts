@@ -91,7 +91,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`seerr`](charts/seerr) | `0.3.1` | `v3.5.1` | Media | Deploys Seerr media request management for shared libraries. |
 | [`sonarr`](charts/sonarr) | `0.3.1` | `4.0.20` | Media | Deploys Sonarr TV automation with PVC and ingress options. |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.3.1` | `1.15.1` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
-| [`syncthing`](charts/syncthing) | `0.3.0` | `2.1.6` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
+| [`syncthing`](charts/syncthing) | `0.3.1` | `2.1.7` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
 | [`tailscale`](charts/tailscale) | `0.1.6` | `v1.104.4` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
 | [`umami`](charts/umami) | `0.3.1` | `3.4.1` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |

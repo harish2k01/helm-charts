@@ -18,7 +18,7 @@ helm install syncthing harish2k01/syncthing
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.3.0
+helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.3.1
 ```
 
 ## Web UI Access
@@ -85,7 +85,7 @@ For access from devices outside the cluster, expose TCP/UDP `22000` and UDP `210
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Syncthing replicas |
 | `image.repository` | string | `syncthing/syncthing` | Container image repository |
-| `image.tag` | string | `2.1.6` | Container image tag |
+| `image.tag` | string | `2.1.7` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `1000` | File ownership user ID |
 | `env.PGID` | string | `1000` | File ownership group ID |
