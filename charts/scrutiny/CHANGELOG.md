@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+### Application changes
+
+v0.9.2-web → v0.10.0-web adds friendly device names, upload-period estimation and notification controls. Two automatic application SQLite migrations add estimated_upload_period and friendly_name. Take a consistent config PVC/SQLite backup and restore matched data for rollback. Existing seeded YAML is not replaced: edit persisted configuration for device scrutiny_uuid, notifications.disabled/on_missed_upload/on_smartctl_error/upload_period. Collector allow_listed_devices applies to its scanning configuration. InfluxDB stays at 2.9.1.
+
+Source: [upstream changes](https://github.com/AnalogJ/scrutiny/compare/v0.9.2...v0.10.0).
+
+### Chart changes
+
+Document opt-in notification settings; explicitly clear RollingUpdate settings when using Recreate to keep an existing Deployment transition valid.
+
 ## 0.2.4 — BusyBox 1.38.0
 
 ### App changes

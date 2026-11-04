@@ -18,7 +18,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "v0.9.2-web"
+          "default": "v0.10.0-web"
         },
         "pullPolicy": {
           "type": "string",
@@ -345,7 +345,8 @@
         }
       },
       "default": {
-        "type": "Recreate"
+        "type": "Recreate",
+        "rollingUpdate": null
       }
     },
     "env": {

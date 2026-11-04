@@ -120,6 +120,7 @@ influxdb:
 # Stop both writers before mounting their database volumes in a new pod.
 deploymentStrategy:
   type: Recreate
+  rollingUpdate: null
 
 initContainer:
   image:
@@ -226,6 +227,11 @@ probes:
 # Scrutiny runtime environment overrides; empty preserves seeded/persisted config.
 # Configuration precedence is env > file > upstream default. Do not enable a
 # commented override merely to copy an upstream default into an existing install.
+# Optional Scrutiny notification overrides (upstream defaults shown).
+# env:
+#   SCRUTINY_NOTIFY_ON_MISSED_UPLOAD: "true"
+#   SCRUTINY_NOTIFY_ON_SMARTCTL_ERROR: "true"
+#   SCRUTINY_NOTIFY_UPLOAD_PERIOD: "0s" # Auto-estimate upload period.
 env: {}
 # SCRUTINY_WEB_LISTEN_HOST: "0.0.0.0" # Bind address; default all interfaces.
 # SCRUTINY_WEB_LISTEN_PORT: "8080" # Match Service/container/probes if changed.
