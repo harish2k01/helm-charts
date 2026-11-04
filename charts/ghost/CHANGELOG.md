@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+Caddy 2.10.2-alpine → 2.11.7-alpine hardens timeouts and header handling and fixes HTTP/2/SSE regressions. Caddy 2.11 automatically rewrites Host for HTTPS upstreams; explicitly pass the original public Host and port for the ActivityPub proxy. Ghost and MySQL are unchanged.
+
+Source: [upstream changes](https://github.com/caddyserver/caddy/releases/tag/v2.11.1).
+
+### Chart changes
+
+Preserve the ActivityPub proxy's documented public Host and request-path behavior when upgrading Caddy.
 
 ## 0.2.5
 
