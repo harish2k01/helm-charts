@@ -52,7 +52,7 @@ jobs:
         run: helm lint charts/*
       - uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "26"
       - name: Install catalog tooling
         run: npm ci --ignore-scripts
       - name: Require chart version bumps
