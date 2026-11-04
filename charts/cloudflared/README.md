@@ -26,7 +26,7 @@ helm install cloudflared harish2k01/cloudflared --namespace cloudflare
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.2.0
+helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.2.1
 ```
 
 ## Sealed Secret
@@ -49,7 +49,7 @@ token:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of cloudflared connector pods |
 | `image.repository` | string | `cloudflare/cloudflared` | Container image repository |
-| `image.tag` | string | `2026.10.2` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `2026.10.7` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `selectorLabels` | object | `{pod: cloudflared}` | Deployment selector labels |
 | `podSecurityContext` | object | ICMP ping sysctl | Pod security context |
