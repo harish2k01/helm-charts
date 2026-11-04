@@ -20,7 +20,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.5
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.6
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -99,7 +99,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of independent Tailscale router pods |
 | `image.repository` | string | `tailscale/tailscale` | Container image repository |
-| `image.tag` | string | `v1.104.1` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `v1.104.4` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `securityContext.privileged` | bool | `true` | Enables privileges required for tun/kernel networking |
 | `sysctl.enabled` | bool | `true` | Runs an init container to enable IP forwarding |

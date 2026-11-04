@@ -229,8 +229,8 @@
       "name": "Tailscale",
       "slug": "tailscale",
       "category": "Network",
-      "version": "0.1.5",
-      "appVersion": "v1.104.1",
+      "version": "0.1.6",
+      "appVersion": "v1.104.4",
       "description": "Deploys Tailscale as a Kubernetes subnet router and exit node",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/tailscale.png"
     },
