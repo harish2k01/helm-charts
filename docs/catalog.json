@@ -193,8 +193,8 @@
       "name": "Seerr",
       "slug": "seerr",
       "category": "Media",
-      "version": "0.3.0",
-      "appVersion": "v3.5.0",
+      "version": "0.3.1",
+      "appVersion": "v3.5.1",
       "description": "Deploys Seerr media request manager on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/jellyseerr.png"
     },

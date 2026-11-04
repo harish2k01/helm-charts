@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+### Application changes
+
+v3.5.0 → v3.5.1 updates the container's Node 22 base to 22.23.4 to distrust compromised eMudhra roots. No application configuration or database migration is introduced by this patch.
+
+Source: [upstream changes](https://github.com/seerr-team/seerr/releases/tag/v3.5.1).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.2.0 - 2026-10-21
 
 ### Application changes
