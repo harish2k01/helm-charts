@@ -123,3 +123,6 @@ env:
 
 # Additional runtime configuration from existing ConfigMaps or Secrets.
 envFrom: []
+# Optional pod volumes and container mounts for custom static files.
+extraVolumes: []
+extraVolumeMounts: []
