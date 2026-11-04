@@ -18,6 +18,10 @@ securityContext: {}
 
 # Non-secret Vaultwarden configuration.
 env:
+  # CLIENT_SUPPRESS_ONBOARDING: "false"
+  # FILL_ASSIST_RULES_URL: https://rules.example.com/rules.json # HTTPS required.
+  # SSO_SIGNUPS_ALLOWED: "true" # Separate OIDC signup policy; review when using SSO.
+  # TWO_FACTOR_REMEMBER_DAYS: "30" # Valid range: 1–90.
   TZ: Asia/Kolkata
   DOMAIN: ""
   SIGNUPS_ALLOWED: "false"

@@ -96,7 +96,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`tor-proxy`](charts/tor-proxy) | `0.1.2` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
 | [`umami`](charts/umami) | `0.3.1` | `3.4.1` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
 | [`uptime-kuma`](charts/uptime-kuma) | `0.3.0` | `2.5.6-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
-| [`vaultwarden`](charts/vaultwarden) | `0.2.0` | `1.37.1` | Security | Deploys Vaultwarden password management on Kubernetes. |
+| [`vaultwarden`](charts/vaultwarden) | `0.2.1` | `1.37.5` | Security | Deploys Vaultwarden password management on Kubernetes. |
 
 ## Media Automation Pattern
 
