@@ -88,7 +88,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`qbittorrent-exporter`](charts/qbittorrent-exporter) | `0.1.0` | `v2.0.1` | Monitoring | Deploys the martabal qBittorrent Prometheus exporter. |
 | [`radarr`](charts/radarr) | `0.3.1` | `6.4.4` | Media | Deploys Radarr movie automation with reusable release values. |
 | [`scrutiny`](charts/scrutiny) | `0.3.0` | `v0.9.2-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
-| [`seerr`](charts/seerr) | `0.3.0` | `v3.5.0` | Media | Deploys Seerr media request management for shared libraries. |
+| [`seerr`](charts/seerr) | `0.3.1` | `v3.5.1` | Media | Deploys Seerr media request management for shared libraries. |
 | [`sonarr`](charts/sonarr) | `0.3.1` | `4.0.20` | Media | Deploys Sonarr TV automation with PVC and ingress options. |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.3.0` | `1.15.0` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
 | [`syncthing`](charts/syncthing) | `0.3.0` | `2.1.6` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
