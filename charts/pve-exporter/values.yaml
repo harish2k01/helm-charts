@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: prompve/prometheus-pve-exporter
-  tag: "3.10.1"
+  tag: "3.11.0"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -118,6 +118,12 @@ extraEnv: {}
 #   - secretRef:
 #       name: pve-api-credentials
 # Secret keys: PVE_USER plus PVE_PASSWORD OR PVE_TOKEN_NAME/PVE_TOKEN_VALUE.
+# For mounted credentials, disable proxmox.config.enabled and use extraEnv:
+#   PVE_USER_FILE: /run/pve-credentials/user
+#   PVE_TOKEN_NAME_FILE: /run/pve-credentials/token-name
+#   PVE_TOKEN_VALUE_FILE: /run/pve-credentials/token-value
+# Alternatively use PVE_PASSWORD_FILE. Mount a readable Secret at that path
+# with extraVolumes and extraVolumeMounts; do not set both forms of a key.
 # Keep all passwords/tokens out of extraEnv and Git; reference Secrets instead.
 # File mode remains recommended for multiple named modules. Its keys are user,
 # password OR token_name/token_value, and verify_ssl; extra ProxmoxAPI options

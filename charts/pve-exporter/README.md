@@ -16,7 +16,7 @@ helm install pve-exporter harish2k01/pve-exporter
 ## Install From OCI
 
 ```bash
-helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.2.0
+helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.2.1
 ```
 
 ## Proxmox Configuration
@@ -65,7 +65,7 @@ serviceMonitor:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of exporter pods |
 | `image.repository` | string | `prompve/prometheus-pve-exporter` | Container image repository |
-| `image.tag` | string | `3.10.1` | Container image tag |
+| `image.tag` | string | `3.11.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `proxmox.targets` | list | `[10.10.10.100]` | Proxmox endpoints to scrape |
 | `proxmox.config.enabled` | bool | `true` | Mount Secret-backed YAML; disable for environment configuration mode |
