@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.2
+
+### Application changes
+
+6.71.0-alpine → 6.74.0-alpine introduces automatic checkout, automation, metafield, app-install and job-outbox migrations. Back up the MySQL database and content together; an image downgrade alone does not undo migrations. New runtime options include upgrade adapter, listing limits and spam blocks. Keep the documented MySQL 8 series and existing content/port configuration.
+
+Source: [upstream changes](https://github.com/TryGhost/Ghost/compare/v6.71.0...v6.74.0).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
+
 ## 0.3.1
 
 ### Application changes
