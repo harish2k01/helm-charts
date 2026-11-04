@@ -84,7 +84,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`profilarr`](charts/profilarr) | `0.2.0` | `2.2.0` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
 | [`prowlarr`](charts/prowlarr) | `0.3.2` | `2.7.0` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`pve-exporter`](charts/pve-exporter) | `0.2.1` | `3.11.0` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
-| [`qbittorrent`](charts/qbittorrent) | `0.3.0` | `5.2.4` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
+| [`qbittorrent`](charts/qbittorrent) | `0.3.1` | `5.3.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
 | [`qbittorrent-exporter`](charts/qbittorrent-exporter) | `0.1.1` | `v2.0.4` | Monitoring | Deploys the martabal qBittorrent Prometheus exporter. |
 | [`radarr`](charts/radarr) | `0.3.1` | `6.4.4` | Media | Deploys Radarr movie automation with reusable release values. |
 | [`scrutiny`](charts/scrutiny) | `0.3.0` | `v0.9.2-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
