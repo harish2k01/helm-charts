@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+1.15.0 → 1.15.1 fixes server-ID filtering on SQLite and refreshes dependencies. The LinuxServer wrapper and supported configuration remain compatible. Preserve the configured database, encryption key and persistent data.
+
+Source: [upstream changes](https://github.com/alexjustesen/speedtest-tracker/compare/v1.15.0...v1.15.1).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
 
 ## 0.2.1
 
