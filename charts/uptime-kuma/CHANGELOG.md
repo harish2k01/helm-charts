@@ -1,4 +1,16 @@
-# Upgrade notes
+# Changelog
+
+## 0.3.1
+
+### Application changes
+
+2.5.6-slim → 2.5.9-slim includes CA and security fixes for Apprise and RSS. Version 2.5.8 removes TLS/STARTTLS options from TCP Port monitors; existing ones become ordinary plaintext TCP checks. Audit these monitors and replace them with an appropriate TLS-aware monitor before rollout if coverage matters. No database migration was found in this range; keep the slim variant and existing backend.
+
+Source: [upstream changes](https://github.com/louislam/uptime-kuma/compare/2.5.6...2.5.9).
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. Existing deployment options, persistence and datastore images are unchanged.
 
 ## 0.2.1
 
