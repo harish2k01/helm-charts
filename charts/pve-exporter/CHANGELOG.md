@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1
+
+### Application changes
+
+3.10.1 → 3.11.0 accepts mounted credential files through PVE_USER_FILE, PVE_PASSWORD_FILE, PVE_TOKEN_NAME_FILE and PVE_TOKEN_VALUE_FILE. Use either a literal or file for each credential. The UTF-8 file must contain a non-empty first line. PVE_USER_FILE selects environment mode; PVE_MODULE and PVE_VERIFY_SSL remain ordinary environment variables.
+
+Source: [upstream changes](https://github.com/prometheus-pve/prometheus-pve-exporter/releases/tag/v3.11.0).
+
+### Chart changes
+
+Document credential-file usage through existing env and mount hooks. No credentials or mounts are enabled by default.
+
 ## 0.2.0
 
 ### Application upgrade from 3.8.2 to 3.10.1

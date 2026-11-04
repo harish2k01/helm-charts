@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag.",
-          "default": "3.10.1"
+          "default": "3.11.0"
         },
         "pullPolicy": {
           "type": "string",
