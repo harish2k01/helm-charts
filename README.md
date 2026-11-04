@@ -82,7 +82,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`owncloud`](charts/owncloud) | `0.3.0` | `10.16.6` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
 | [`pocket-id`](charts/pocket-id) | `0.3.0` | `v2.18.0` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`profilarr`](charts/profilarr) | `0.2.0` | `2.2.0` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
-| [`prowlarr`](charts/prowlarr) | `0.3.1` | `2.6.5` | Media | Deploys Prowlarr indexer management for media automation. |
+| [`prowlarr`](charts/prowlarr) | `0.3.2` | `2.7.0` | Media | Deploys Prowlarr indexer management for media automation. |
 | [`pve-exporter`](charts/pve-exporter) | `0.2.0` | `3.10.1` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
 | [`qbittorrent`](charts/qbittorrent) | `0.3.0` | `5.2.4` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
 | [`qbittorrent-exporter`](charts/qbittorrent-exporter) | `0.1.0` | `v2.0.1` | Monitoring | Deploys the martabal qBittorrent Prometheus exporter. |
