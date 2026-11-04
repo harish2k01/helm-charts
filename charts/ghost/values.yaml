@@ -87,7 +87,10 @@ env:
   # members__metafields__maxDefinitions: "100"
   # members__importer__inlineThreshold: "500"
   # bulkEmail__batchCreationConcurrency: "2"
-  # bulkEmail__perRecipientMessageId: "false"
+  # adapters__upgrade__active: NoopUpgradeAdapter
+  # optimization__capListingLimit: "false"
+  # Spam controls include upgrade_api_block, upgrade_block, staff_invite_block,
+  # and support_request_block; see the upstream defaults for each block.
   # verifyRequestIntegrity: "true"
   # queryParameterFiltering__enabled: "false"
   # remoteFlags__enabled: "false" # Needs upstream URL/poll configuration.
