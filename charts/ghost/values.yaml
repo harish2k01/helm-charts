@@ -62,6 +62,22 @@ env:
   url: http://localhost:2368
   NODE_ENV: production
   # Optional upstream configuration; uncomment only to override app defaults.
+  # server__shutdownTimeout: "60000" # Match deployment.terminationGracePeriodSeconds.
+  # compress: "true" # Upstream HTTP response compression.
+  # preloadHeaders: "false" # Send resource preload links in HTTP headers.
+  # adminFrameProtection: "true" # Keep clickjacking protection for Admin.
+  # security__allowWebhookInternalIPs: "false" # Keep webhook SSRF protection.
+  # security__staffDeviceVerification: "true"
+  # imageOptimization__resize: "true"
+  # imageOptimization__srcsets: "true"
+  # theme__uploadLimits__compressedBytes: "1073741824" # 1 GiB archive limit.
+  # theme__uploadLimits__entryUncompressedBytes: "536870912" # 512 MiB per entry.
+  # theme__uploadLimits__totalUncompressedBytes: "4294967296" # 4 GiB expanded total.
+  # emailAnalytics__enabled: "true"
+  # emailAnalytics__batchProcessing: "false"
+  # members__emailTemplate__showSiteHeader: "true"
+  # members__emailTemplate__showPoweredBy: "true"
+  # enableTipsAndDonations: "true"
   # admin__sessionMaxAgeMs: "15552000000" # Admin session lifetime in milliseconds.
   # privacy__useGravatar: "false"
   # mail__transport: SMTP
@@ -81,14 +97,21 @@ env:
   # externalRequest__keepAlive: "true"
   # externalRequest__keepAliveMsecs: "60000"
   # logging__level: info
+  # logging__useLocalTime: "false"
+  # logging__rotation__period: 1d # Applies to configured file log transports.
+  # logging__rotation__count: "10"
   # logging__logClientErrorsAsError: "true"
   # caching__assets__contentBasedHash__enabled: "true"
   # caching__llms__maxAge: "3600"
   # members__metafields__maxDefinitions: "100"
   # members__importer__inlineThreshold: "500"
+  # bulkEmail__batchSize: "1000"
   # bulkEmail__batchCreationConcurrency: "2"
   # adapters__upgrade__active: NoopUpgradeAdapter
   # optimization__capListingLimit: "false"
+  # optimization__maxLimit: "100" # Used when capListingLimit is enabled.
+  # optimization__allowLimitAll: "false"
+  # apps__trustedOrigins: '["https://app.example.com"]' # Skips app ownership checks; trust exact origins only.
   # Spam controls include upgrade_api_block, upgrade_block, staff_invite_block,
   # and support_request_block; see the upstream defaults for each block.
   # verifyRequestIntegrity: "true"
@@ -100,7 +123,10 @@ env:
 envFrom: []
 
 # Extra environment variables with full Kubernetes EnvVar support, including
-# valueFrom references.
+# valueFrom references. The official image also supports mail__options__auth__pass_FILE
+# pointing to a mounted Secret file; do not also set mail__options__auth__pass.
+# Never set database__connection__password_FILE alongside the chart's injected
+# database password when mysql.enabled=true.
 extraEnv: []
 
 # Secret environment variables for mail passwords, Stripe keys, or other

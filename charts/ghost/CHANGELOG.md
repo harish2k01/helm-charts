@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.4
+
+### Application changes
+
+Ghost 6.74.0-alpine → 6.75.0-alpine adds the paid-subscription-changed automation trigger and video thumbnail selection from frames, and fixes upcoming YouTube livestream embeds in emails. The full source comparison also includes app-frame navigation/log-redaction hardening, SVG/PNG/WebP app-icon validation (JPEG/GIF no longer accepted), Portal/Admin automation refinements and GA lifecycle automation triggers. Private Labs flags and editor features are managed by the application, not enabled through chart defaults.
+
+The complete runtime config, database schema and migration directories are identical between these two tags; no database migration or new environment default is introduced by this release. The official Alpine image changes only the Ghost version; Node 22.23.4, Ghost CLI 1.34.1, entrypoint, port 2368 and content path remain unchanged. Keep mysql:8; this app update supplies no evidence for a datastore version bump. Normal database/content backups remain recommended; custom apps/themes still need their own compatibility review.
+
+Sources: [release notes](https://github.com/TryGhost/Ghost/releases/tag/v6.75.0), [all application changes](https://github.com/TryGhost/Ghost/compare/v6.74.0...v6.75.0), [runtime defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json), [production defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/env/config.production.json).
+
+### Chart changes
+
+Synchronize app image metadata/schema/docs and catalog. Add commented examples for previously supported shutdown, HTTP compression/preload, Admin/device/webhook protections, image resizing/srcsets, theme archive expansion limits, file-log rotation, bulk email sizing, analytics/email branding, listing limits, exact trusted app origins and tips/donations options. Document the supported mounted-secret _FILE mechanism and its conflict with simultaneously supplied inline/chart-owned credentials. All remain opt-in overrides through existing env/Secret/volume hooks; persisted app configuration and optional integrations are not activated. Trusted app origins bypass ownership checks and must be selected carefully; development-only aliases and settings overridden by Ghost's mandatory overrides are not advertised as production options. This chart includes the independently reviewed Caddy 2.11.8 proxy changes from 0.3.3; merge PR #136 before PR #139.
+
+Validation: Helm lint/default and optional routing/Secret renders and repository regression tests. Runtime Caddy proxy checks are recorded in 0.3.3. Ghost admin/editor, email delivery, theme/custom-app behavior and production data were not exercised.
+
+
 ## 0.3.3
 
 ### Application changes
