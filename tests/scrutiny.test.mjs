@@ -6,7 +6,9 @@ import { parseAllDocuments } from 'yaml';
 const render = (...args) => parseAllDocuments(execFileSync('helm', ['template', 'scrutiny', 'charts/scrutiny', '--namespace', 'monitoring', ...args], {encoding:'utf8'})).map(d=>d.toJSON()).filter(Boolean);
 test('Scrutiny serializes database writers during default upgrades', () => {
   const deployment=render().find(d=>d.kind==='Deployment');
-  assert.deepEqual(deployment.spec.strategy,{type:'Recreate',rollingUpdate:null});
+  // Helm 4 drops null values (rollingUpdate) from the output; Helm 3 renders them as null.
+  assert.equal(deployment.spec.strategy.type,'Recreate');
+  assert.equal(deployment.spec.strategy.rollingUpdate ?? null,null);
   const influx=deployment.spec.template.spec.containers.find(c=>c.name==='influxdb');
   assert.equal(influx.image,'influxdb:2.9.1');
   assert.equal(influx.env,undefined);
