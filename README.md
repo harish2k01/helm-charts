@@ -75,7 +75,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`firefly-iii`](charts/firefly-iii) | `0.2.1` | `version-6.6.6` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.2.0` | `v3.5.2` | Media | Deploys FlareSolverr request solving for automation stacks. |
 | [`ghost`](charts/ghost) | `0.3.4` | `6.75.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
-| [`homepage`](charts/homepage) | `0.2.0` | `1.13.2` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
+| [`homepage`](charts/homepage) | `0.3.0` | `2.7.0` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.3.0` | `10.11.11` | Media | Deploys Jellyfin media server with library mount support. |
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.1` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.3.0` | `0.64.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |

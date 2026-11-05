@@ -76,8 +76,8 @@
       "name": "Homepage",
       "slug": "homepage",
       "category": "Dashboard",
-      "version": "0.2.0",
-      "appVersion": "1.13.2",
+      "version": "0.3.0",
+      "appVersion": "2.7.0",
       "description": "Deploys Homepage dashboard on Kubernetes.",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/homepage.png"
     },
