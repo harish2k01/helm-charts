@@ -267,6 +267,12 @@ checksum also rolls out this normalization change to existing proxy pods.
 
 ## Additional Ghost configuration
 
+`env.server__shutdownTimeout` is in milliseconds and can apply first to HTTP
+draining and then to background-job cleanup. Allow both stages plus a margin
+in the pod's termination grace period. For busy workloads using a 60000 ms
+timeout, consider `deployment.terminationGracePeriodSeconds: 150`; the existing
+chart default of 60 seconds can truncate worst-case cleanup.
+
 The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
 
 ### StatefulSet claim labels

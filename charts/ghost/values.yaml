@@ -62,7 +62,8 @@ env:
   url: http://localhost:2368
   NODE_ENV: production
   # Optional upstream configuration; uncomment only to override app defaults.
-  # server__shutdownTimeout: "60000" # Milliseconds; keep pod termination grace (seconds) longer than this.
+  # server__shutdownTimeout: "60000" # Milliseconds for HTTP drain and job cleanup stages.
+  # Pod termination grace (seconds) must cover both stages plus a margin.
   # compress: "true" # Upstream HTTP response compression.
   # preloadHeaders: "false" # Send resource preload links in HTTP headers.
   # adminFrameProtection: "true" # Keep clickjacking protection for Admin.
