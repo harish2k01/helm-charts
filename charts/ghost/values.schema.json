@@ -726,7 +726,7 @@
         "image": {
           "type": "string",
           "minLength": 1,
-          "default": "caddy:2.11.7-alpine"
+          "default": "caddy:2.11.8-alpine"
         },
         "resources": {
           "type": "object",

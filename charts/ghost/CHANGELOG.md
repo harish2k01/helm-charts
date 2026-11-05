@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.3
+
+### Application changes
+
+The optional ActivityPub proxy upgrades Caddy 2.11.7-alpine → 2.11.8-alpine. This maintenance/security release fixes reverse-proxy informational-response header filtering (GHSA-8qx7-j2v2-x6q5), HTTP/2 upload timeouts, escaped URI handling and connection leaks. It rejects invalid/dots-only Host values. Stricter TLS/Caddyfile validation and PHP/file-server fixes do not require changes to this chart's generated reverse-proxy configuration. New log/TLS matcher directives are Caddyfile features, not Ghost environment settings; no new runtime environment defaults are required.
+
+Sources: [release and full change list](https://github.com/caddyserver/caddy/releases/tag/v2.11.8), [official image change](https://github.com/caddyserver/caddy-docker/commit/8338ec8d). The official image moves Alpine 3.23 → 3.24 and changes the binary file capability from effective+permitted to permitted-only. Ghost 6.74.0-alpine and MySQL 8 remain unchanged.
+
+### Chart changes
+
+Update proxy image metadata/schema/docs and remove the proxy's added NET_BIND_SERVICE capability: port 8080 now runs with all capabilities dropped, UID/GID 1000, no privilege escalation and a read-only root filesystem. Retain original Host+port forwarding, trailing-slash normalization, disabled admin/automatic TLS and writable ephemeral /data and /config. ActivityPub remains opt-in. Older Caddy image overrides may require their former capability setup; use the previous chart when reverting the proxy image.
+
+Validation: disposable Kubernetes test with the exact published image and chart security context passed Caddy validation/startup, Host+port, encoded percent paths, query strings, slash normalization and POST-body forwarding, and invalid Host rejection. Synthetic HTTP upstream only; hosted Social Web/TLS federation was not exercised. Existing Ghost content/database persistence is unaffected.
+
 ## 0.3.2
 
 ### Application changes

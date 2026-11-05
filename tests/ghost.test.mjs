@@ -19,4 +19,11 @@ test('ActivityPub proxy preserves original Host for HTTPS upstreams',()=>{
   const docs=render('ghost',['activityPub.enabled=true','httpRoutes.main.enabled=true','httpRoutes.main.parentRefs[0].name=edge','httpRoutes.main.hostnames[0]=ghost.example.com']);
   const config=docs.find(d=>d.kind==='ConfigMap'&&d.data?.Caddyfile);
   assert.match(config.data.Caddyfile,/header_up Host \{http\.request\.hostport\}/);
+  assert.match(config.data.Caddyfile,/uri strip_suffix \//);
+  const proxy=docs.find(d=>d.kind==='Deployment'&&d.spec.template.spec.containers.some(c=>c.name==='proxy'));
+  const security=proxy.spec.template.spec.containers[0].securityContext;
+  assert.equal(proxy.spec.template.spec.securityContext.runAsNonRoot,true);
+  assert.equal(security.readOnlyRootFilesystem,true);
+  assert.equal(security.allowPrivilegeEscalation,false);
+  assert.deepEqual(security.capabilities,{drop:['ALL']});
 });
