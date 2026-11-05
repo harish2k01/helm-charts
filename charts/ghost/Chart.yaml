@@ -3,8 +3,8 @@ name: ghost
 description: Deploys Ghost publishing platform on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png
-version: 0.3.3
-appVersion: "6.74.0-alpine"
+version: 0.3.4
+appVersion: "6.75.0-alpine"
 home: https://ghost.org
 sources:
   - https://github.com/TryGhost/Ghost
@@ -21,7 +21,7 @@ annotations:
     - name: activitypub-proxy
       image: caddy:2.11.8-alpine
     - name: ghost
-      image: ghost:6.74.0-alpine
+      image: ghost:6.75.0-alpine
     - name: mysql
       image: mysql:8
 maintainers:

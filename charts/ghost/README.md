@@ -2,6 +2,11 @@
 
 This chart deploys [Ghost](https://ghost.org), a publishing platform for blogs, newsletters, memberships, and content sites, using the official `ghost` container image.
 
+See [CHANGELOG.md](CHANGELOG.md) for app/chart changes and migration notes. The
+commented `env` examples in [values.yaml](values.yaml) cover optional runtime
+settings; leave them unset to inherit Ghost's defaults. Use Secret references
+for credentials rather than putting them in plain `env` values.
+
 > [!NOTE]
 > This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
 
@@ -18,7 +23,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.3
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.4
 ```
 
 ## Database Configuration
@@ -164,7 +169,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Ghost replicas |
 | `image.repository` | string | `ghost` | Container image repository |
-| `image.tag` | string | `6.74.0-alpine` | Container image tag |
+| `image.tag` | string | `6.75.0-alpine` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for Ghost |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the Ghost pod |
@@ -262,7 +267,13 @@ checksum also rolls out this normalization change to existing proxy pods.
 
 ## Additional Ghost configuration
 
-The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.71.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
+`env.server__shutdownTimeout` is in milliseconds and can apply first to HTTP
+draining and then to background-job cleanup. Allow both stages plus a margin
+in the pod's termination grace period. For busy workloads using a 60000 ms
+timeout, consider `deployment.terminationGracePeriodSeconds: 150`; the existing
+chart default of 60 seconds can truncate worst-case cleanup.
+
+The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
 
 ### StatefulSet claim labels
 
