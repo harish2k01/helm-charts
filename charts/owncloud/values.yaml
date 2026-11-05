@@ -3,7 +3,7 @@ replicaCount: 1
 # Official ownCloud Server image. Pin the tag so upgrades are intentional.
 image:
   repository: owncloud/server
-  tag: "10.16.7"
+  tag: "11.1.0"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
@@ -72,11 +72,13 @@ database:
   existingSecret: ""
   passwordKey: db-password
 
-# Additional non-secret ownCloud environment variables such as OWNCLOUD_LOGLEVEL.
+# Additional non-secret ownCloud environment variables such as OWNCLOUD_LOG_LEVEL.
 env: {}
 # Optional wrapper settings below are commented to preserve persisted config.
-# Verified against owncloud/base v22.04 entrypoint/template sources.
-# Uncomment a key inside env above only when overriding that upstream setting.
+# Verified against owncloud/base v24.04 entrypoint/template sources for ownCloud 11.1.0.
+# Copy a setting into env above only when overriding that upstream setting.
+# Empty defaults mean unset; shell expressions show upstream fallback references,
+# not literal values to copy into Kubernetes env. Choose an explicit value.
 #   # Location of the access log.
 #   OWNCLOUD_ACCESSLOG_LOCATION: "/dev/stdout"
 #   # Allow medial search on user account properties
@@ -97,7 +99,7 @@ env: {}
 #   OWNCLOUD_APPS_INSTALL_MAJOR: "false"
 #   # List of apps to remove on container startup.
 #   OWNCLOUD_APPS_UNINSTALL: ""
-#   # Service to execute ownCloud backgrouns jobs. It is recommended to keep the default
+#   # Service to execute ownCloud background jobs. It is recommended to keep the default
 #   OWNCLOUD_BACKGROUND_MODE: "cron"
 #   # Define blacklisted files
 #   OWNCLOUD_BLACKLISTED_FILES: ""
@@ -119,7 +121,7 @@ env: {}
 #   OWNCLOUD_CROND_SCHEDULE: "\"*/1 * * * *\""
 #   # Define logging if cron ran successfully
 #   OWNCLOUD_CRON_LOG: ""
-#   # Enable or disable ownCloudâ€™s built-in CSRF protection mechanism
+#   # Enable or disable ownCloud's built-in CSRF protection mechanism
 #   OWNCLOUD_CSRF_DISABLED: ""
 #   # Define the DAV chunk base directory
 #   OWNCLOUD_DAV_CHUNK_BASE_DIR: ""
@@ -359,8 +361,6 @@ env: {}
 #   OWNCLOUD_SHOW_SERVER_HOSTNAME: ""
 #   # Enable or disable single user mode
 #   OWNCLOUD_SINGLEUSER: ""
-#   # Define the directory where the skeleton files are located
-#   OWNCLOUD_SKELETON_DIRECTORY: ""
 #   # Enable or disable automatic file permissions correction on container startup.
 #   OWNCLOUD_SKIP_CHMOD: "false"
 #   # Enable or disable automatic file ownership correction on container startup.
@@ -415,6 +415,175 @@ env: {}
 #   OWNCLOUD_REDIS_PASSWORD: ""
 #   OWNCLOUD_SECRET: ""
 #   OWNCLOUD_TOKEN_AUTH_ENFORCED: ""
+
+
+# Additional 11.1 / Ubuntu 24.04 wrapper options (commented, not applied).
+# Empty defaults mean the wrapper leaves the corresponding core/app default in
+# control. Enterprise app settings only apply when that compatible app is enabled.
+#   # Restrict audit logging to specific groups. Comma-separated list of group names Wrapper default: unset.
+#   OWNCLOUD_ADMIN_AUDIT_GROUPS: ""
+#   # Enable or disable the subadmin (group admin) feature. Set to true to enable; unset leaves it disabled (ownCloud core default) Wrapper default: unset.
+#   OWNCLOUD_ALLOW_SUBADMINS: ""
+#   # Allow or disallow users to change their email addresses Wrapper default: unset.
+#   OWNCLOUD_ALLOW_USER_TO_CHANGE_MAIL_ADDRESS: ""
+#   # Command line options for the clamscan antivirus scanner Wrapper default: unset.
+#   OWNCLOUD_ANTIVIRUS_AV_CMD_OPTIONS: ""
+#   # Path to the clamscan binary in the container Wrapper default: unset.
+#   OWNCLOUD_ANTIVIRUS_AV_PATH: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_APPSTORE_ENABLED: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_APPSTORE_URL: ""
+#   # Define blacklisted files using regular expressions. Comma-separated list of regex patterns Wrapper default: unset.
+#   OWNCLOUD_BLACKLISTED_FILES_REGEX: ""
+#   # Restrict access to Collabora/Richdocuments to a specific group. Only one group can be defined. Default is empty (no restriction) Wrapper default: unset.
+#   OWNCLOUD_COLLABORA_GROUP: ""
+#   # Override the Android client download URL shown in the first-run wizard Wrapper default: unset.
+#   OWNCLOUD_CUSTOMCLIENT_ANDROID: ""
+#   # Override the desktop client download URL shown in the first-run wizard Wrapper default: unset.
+#   OWNCLOUD_CUSTOMCLIENT_DESKTOP: ""
+#   # Override the iOS client download URL shown in the first-run wizard Wrapper default: unset.
+#   OWNCLOUD_CUSTOMCLIENT_IOS: ""
+#   # Groups whose members have the Custom Groups app hidden from their personal settings. Comma-separated list of group names Wrapper default: unset.
+#   OWNCLOUD_CUSTOMGROUPS_DISALLOWED_GROUPS: ""
+#   # When set to true, ownCloud admins are denied access to custom groups they are not a member of Wrapper default: unset.
+#   OWNCLOUD_CUSTOMGROUPS_DISALLOW_ADMIN_ACCESS_ALL: ""
+#   # Allow Depth: infinity PROPFIND requests Wrapper default: unset.
+#   OWNCLOUD_DAV_PROPFIND_DEPTH_INFINITY: ""
+#   # Force a specific Doctrine DBAL platform class, e.g. for MariaDB compatibility Wrapper default: unset.
+#   OWNCLOUD_DB_PLATFORM: ""
+#   # Define excluded directories using regular expressions. Comma-separated list of regex patterns Wrapper default: unset.
+#   OWNCLOUD_EXCLUDED_DIRECTORIES_REGEX: ""
+#   # Maximum number of failed mountpoint rename attempts before giving up Wrapper default: unset.
+#   OWNCLOUD_FILESYSTEM_MAX_MOUNTPOINT_MOVE_ATTEMPTS: ""
+#   # Override the link shown in the grace period popup Wrapper default: unset.
+#   OWNCLOUD_GRACE_PERIOD_DEMO_KEY_LINK: ""
+#   # Show or hide the grace period demo key popup Wrapper default: unset.
+#   OWNCLOUD_GRACE_PERIOD_DEMO_KEY_SHOW_POPUP: ""
+#   # Allow medial search on group IDs Wrapper default: unset.
+#   OWNCLOUD_GROUPS_ENABLE_MEDIAL_SEARCH: ""
+#   # URL used to detect internet connectivity Wrapper default: unset.
+#   OWNCLOUD_INTERNET_CONNECTIVITY_DETECT_URL: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_KNOWLEDGEBASE_ENABLED: ""
+#   # Ignore LDAP naming rules Wrapper default: unset.
+#   OWNCLOUD_LDAP_IGNORE_NAMING_RULES: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_LICENSE_CLASS: ""
+#   # Group login policy rules as a JSON-encoded map keyed by login type (e.g. password, token), each holding allowOnly/reject lists of group names, e.g. {"password":{"reject":["admin"]}}. Requires the group login policy in OWNCLOUD_LOGIN_POLICY_ORDER Wrapper default: unset.
+#   OWNCLOUD_LOGIN_POLICY_GROUP_FORBID_MAP: ""
+#   # Ordered list of login policy class names. Comma-separated Wrapper default: unset.
+#   OWNCLOUD_LOGIN_POLICY_ORDER: ""
+#   # Strip the display name from the From header in sharing notification emails Wrapper default: unset.
+#   OWNCLOUD_MAIL_REMOVE_SENDER_DISPLAY_NAME: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_MARKETPLACE_URL: ""
+#   # Define multiple memcached servers as a JSON-encoded list of [host, port] or [host, port, weight] tuples, e.g. [["mem1",11211,33],["mem2",11211]]. Overrides the single-server OWNCLOUD_MEMCACHED_HOST/OWNCLOUD_MEMCACHED_PORT pair when set Wrapper default: unset.
+#   OWNCLOUD_MEMCACHED_SERVERS: ""
+#   # Optional target wrapper setting; see linked configuration reference. Wrapper default: unset.
+#   OWNCLOUD_MOUNT_FILE: ""
+#   # Path to a custom openssl.cnf file, e.g. when using a custom PKI or CA in the container Wrapper default: unset.
+#   OWNCLOUD_OPENSSL_CONFIG: ""
+#   # Allow JavaScript execution in PDF files. Security risk — only enable if required Wrapper default: unset.
+#   OWNCLOUD_PDF_VIEWER_ENABLE_SCRIPTING: ""
+#   # Suggested client polling interval in milliseconds Wrapper default: unset.
+#   OWNCLOUD_POLLINTERVAL: ""
+#   # Sets PHP option post_max_size, the size limit for form and multipart POST bodies that PHP parses. File uploads go through WebDAV PUT and are not affected, and the body of other POST requests is still readable. Keep it below a quarter of PHP's memory_limit, so that parsing a large request cannot reach it. That is OWNCLOUD_MEMORY_LIMIT on ownCloud 11, but on ownCloud 10 the web server always uses 512M, because ownCloud's .htaccess sets it. Wrapper default: 100M.
+#   OWNCLOUD_POST_MAX_SIZE: "100M"
+#   # JPEG preview display quality from 1 to 100 (-1 uses the PHP default of ~75%) Wrapper default: unset.
+#   OWNCLOUD_PREVIEW_JPEG_IMAGE_DISPLAY_QUALITY: ""
+#   # Comma-separated list of hostnames that bypass the proxy Wrapper default: unset.
+#   OWNCLOUD_PROXY_IGNORE: ""
+#   # Allow self-signed certificates on the Redis server (true/false) (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_ALLOW_SELF_SIGNED: ""
+#   # Path to CA certificate file for TLS-secured Redis connections (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_CAFILE: ""
+#   # Directory containing CA certificates for TLS-secured Redis connections (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_CAPATH: ""
+#   # OpenSSL cipher list for Redis TLS connections (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_CIPHERS: ""
+#   # Path to client certificate file for mutual TLS to Redis (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_LOCAL_CERT: ""
+#   # Path to client private key file for mutual TLS to Redis (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_LOCAL_PK: ""
+#   # Expected hostname in the Redis server certificate, overrides the connection host for SNI (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_PEER_NAME: ""
+#   # Validate the Redis server certificate against the CA (true/false) (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_VERIFY_PEER: ""
+#   # Validate that the Redis server certificate CN/SAN matches the peer name (true/false) (see phpredis docs). Wrapper default: unset.
+#   OWNCLOUD_REDIS_TLS_VERIFY_PEER_NAME: ""
+#   # Show a quick-action button for creating public links in the file list Wrapper default: unset.
+#   OWNCLOUD_SHARING_SHOW_PUBLIC_LINK_QUICK_ACTION: ""
+#   # Only validate the exact login name entered by the user, not alternative formats Wrapper default: unset.
+#   OWNCLOUD_STRICT_LOGIN_ENFORCED: ""
+#   # Send daily telemetry reports (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_TELEMETRY_ENABLED: ""
+#   # Comma-separated list of directory names that bypass the trash bin Wrapper default: unset.
+#   OWNCLOUD_TRASHBIN_SKIP_DIRECTORIES: ""
+#   # Comma-separated list of file extensions that bypass the trash bin Wrapper default: unset.
+#   OWNCLOUD_TRASHBIN_SKIP_EXTENSIONS: ""
+#   # Files larger than this size bypass the trash bin (e.g. 1GB) Wrapper default: unset.
+#   OWNCLOUD_TRASHBIN_SKIP_SIZE_THRESHOLD: ""
+#   # Enable medial search in the LDAP user backend Wrapper default: unset.
+#   OWNCLOUD_USER_LDAP_ENABLE_MEDIAL_SEARCH: ""
+#   # Use only the short hostname (no FQDN) in status.php Wrapper default: unset.
+#   OWNCLOUD_USE_RELATIVE_DOMAIN_NAME: ""
+#   # Base URL for the ownCloud Web UI Wrapper default: unset.
+#   OWNCLOUD_WEB_BASEURL: ""
+#   # Redirect public/private links to the ownCloud Web UI Wrapper default: unset.
+#   OWNCLOUD_WEB_REWRITE_LINKS: ""
+#   # Probe both NFC/NFD UTF-8 forms in the Windows Network Drive collaborative cache wrapper, needed for macOS HFS+ mounts (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND2_CACHE_WRAPPER_NORMALIZE: ""
+#   # TTL in seconds for the Windows Network Drive collaborative cache wrapper (default 1800); use a negative value to disable (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND2_CACHE_WRAPPER_TTL: ""
+#   # Register the Windows Network Drive app with the Activity app to report what wnd:process-queue is doing (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_ACTIVITY_REGISTER_EXTENSION: ""
+#   # Send activity notifications to sharees of Windows Network Drive files and folders; requires OWNCLOUD_WND_ACTIVITY_REGISTER_EXTENSION (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_ACTIVITY_SEND_TO_SHAREES: ""
+#   # Timeout in milliseconds applied to all Windows Network Drive backend operations and connections (default 20000) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_CONNECTOR_OPTS_TIMEOUT: ""
+#   # Comma-separated list of error codes that trigger a password reset for Windows Network Drive (default 13 = access denied); empty disables it (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_ERROR_CODES_PASSWORD_RESET: ""
+#   # How Windows Network Drive evaluates file attributes: none, stat (default) or getxattr (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_FILE_INFO_PARSE_ATTRS_MODE: ""
+#   # Make the Windows Network Drive group membership component assume an ACL entry is a user and check users first (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_GROUP_MEMBERSHIP_CHECK_USER_FIRST: ""
+#   # Enable the in-memory notifier so Windows Network Drive storages reset passwords on detecting a wrong password (true/false, default true) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_IN_MEMORY_NOTIFIER_ENABLE: ""
+#   # Listen to events from the smb_acl app to update Windows Network Drive storages when an ACL changes (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_LISTEN_EVENTS_SMB_ACL: ""
+#   # Interval in seconds after which the Windows Network Drive listener reconnects to the database to avoid crashes from idle connections (default 28800) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_LISTEN_RECONNECT_AFTER_TIME: ""
+#   # Enable additional debug logging for the Windows Network Drive app (true/false) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_LOGGING_ENABLE: ""
+#   # Maximum number of items in the Windows Network Drive permission manager per-request cache (default 512) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WND_PERMISSION_MANAGER_CACHE_SIZE: ""
+#   # Enable the Microsoft Office 365 business flow for WOPI (yes/no) (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WOPI_BUSINESS_FLOW_ENABLED: ""
+#   # Restrict Microsoft Office Online access to a specific group (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WOPI_GROUP: ""
+#   # URL of the Microsoft Office Online server (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WOPI_OFFICE_ONLINE_SERVER: ""
+#   # Business proxy URL for Microsoft Office 365 (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WOPI_PROXY_URL: ""
+#   # Retention engine for the workflow/tagging app: tagbased (default) or userbased (Enterprise only) Wrapper default: unset.
+#   OWNCLOUD_WORKFLOW_RETENTION_ENGINE: ""
+
+# Additional sensitive/structured settings: use secretEnv.existingSecret.keys or
+# extraEnv.valueFrom; do not put credentials in the ordinary env map.
+#   OWNCLOUD_METRICS_SHARED_SECRET: "" # Unset by default; supply through a referenced Secret.
+#   OWNCLOUD_OPENID_CONNECT: "" # Unset by default; supply through a referenced Secret.
+#   OWNCLOUD_REDIS_TLS_PASSPHRASE: "" # Unset by default; supply through a referenced Secret.
+#   OWNCLOUD_USER_BACKENDS: "" # Unset by default; supply through a referenced Secret.
+#   OWNCLOUD_WOPI_TOKEN_KEY: "" # Unset by default; supply through a referenced Secret.
+
+# OWNCLOUD_SKELETON_DIRECTORY is not consumed by the 24.04 wrapper. It now uses
+# /mnt/data/skeleton only when nonempty, otherwise the bundled core/skeleton.
+# Core account_lockout.* has no wrapper environment aliases: preserve the secure
+# defaults (enabled=true, max_attempts=5, duration=600, attempt_window=900).
+# Tune them with occ config:system:set and --type=boolean/integer after reviewing
+# the login/DoS tradeoff; occ user:unlock clears a temporary lockout early.
+# source: https://github.com/owncloud-docker/base/tree/b2071642309604eaf42b64c6c96ffb9052ab0bb1/v24.04/overlay
 
 # Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
 envFrom: []
@@ -519,12 +688,17 @@ mariadb:
 redis:
   enabled: true
   internal: true
+  # External Redis skips the unauthenticated internal init probe; the wrapper
+  # performs its bounded startup wait. For TLS use tls://host and configure
+  # OWNCLOUD_REDIS_TLS_* plus a Secret password through the hooks above.
   host: ""
   image:
     repository: redis
     tag: "8.10.2"
     pullPolicy: IfNotPresent
   service:
+    # Passed to the ownCloud client and Redis Service/container metadata.
+    # For a custom internal listener, also set --port in args and update probes.
     port: 6379
   args:
     - --databases
