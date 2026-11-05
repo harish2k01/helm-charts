@@ -67,7 +67,7 @@
       "name": "Ghost",
       "slug": "ghost",
       "category": "Publishing",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "appVersion": "6.74.0-alpine",
       "description": "Deploys Ghost publishing platform on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png"
