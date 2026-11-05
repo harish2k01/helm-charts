@@ -46,10 +46,16 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: "$(MY_POD_IP):3000{{- if .Values.homepage.allowedHosts }},{{ join "," .Values.homepage.allowedHosts }}{{- end }}"
+              value: "$(MY_POD_IP):{{ .Values.service.targetPort }}{{- if .Values.homepage.allowedHosts }},{{ join "," .Values.homepage.allowedHosts }}{{- end }}"
             {{- range $name, $value := .Values.env }}
             - name: {{ $name }}
               value: {{ $value | quote }}
+            {{- end }}
+            {{- range .Values.extraEnv }}
+            {{- if has .name (list "MY_POD_IP" "HOMEPAGE_ALLOWED_HOSTS") }}
+            {{- fail "extraEnv cannot override MY_POD_IP or HOMEPAGE_ALLOWED_HOSTS; use homepage.allowedHosts" }}
+            {{- end }}
+            - {{- toYaml . | nindent 14 }}
             {{- end }}
           {{- with .Values.envFrom }}
           envFrom:

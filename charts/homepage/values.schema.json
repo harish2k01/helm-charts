@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "v1.13.2"
+          "default": "v2.7.0"
         },
         "pullPolicy": {
           "type": "string",
@@ -131,7 +131,82 @@
       "type": "object",
       "description": "Additional non-secret environment variables.",
       "additionalProperties": true,
-      "properties": {}
+      "properties": {
+        "MY_POD_IP": false,
+        "HOMEPAGE_ALLOWED_HOSTS": false,
+        "HOMEPAGE_AUTH_ENABLED": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_OIDC_AUTO_LOGIN": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_MCP_ENABLED": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_MCP_ALLOW_WRITE": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_EXTERNAL_URL": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_ISSUER": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_CLIENT_ID": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_NAME": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_SCOPE": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        }
+      }
     },
     "envFrom": {
       "type": "array",
@@ -461,6 +536,53 @@
                   "minItems": 1
                 }
               }
+            }
+          }
+        ]
+      }
+    },
+    "extraEnv": {
+      "type": "array",
+      "default": [],
+      "description": "Individual Kubernetes EnvVar entries, including Secret references. Chart-managed pod IP/allowed hosts cannot be overridden.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "string"
+          },
+          "valueFrom": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "value"
+            ],
+            "not": {
+              "required": [
+                "valueFrom"
+              ]
+            }
+          },
+          {
+            "required": [
+              "valueFrom"
+            ],
+            "not": {
+              "required": [
+                "value"
+              ]
             }
           }
         ]

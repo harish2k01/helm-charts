@@ -64,7 +64,38 @@ env:
   # HOMEPAGE_VAR_EXAMPLE: "value" # Substitutes {{HOMEPAGE_VAR_EXAMPLE}} in YAML.
   # HOMEPAGE_FILE_EXAMPLE: /secrets/example # File contents substituted into YAML.
   # PORT: "3000" # Match service.targetPort when changing the listener.
-  # HOSTNAME: "::" # Bind address used by the container Next.js server.
+  # HOSTNAME: "::" # Image falls back to IPv4 if dual-stack binding fails.
+  # Optional v2 authentication (disabled upstream unless explicitly true).
+  # HOMEPAGE_AUTH_ENABLED: "true"
+  # HOMEPAGE_EXTERNAL_URL: https://dashboard.example.com # Required for auth.
+  # HOMEPAGE_OIDC_ISSUER: https://id.example.com # Select OIDC instead of password.
+  # HOMEPAGE_OIDC_CLIENT_ID: homepage
+  # HOMEPAGE_OIDC_NAME: Homepage OIDC
+  # HOMEPAGE_OIDC_SCOPE: openid email profile
+  # HOMEPAGE_OIDC_AUTO_LOGIN: "true" # Skip the sign-in page for OIDC.
+  # Optional MCP config API (disabled upstream unless explicitly true).
+  # HOMEPAGE_MCP_ENABLED: "true"
+  # HOMEPAGE_MCP_ALLOW_WRITE: "false" # Requires writable operator-owned config.
+  # HOMEPAGE_AUTH_SECRET, HOMEPAGE_AUTH_PASSWORD, HOMEPAGE_OIDC_CLIENT_SECRET
+  # and HOMEPAGE_MCP_TOKEN belong in extraEnv Secret references or envFrom.
+  # Authentication secret and MCP token must each be at least 32 characters.
+  # NEXTAUTH_URL / NEXTAUTH_SECRET are supported upstream aliases; use only one
+  # naming family to avoid an alias taking precedence unexpectedly.
+  # Next.js BUILD_/NEXT_PUBLIC_* values are image-build metadata, not pod options.
+
+# Individual Kubernetes EnvVar entries, including references to existing Secrets.
+# Secret contents stay out of ConfigMaps and plaintext Deployment environment.
+extraEnv: []
+# - name: HOMEPAGE_AUTH_SECRET
+#   valueFrom:
+#     secretKeyRef:
+#       name: homepage-auth
+#       key: cookie-secret
+# - name: HOMEPAGE_AUTH_PASSWORD
+#   valueFrom:
+#     secretKeyRef:
+#       name: homepage-auth
+#       key: password
 
 # Secret or ConfigMap references for sensitive HOMEPAGE_VAR_ or HOMEPAGE_FILE_
 # values used inside Homepage config files.
@@ -72,7 +103,7 @@ envFrom: []
 
 homepage:
   # Add public hostnames here, for example homepage.example.com. The chart
-  # always prepends $(MY_POD_IP):3000 so Kubernetes probes pass host validation.
+  # always includes the pod address at service.targetPort for health probes.
   allowedHosts: []
 
   # Use an existing ConfigMap with Homepage config files instead of generating
@@ -131,7 +162,9 @@ service:
 extraContainerPorts: []
 
 # Optional config PVC. Leave disabled to run from generated ConfigMap files.
-# Enable this when Homepage should persist edited config or logs in storage.
+# For MCP writes, also set homepage.config.enabled=false so read-only ConfigMap
+# files do not shadow this writable volume. Pre-populate the PVC yourself; the
+# chart does not overwrite or seed an existing config directory. Logs use emptyDir.
 persistence:
   config:
     enabled: false

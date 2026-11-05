@@ -16,7 +16,7 @@ helm install homepage harish2k01/homepage
 ## Install From OCI
 
 ```bash
-helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.2.0
+helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.3.0
 ```
 
 ## Web UI Access
@@ -121,7 +121,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Homepage replicas |
 | `image.repository` | string | `ghcr.io/gethomepage/homepage` | Container image repository |
-| `image.tag` | string | `v1.13.2` | Container image tag |
+| `image.tag` | string | `v2.7.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount |
 | `serviceAccount.automount` | bool | `true` | Automount the ServiceAccount token |
@@ -201,3 +201,42 @@ resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
 upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
 Multiple hostnames and parent references apply to the whole route; use separate
 entries when each hostname group must attach to a different Gateway.
+
+## Built-in authentication and MCP
+
+Homepage authentication is opt-in. Store a stable cookie secret (at least 32 characters) and the password in an existing Kubernetes Secret, then reference its keys:
+
+```yaml
+env:
+  HOMEPAGE_AUTH_ENABLED: "true"
+  HOMEPAGE_EXTERNAL_URL: https://dashboard.example.com
+extraEnv:
+  - name: HOMEPAGE_AUTH_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: homepage-auth
+        key: cookie-secret
+  - name: HOMEPAGE_AUTH_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: homepage-auth
+        key: password
+```
+
+For OIDC, replace the password with `HOMEPAGE_OIDC_CLIENT_SECRET` from a Secret and set `HOMEPAGE_OIDC_ISSUER` and `HOMEPAGE_OIDC_CLIENT_ID`. Optional `HOMEPAGE_OIDC_NAME`, `HOMEPAGE_OIDC_SCOPE` (upstream default `openid email profile`) and `HOMEPAGE_OIDC_AUTO_LOGIN` control the login experience. `HOMEPAGE_EXTERNAL_URL` must be the browser-facing absolute URL; configure TLS at your Gateway/Ingress. `NEXTAUTH_URL` and `NEXTAUTH_SECRET` are supported upstream aliases, with precedence over the Homepage names. Keep the cookie secret shared across replicas and stable across restarts.
+
+The optional `/api/mcp` endpoint uses `HOMEPAGE_MCP_ENABLED=true`. It accepts an authenticated Homepage session or a separate `HOMEPAGE_MCP_TOKEN` (at least 32 characters) supplied through `extraEnv` or `envFrom`. Tokens can read configured service credentials. Writes remain off unless `HOMEPAGE_MCP_ALLOW_WRITE=true`; write access also permits changing `custom.js`, which executes in browsers.
+
+For writable MCP configuration, set `homepage.config.enabled=false`, enable `persistence.config`, and supply an operator-populated writable claim. Generated or existing ConfigMap files are read-only even when a PVC is mounted beneath them. The chart does not initialize or overwrite the claim. Set a suitable `podSecurityContext.fsGroup` or volume ownership for UID/GID 1000. Back up the files before enabling writers; generated GitOps configuration and runtime MCP edits must not compete for ownership.
+
+`extraEnv` accepts Kubernetes `EnvVar` objects; `envFrom` imports whole Secrets/ConfigMaps. The chart reserves `MY_POD_IP` and `HOMEPAGE_ALLOWED_HOSTS`; set public names through `homepage.allowedHosts`. When changing `env.PORT`, also change `service.targetPort` so the Service, probes and allowed pod address stay aligned.
+
+| Key | Default | Description |
+|---|---|---|
+| `extraEnv` | `[]` | Individual environment variables, including Secret key references. |
+| `env.HOMEPAGE_AUTH_ENABLED` | Unset; upstream disabled | Enable password or OIDC authentication explicitly. |
+| `env.HOMEPAGE_EXTERNAL_URL` | Unset | Public absolute HTTP(S) URL required for authentication. |
+| `env.HOMEPAGE_MCP_ENABLED` | Unset; upstream disabled | Enable the authenticated MCP config endpoint. |
+| `env.HOMEPAGE_MCP_ALLOW_WRITE` | Unset; upstream disabled | Allow edits only with writable operator-owned config. |
+
+See [CHANGELOG.md](CHANGELOG.md) for the v1 to v2 release review, compatibility notes and validation.
