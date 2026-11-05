@@ -74,23 +74,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
-      - name: Install Helm
-        uses: azure/setup-helm@v5
-
-      - name: Install GnuPG
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if command -v gpg >/dev/null 2>&1; then
-            gpg --version
-            exit 0
-          fi
-
-          sudo apt-get update
-          sudo apt-get install -y gnupg
-          gpg --version
-
       - name: Import Helm signing key
         shell: bash
         env:
