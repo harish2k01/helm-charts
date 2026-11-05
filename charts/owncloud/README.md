@@ -40,7 +40,9 @@ The admin credentials are only used when ownCloud initializes a fresh data volum
 
 ## Database And Redis
 
-The default values deploy MariaDB 10.11 and Redis 8.10.2. Read [the Redis upgrade notes](CHANGELOG.md) before upgrading an existing Redis 6 volume.
+The default values deploy MariaDB 10.11 and Redis 8.10.2. See
+[CHANGELOG.md](CHANGELOG.md) for application/runtime compatibility, migration
+and datastore support notes.
 
 ```yaml
 database:
@@ -77,6 +79,18 @@ redis:
   internal: false
   host: redis.database.svc.cluster.local
 ```
+
+For external Redis over TLS, use `redis.host: tls://redis.example.com`, set
+`redis.service.port` to its listener port (for example 6380), and supply
+`OWNCLOUD_REDIS_PASSWORD` through `secretEnv.existingSecret.keys` or `extraEnv`
+Secret references. Mount custom CA/client certificates through the volume hooks
+and set the commented `OWNCLOUD_REDIS_TLS_*` options in values as required. The
+external connection uses the wrapper's startup handling rather than the chart's
+plaintext internal Redis init probe. Keep peer/certificate verification enabled.
+
+The chart passes `redis.service.port` to the ownCloud client. When changing the
+chart-managed Redis listener too, also align `redis.args` (`--port`) and all
+Redis probe commands with that port; their upstream defaults use 6379.
 
 ## Web Access
 

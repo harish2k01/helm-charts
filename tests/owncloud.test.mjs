@@ -33,7 +33,7 @@ test('ownCloud 11 retains supported MariaDB series and existing Redis pin withou
   assert.ok(pod.initContainers.some(c=>c.name==='wait-for-redis'));
 });
 test('external TLS Redis reaches wrapper with optional settings and referenced credentials',()=>{
-  const pod=app(render('--set','redis.internal=false,redis.host=tls://redis.example.invalid',
+  const pod=app(render('--set','redis.internal=false,redis.host=tls://redis.example.invalid,redis.service.port=6380',
     '--set-string','env.OWNCLOUD_REDIS_TLS_VERIFY_PEER=true',
     '--set-string','env.OWNCLOUD_STRICT_LOGIN_ENFORCED=true',
     '--set','secretEnv.existingSecret.name=redis-credentials',
@@ -41,6 +41,7 @@ test('external TLS Redis reaches wrapper with optional settings and referenced c
   assert.ok(!pod.initContainers.some(c=>c.name==='wait-for-redis'));
   const env=pod.containers[0].env;
   assert.equal(env.find(e=>e.name==='OWNCLOUD_REDIS_HOST').value,'tls://redis.example.invalid');
+  assert.equal(env.find(e=>e.name==='OWNCLOUD_REDIS_PORT').value,'6380');
   assert.equal(env.find(e=>e.name==='OWNCLOUD_REDIS_TLS_VERIFY_PEER').value,'true');
   assert.deepEqual(env.find(e=>e.name==='OWNCLOUD_REDIS_PASSWORD').valueFrom.secretKeyRef,{name:'redis-credentials',key:'password',optional:false});
 });

@@ -583,7 +583,6 @@ env: {}
 # defaults (enabled=true, max_attempts=5, duration=600, attempt_window=900).
 # Tune them with occ config:system:set and --type=boolean/integer after reviewing
 # the login/DoS tradeoff; occ user:unlock clears a temporary lockout early.
-# Do not add invented OWNCLOUD_ACCOUNT_LOCKOUT_* variables.
 # source: https://github.com/owncloud-docker/base/tree/b2071642309604eaf42b64c6c96ffb9052ab0bb1/v24.04/overlay
 
 # Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
@@ -698,6 +697,8 @@ redis:
     tag: "8.10.2"
     pullPolicy: IfNotPresent
   service:
+    # Passed to the ownCloud client and Redis Service/container metadata.
+    # For a custom internal listener, also set --port in args and update probes.
     port: 6379
   args:
     - --databases

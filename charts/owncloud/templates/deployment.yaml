@@ -148,6 +148,8 @@ spec:
               value: "true"
             - name: OWNCLOUD_REDIS_HOST
               value: {{ include "owncloud.redisHost" . | quote }}
+            - name: OWNCLOUD_REDIS_PORT
+              value: {{ .Values.redis.service.port | quote }}
             {{- end }}
             {{- range $name, $value := .Values.env }}
             {{- if ne (toString $value) "" }}

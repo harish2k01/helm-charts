@@ -22,6 +22,8 @@ Audit all `OWNCLOUD_*` variables referenced by the target 24.04 overlay, includi
 
 Fix external Redis startup: when `redis.internal=false` and `redis.host` is external (including `tls://...` with a referenced password), skip the chart's internal plaintext/unauthenticated `redis-cli` init probe. Otherwise that probe loops forever before the TLS/auth-aware ownCloud client can start. The official wrapper retains its bounded TCP startup wait. Chart-managed Redis keeps its existing init probe. External certificate validity, authentication and server availability remain operator responsibilities.
 
+Wire `redis.service.port` into the ownCloud client's `OWNCLOUD_REDIS_PORT`; previously only the init probe received it, so external TLS listeners on ports such as 6380 could still be contacted on 6379. Add a Secret-backed external TLS/custom-port rendering regression and document the separately configurable internal Redis server arguments/probes.
+
 Sources: [server Dockerfile](https://github.com/owncloud-docker/server/blob/master/v24.04/Dockerfile.multiarch), [reviewed base source](https://github.com/owncloud-docker/base/tree/b2071642309604eaf42b64c6c96ffb9052ab0bb1/v24.04), [environment reference](https://github.com/owncloud-docker/base/blob/b2071642309604eaf42b64c6c96ffb9052ab0bb1/ENVIRONMENT.md), [core config sample](https://github.com/owncloud/core/blob/v11.1.0/config/config.sample.php). Three target image files (config template, Redis defaults and general defaults) were byte-for-byte matched to that reviewed base source; the image itself carries no attested source revision.
 
 ### Datastores, migration and rollback
