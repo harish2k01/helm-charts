@@ -2,6 +2,11 @@
 
 This chart deploys [Ghost](https://ghost.org), a publishing platform for blogs, newsletters, memberships, and content sites, using the official `ghost` container image.
 
+See [CHANGELOG.md](CHANGELOG.md) for app/chart changes and migration notes. The
+commented `env` examples in [values.yaml](values.yaml) cover optional runtime
+settings; leave them unset to inherit Ghost's defaults. Use Secret references
+for credentials rather than putting them in plain `env` values.
+
 > [!NOTE]
 > This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
 
