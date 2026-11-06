@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7
+
+### Chart changes
+
+Add optional host networking with automatic `ClusterFirstWithHostNet` DNS policy and validated explicit DNS overrides. Reject `None` because `dnsConfig` is not exposed. Required hostname anti-affinity separates host-network Tailscale pods across releases and namespaces while preserving user affinity rules; excess replicas remain Pending. Normal pod networking remains the default. Application and init-container image versions are unchanged.
+
 ## 0.1.6
 
 ### Application changes

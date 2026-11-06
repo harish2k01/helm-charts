@@ -19,13 +19,22 @@ spec:
       {{- end }}
       labels:
         {{- include "tailscale.selectorLabels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
+        {{- with (omit .Values.podLabels "tailscale.harish2k01.in/host-network") }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.hostNetwork }}
+        tailscale.harish2k01.in/host-network: "true"
         {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      {{- if or .Values.dnsPolicy .Values.hostNetwork }}
+      dnsPolicy: {{ .Values.dnsPolicy | default "ClusterFirstWithHostNet" }}
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -177,7 +186,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with (include "tailscale.affinity" . | fromYaml) }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
