@@ -1,5 +1,11 @@
 replicaCount: 1
 
+# Stop the old pod before an upgrade reuses its single-writer upload volume.
+# RollingUpdate requires storage and application behavior that support overlap.
+deployment:
+  strategy:
+    type: Recreate
+
 # Main Firefly III application image.
 # The chart version and app image version are intentionally separate:
 # - Chart.yaml version tracks chart/template changes.

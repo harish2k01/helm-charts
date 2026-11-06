@@ -5,6 +5,23 @@
   "type": "object",
   "additionalProperties": true,
   "properties": {
+    "deployment": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Application deployment rollout settings.",
+      "properties": {
+        "strategy": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Recreate releases the upload volume before starting replacement pods. Override only when storage and application behavior support overlapping pods.",
+          "default": {"type": "Recreate"},
+          "properties": {
+            "type": {"type": "string", "enum": ["Recreate", "RollingUpdate"], "default": "Recreate"},
+            "rollingUpdate": {"type": "object", "additionalProperties": true, "description": "Native Kubernetes rolling update settings when type is RollingUpdate."}
+          }
+        }
+      }
+    },
     "replicaCount": {
       "type": "integer",
       "description": "Number of application pod replicas to run. Increase for horizontally scalable services when storage and application behavior allow multiple pods.",
@@ -28,7 +45,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "version-6.6.1"
+          "default": "version-6.6.6"
         }
       }
     },

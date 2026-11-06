@@ -18,7 +18,7 @@ helm install firefly-iii harish2k01/firefly-iii
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install firefly-iii oci://ghcr.io/harish2k01/helm-charts/firefly-iii --version 0.1.2
+helm install firefly-iii oci://ghcr.io/harish2k01/helm-charts/firefly-iii --version 0.2.2
 ```
 
 The default inline secrets are placeholders for evaluation only. For persistent or public deployments, provide your own Kubernetes Secret and set `firefly.secrets.existingSecret`.
@@ -74,11 +74,14 @@ httpRoutes:
 
 ## Values
 
+The application uses `Recreate` upgrades so the old pod releases its upload PVC before its replacement starts. This avoids a rolling update waiting indefinitely when a `ReadWriteOnce` volume must move between nodes. Upgrades have a brief interruption. Change `deployment.strategy` only when your storage and application setup support overlapping pods. Keep one replica with the default single-writer storage.
+
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Firefly III replicas |
+| `deployment.strategy.type` | string | `Recreate` | Release the upload PVC before starting replacement pods |
 | `image.repository` | string | `fireflyiii/core` | Firefly III image repository |
-| `image.tag` | string | `version-6.6.1` | Firefly III image tag |
+| `image.tag` | string | `version-6.6.6` | Firefly III image tag |
 | `service.port` | int | `80` | Kubernetes Service port |
 | `service.targetPort` | int | `8080` | Firefly III container port |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress |

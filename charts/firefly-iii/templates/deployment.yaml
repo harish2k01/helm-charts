@@ -6,6 +6,8 @@ metadata:
     {{- include "firefly-iii.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    {{- toYaml .Values.deployment.strategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "firefly-iii.selectorLabels" . | nindent 6 }}

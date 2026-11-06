@@ -49,7 +49,7 @@
       "name": "Firefly III",
       "slug": "firefly-iii",
       "category": "Finance",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "version-6.6.6",
       "description": "A Helm chart for deploying Firefly III with PostgreSQL",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/firefly-iii.png"
