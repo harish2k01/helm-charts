@@ -89,6 +89,14 @@ After adding or changing schema, run `helm lint charts/<chart-name>` and at leas
 
 Each chart README should match the style of existing chart READMEs.
 
+When creating or updating a chart, include the following catalog link immediately below its README title, before the chart description. Use the canonical HTTPS URL so readers can discover the web UI, browse other charts, and find installation commands:
+
+```markdown
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+```
+
+Keep this link in every chart README when copying a chart or revising its documentation.
+
 Include, as applicable:
 
 - title in the form `# <Chart Name> Helm Chart`

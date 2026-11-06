@@ -1,5 +1,7 @@
 # Profilarr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 Deploys [Profilarr](https://github.com/Dictionarry-Hub/profilarr) for managing Radarr and Sonarr quality profiles, custom formats, naming, and media settings. An optional parser sidecar enables custom-format tests and release-ranking simulations in the UI.
 
 > [!NOTE]
@@ -16,7 +18,7 @@ helm install profilarr harish2k01/profilarr --version 0.2.1
 ## Install From OCI
 
 ```bash
-helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.1
+helm install profilarr oci://ghcr.io/harish2k01/helm-charts/profilarr --version 0.2.2
 ```
 
 ## Gateway API HTTPRoute

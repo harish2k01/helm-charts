@@ -1,5 +1,7 @@
 # Seerr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Seerr](https://docs.seerr.dev), a media request manager, with persistent configuration and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install seerr harish2k01/seerr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.3.1
+helm install seerr oci://ghcr.io/harish2k01/helm-charts/seerr --version 0.3.2
 ```
 
 ## Install With Gateway API HTTPRoute

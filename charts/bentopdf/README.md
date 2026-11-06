@@ -1,5 +1,7 @@
 # BentoPDF Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [BentoPDF](https://github.com/alam00000/BentoPDF) on Kubernetes.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install bentopdf harish2k01/bentopdf
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.3.1
+helm install bentopdf oci://ghcr.io/harish2k01/helm-charts/bentopdf --version 0.3.2
 ```
 
 ## Install With Ingress

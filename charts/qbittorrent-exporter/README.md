@@ -1,5 +1,7 @@
 # qBittorrent Exporter Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [martabal/qbittorrent-exporter](https://github.com/martabal/qbittorrent-exporter), a Prometheus exporter for qBittorrent.
 
 > [!NOTE]
@@ -16,7 +18,7 @@ helm install qbittorrent-exporter harish2k01/qbittorrent-exporter
 ## Install From OCI
 
 ```bash
-helm install qbittorrent-exporter oci://ghcr.io/harish2k01/helm-charts/qbittorrent-exporter --version 0.1.1
+helm install qbittorrent-exporter oci://ghcr.io/harish2k01/helm-charts/qbittorrent-exporter --version 0.1.2
 ```
 
 ## qBittorrent Authentication

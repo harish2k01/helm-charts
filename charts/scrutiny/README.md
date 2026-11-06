@@ -1,5 +1,7 @@
 # Scrutiny Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Scrutiny](https://github.com/AnalogJ/scrutiny) web/API with an InfluxDB sidecar for collecting and visualizing S.M.A.R.T. metrics from remote collectors.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install scrutiny harish2k01/scrutiny
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.1
+helm install scrutiny oci://ghcr.io/harish2k01/helm-charts/scrutiny --version 0.3.2
 ```
 
 The chart deploys the Scrutiny web/API container and an InfluxDB container in the same Pod. It does not deploy disk collectors; configure remote collectors to send data to the Scrutiny web endpoint.

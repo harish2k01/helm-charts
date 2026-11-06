@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+### Chart changes
+
+Add a link to the web chart catalog near the top of the README. Application versions and workload configuration are unchanged.
+
 ## 0.4.0 — ownCloud 11.1.0
 
 ### Application changes and compatibility

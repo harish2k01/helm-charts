@@ -1,5 +1,7 @@
 # PVE Exporter Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [prometheus-pve/prometheus-pve-exporter](https://github.com/prometheus-pve/prometheus-pve-exporter), a Prometheus exporter for Proxmox VE.
 
 > [!NOTE]
@@ -16,7 +18,7 @@ helm install pve-exporter harish2k01/pve-exporter
 ## Install From OCI
 
 ```bash
-helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.2.1
+helm install pve-exporter oci://ghcr.io/harish2k01/helm-charts/pve-exporter --version 0.2.2
 ```
 
 ## Proxmox Configuration

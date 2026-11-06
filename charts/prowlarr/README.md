@@ -1,5 +1,7 @@
 # Prowlarr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Prowlarr](https://prowlarr.com) using the LinuxServer.io container image, with persistent configuration and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install prowlarr harish2k01/prowlarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install prowlarr oci://ghcr.io/harish2k01/helm-charts/prowlarr --version 0.3.2
+helm install prowlarr oci://ghcr.io/harish2k01/helm-charts/prowlarr --version 0.3.3
 ```
 
 ## Install With Gateway API HTTPRoute

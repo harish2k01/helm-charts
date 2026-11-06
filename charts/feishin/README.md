@@ -1,5 +1,7 @@
 # Feishin Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Feishin](https://github.com/jeffvli/feishin), a self-hosted music streaming client for Jellyfin, Navidrome, and Subsonic-compatible servers.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install feishin harish2k01/feishin
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install feishin oci://ghcr.io/harish2k01/helm-charts/feishin --version 0.2.0
+helm install feishin oci://ghcr.io/harish2k01/helm-charts/feishin --version 0.2.1
 ```
 
 ## Server Preconfiguration

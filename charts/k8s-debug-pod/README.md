@@ -1,5 +1,7 @@
 # k8s-debug-pod Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 Deploys an Ubuntu-based Kubernetes troubleshooting pod with common cluster, network, DNS, TLS, process, and database client tools.
 
 > [!NOTE]
@@ -20,7 +22,7 @@ helm install k8s-debug-pod harish2k01/k8s-debug-pod \
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install k8s-debug-pod oci://ghcr.io/harish2k01/helm-charts/k8s-debug-pod --version 0.1.1 --namespace debug --create-namespace
+helm install k8s-debug-pod oci://ghcr.io/harish2k01/helm-charts/k8s-debug-pod --version 0.1.2 --namespace debug --create-namespace
 ```
 
 ## Connect

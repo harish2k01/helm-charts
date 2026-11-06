@@ -1,5 +1,7 @@
 # Navidrome Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Navidrome](https://www.navidrome.org) using the official container image, with separate persistent volumes for application data/configuration and the music library.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install navidrome harish2k01/navidrome
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install navidrome oci://ghcr.io/harish2k01/helm-charts/navidrome --version 0.3.0
+helm install navidrome oci://ghcr.io/harish2k01/helm-charts/navidrome --version 0.3.1
 ```
 
 ## Web UI Access

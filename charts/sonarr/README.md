@@ -1,5 +1,7 @@
 # Sonarr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Sonarr](https://sonarr.tv) using the LinuxServer.io container image, with persistent configuration, optional shared media storage, and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install sonarr harish2k01/sonarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install sonarr oci://ghcr.io/harish2k01/helm-charts/sonarr --version 0.3.1
+helm install sonarr oci://ghcr.io/harish2k01/helm-charts/sonarr --version 0.3.2
 ```
 
 Deploy another Sonarr instance by using a different release name and values file:

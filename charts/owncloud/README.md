@@ -1,5 +1,7 @@
 # ownCloud Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [ownCloud Server](https://owncloud.com), a self-hosted file sync, share, and collaboration server, using the official `owncloud/server` container image with optional chart-managed MariaDB and Redis StatefulSets.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install owncloud harish2k01/owncloud
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.4.0
+helm install owncloud oci://ghcr.io/harish2k01/helm-charts/owncloud --version 0.4.1
 ```
 
 ## Initial Configuration

@@ -3,7 +3,7 @@ name: k8s-debug-pod
 description: Deploys an Ubuntu-based Kubernetes troubleshooting pod
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/ubuntu.png
-version: 0.1.1
+version: 0.1.2
 appVersion: "0.1.1"
 home: https://github.com/harish2k01/helm-charts
 sources:

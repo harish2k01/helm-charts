@@ -2,7 +2,7 @@ apiVersion: v2
 name: homepage
 description: Deploys Homepage dashboard on Kubernetes.
 type: application
-version: 0.3.0
+version: 0.3.1
 appVersion: "2.7.0"
 home: https://gethomepage.dev/
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/homepage.png

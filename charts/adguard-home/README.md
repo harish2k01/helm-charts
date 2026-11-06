@@ -1,5 +1,7 @@
 # AdGuard Home Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) using the official container image, with persistent work and configuration storage, DNS service ports, and optional Ingress or Gateway API HTTPRoute access for the web UI.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install adguard-home harish2k01/adguard-home
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.2.1
+helm install adguard-home oci://ghcr.io/harish2k01/helm-charts/adguard-home --version 0.2.2
 ```
 
 ## First Run

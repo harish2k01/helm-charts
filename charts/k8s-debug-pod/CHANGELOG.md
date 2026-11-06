@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+### Chart changes
+
+Add a link to the web chart catalog near the top of the README. Application versions and workload configuration are unchanged.
+
 ## 0.1.1
 
 - Update the application image from `0.1.0` to `0.1.1`, including the app version, image metadata, schema defaults, and catalog.
