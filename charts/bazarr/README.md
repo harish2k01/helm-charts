@@ -1,5 +1,7 @@
 # Bazarr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Bazarr](https://www.bazarr.media) using the LinuxServer.io container image, with persistent configuration, optional shared media storage, and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install bazarr harish2k01/bazarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.3.0
+helm install bazarr oci://ghcr.io/harish2k01/helm-charts/bazarr --version 0.3.1
 ```
 
 Deploy another Bazarr instance by using a different release name and values file:

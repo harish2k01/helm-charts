@@ -1,5 +1,7 @@
 # Homepage Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Homepage](https://gethomepage.dev/), a customizable application dashboard/startpage, using the upstream container image.
 
 > [!NOTE]
@@ -16,7 +18,7 @@ helm install homepage harish2k01/homepage
 ## Install From OCI
 
 ```bash
-helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.3.0
+helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.3.1
 ```
 
 ## Web UI Access

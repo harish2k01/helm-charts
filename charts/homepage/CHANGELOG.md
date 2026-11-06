@@ -1,5 +1,11 @@
 # Upgrade notes
 
+## 0.3.1
+
+### Chart changes
+
+Add a link to the web chart catalog near the top of the README. Application versions and workload configuration are unchanged.
+
 ## 0.3.0 — Homepage 2.7.0
 
 Upgrade from 1.13.2. Reviewed all intervening releases: [2.0.0](https://github.com/gethomepage/homepage/releases/tag/v2.0.0), [2.1.0](https://github.com/gethomepage/homepage/releases/tag/v2.1.0), [2.1.1](https://github.com/gethomepage/homepage/releases/tag/v2.1.1), [2.1.2](https://github.com/gethomepage/homepage/releases/tag/v2.1.2), [2.2.0](https://github.com/gethomepage/homepage/releases/tag/v2.2.0), [2.3.0](https://github.com/gethomepage/homepage/releases/tag/v2.3.0), [2.4.0](https://github.com/gethomepage/homepage/releases/tag/v2.4.0), [2.5.0](https://github.com/gethomepage/homepage/releases/tag/v2.5.0), [2.6.0](https://github.com/gethomepage/homepage/releases/tag/v2.6.0) and [2.7.0](https://github.com/gethomepage/homepage/releases/tag/v2.7.0), plus the [complete source comparison](https://github.com/gethomepage/homepage/compare/v1.13.2...v2.7.0).

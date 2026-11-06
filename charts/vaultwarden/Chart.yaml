@@ -3,7 +3,7 @@ name: vaultwarden
 description: Deploys Vaultwarden password manager on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/vaultwarden.png
-version: 0.2.1
+version: 0.2.2
 appVersion: "1.37.5"
 home: https://github.com/dani-garcia/vaultwarden
 sources:

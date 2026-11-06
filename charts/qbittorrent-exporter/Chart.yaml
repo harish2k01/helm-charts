@@ -3,7 +3,7 @@ name: qbittorrent-exporter
 description: Deploys the martabal qBittorrent Prometheus exporter on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png
-version: 0.1.1
+version: 0.1.2
 appVersion: "v2.0.4"
 home: https://github.com/martabal/qbittorrent-exporter
 sources:

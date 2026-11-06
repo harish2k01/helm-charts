@@ -1,5 +1,7 @@
 # FlareSolverr Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr), typically as an internal service used by Prowlarr or other applications that need challenge solving.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install flaresolverr harish2k01/flaresolverr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install flaresolverr oci://ghcr.io/harish2k01/helm-charts/flaresolverr --version 0.2.0
+helm install flaresolverr oci://ghcr.io/harish2k01/helm-charts/flaresolverr --version 0.2.1
 ```
 
 By default, this chart creates only an internal ClusterIP Service.

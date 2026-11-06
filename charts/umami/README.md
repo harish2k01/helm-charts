@@ -1,5 +1,7 @@
 # Umami Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Umami](https://github.com/umami-software/umami), a privacy-focused web analytics platform, on Kubernetes.
 
 > [!NOTE]
@@ -16,7 +18,7 @@ helm install umami harish2k01/umami
 ## Install From OCI
 
 ```bash
-helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.3.1
+helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.3.2
 ```
 
 ## Database Configuration

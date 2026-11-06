@@ -4,7 +4,7 @@
       "name": "AdGuard Home",
       "slug": "adguard-home",
       "category": "Network",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "v0.107.80",
       "description": "Deploys AdGuard Home DNS filtering on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/adguard-home.png"
@@ -13,7 +13,7 @@
       "name": "Bazarr",
       "slug": "bazarr",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "1.6.2",
       "description": "Deploys Bazarr subtitle automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/bazarr.png"
@@ -22,7 +22,7 @@
       "name": "BentoPDF",
       "slug": "bentopdf",
       "category": "Documents",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "2.8.11",
       "description": "A Helm chart for deploying BentoPDF on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/bentopdf.png"
@@ -31,7 +31,7 @@
       "name": "Cloudflared",
       "slug": "cloudflared",
       "category": "Network",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "2026.10.7",
       "description": "Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/cloudflare.png"
@@ -40,7 +40,7 @@
       "name": "Feishin",
       "slug": "feishin",
       "category": "Media",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "1.17.0",
       "description": "Deploys Feishin music streaming client on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/feishin.png"
@@ -49,7 +49,7 @@
       "name": "Firefly III",
       "slug": "firefly-iii",
       "category": "Finance",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "appVersion": "version-6.6.6",
       "description": "A Helm chart for deploying Firefly III with PostgreSQL",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/firefly-iii.png"
@@ -58,7 +58,7 @@
       "name": "Flaresolverr",
       "slug": "flaresolverr",
       "category": "Media",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "appVersion": "v3.5.2",
       "description": "Deploys FlareSolverr on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/flaresolverr.png"
@@ -67,7 +67,7 @@
       "name": "Ghost",
       "slug": "ghost",
       "category": "Publishing",
-      "version": "0.3.4",
+      "version": "0.3.5",
       "appVersion": "6.75.0-alpine",
       "description": "Deploys Ghost publishing platform on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/ghost.png"
@@ -76,7 +76,7 @@
       "name": "Homepage",
       "slug": "homepage",
       "category": "Dashboard",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "2.7.0",
       "description": "Deploys Homepage dashboard on Kubernetes.",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/homepage.png"
@@ -85,7 +85,7 @@
       "name": "Jellyfin",
       "slug": "jellyfin",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "10.11.11",
       "description": "Deploys Jellyfin media server on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/jellyfin.png"
@@ -94,7 +94,7 @@
       "name": "K8s Debug Pod",
       "slug": "k8s-debug-pod",
       "category": "Operations",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "appVersion": "0.1.1",
       "description": "Deploys an Ubuntu-based Kubernetes troubleshooting pod",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/ubuntu.png"
@@ -103,7 +103,7 @@
       "name": "Navidrome",
       "slug": "navidrome",
       "category": "Media",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "appVersion": "0.64.2",
       "description": "Deploys Navidrome music streaming server on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/navidrome.png"
@@ -112,7 +112,7 @@
       "name": "ownCloud",
       "slug": "owncloud",
       "category": "Storage",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "appVersion": "11.1.0",
       "description": "Deploys ownCloud Server with MariaDB and Redis on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/owncloud.png"
@@ -121,7 +121,7 @@
       "name": "Pocket ID",
       "slug": "pocket-id",
       "category": "Security",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "v2.19.2",
       "description": "Deploys Pocket ID passkey-based OIDC provider on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/pocket-id.png"
@@ -130,7 +130,7 @@
       "name": "Profilarr",
       "slug": "profilarr",
       "category": "Media",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "2.3.1",
       "description": "Deploys Profilarr configuration management with optional release parsing for Radarr and Sonarr",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/profilarr.png"
@@ -139,7 +139,7 @@
       "name": "Prowlarr",
       "slug": "prowlarr",
       "category": "Media",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "appVersion": "2.7.0",
       "description": "Deploys Prowlarr indexer manager on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/prowlarr.png"
@@ -148,7 +148,7 @@
       "name": "Proxmox VE Exporter",
       "slug": "pve-exporter",
       "category": "Monitoring",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "3.11.0",
       "description": "Deploys the prometheus-pve-exporter for scraping Proxmox VE metrics",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/proxmox.png"
@@ -157,7 +157,7 @@
       "name": "qBittorrent",
       "slug": "qbittorrent",
       "category": "Media",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "5.3.0",
       "description": "Deploys qBittorrent on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png"
@@ -166,7 +166,7 @@
       "name": "qBittorrent Exporter",
       "slug": "qbittorrent-exporter",
       "category": "Monitoring",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "appVersion": "v2.0.4",
       "description": "Deploys the martabal qBittorrent Prometheus exporter on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/qbittorrent.png"
@@ -175,7 +175,7 @@
       "name": "Radarr",
       "slug": "radarr",
       "category": "Media",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "6.4.4",
       "description": "Deploys Radarr movie automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/radarr.png"
@@ -184,7 +184,7 @@
       "name": "Scrutiny",
       "slug": "scrutiny",
       "category": "Monitoring",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "v0.10.0-web",
       "description": "Scrutiny web/API hub for remote S.M.A.R.T collectors",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/scrutiny.png"
@@ -193,7 +193,7 @@
       "name": "Seerr",
       "slug": "seerr",
       "category": "Media",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "v3.5.1",
       "description": "Deploys Seerr media request manager on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/jellyseerr.png"
@@ -202,7 +202,7 @@
       "name": "Sonarr",
       "slug": "sonarr",
       "category": "Media",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "4.0.20",
       "description": "Deploys Sonarr TV automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/sonarr.png"
@@ -211,7 +211,7 @@
       "name": "Speedtest Tracker",
       "slug": "speedtest-tracker",
       "category": "Monitoring",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "1.15.1",
       "description": "A Helm chart for deploying Speedtest Tracker on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/speedtest-tracker.png"
@@ -220,7 +220,7 @@
       "name": "Syncthing",
       "slug": "syncthing",
       "category": "Storage",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "2.1.7",
       "description": "Deploys Syncthing continuous file synchronization on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/syncthing.png"
@@ -229,7 +229,7 @@
       "name": "Tailscale",
       "slug": "tailscale",
       "category": "Network",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "appVersion": "v1.104.4",
       "description": "Deploys Tailscale as a Kubernetes subnet router and exit node",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/tailscale.png"
@@ -238,7 +238,7 @@
       "name": "Tor Proxy",
       "slug": "tor-proxy",
       "category": "Network",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "appVersion": "latest",
       "description": "Deploys a Tor SOCKS proxy on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/tor.png"
@@ -247,7 +247,7 @@
       "name": "Umami",
       "slug": "umami",
       "category": "Analytics",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "3.4.1",
       "description": "A Helm chart for Umami, a privacy-focused web analytics platform",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/umami.png"
@@ -256,7 +256,7 @@
       "name": "Uptime Kuma",
       "slug": "uptime-kuma",
       "category": "Monitoring",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "appVersion": "2.5.9-slim",
       "description": "A Helm chart for Uptime Kuma - a self-hosted monitoring tool",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/uptime-kuma.png"
@@ -265,7 +265,7 @@
       "name": "Vaultwarden",
       "slug": "vaultwarden",
       "category": "Security",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "appVersion": "1.37.5",
       "description": "Deploys Vaultwarden password manager on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/vaultwarden.png"

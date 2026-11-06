@@ -1,5 +1,7 @@
 # Speedtest Tracker Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Speedtest Tracker](https://github.com/alexjustesen/speedtest-tracker) on Kubernetes.
 
 > [!NOTE]
@@ -10,7 +12,7 @@ This chart deploys [Speedtest Tracker](https://github.com/alexjustesen/speedtest
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.3.1
+helm install speedtest-tracker oci://ghcr.io/harish2k01/helm-charts/speedtest-tracker --version 0.3.2
 ```
 
 ## Database Configuration

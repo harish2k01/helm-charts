@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+### Chart changes
+
+Add a link to the web chart catalog near the top of the README. Application versions and workload configuration are unchanged.
+
 ## 0.1.3
 
 ### Application upgrade from v3.4.6 to v3.5.2

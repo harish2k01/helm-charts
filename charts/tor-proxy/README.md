@@ -1,5 +1,7 @@
 # Tor Proxy Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [peterdavehello/tor-socks-proxy](https://github.com/peterdavehello/tor-socks-proxy), a small Tor SOCKS proxy, on Kubernetes.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install tor-proxy harish2k01/tor-proxy
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tor-proxy oci://ghcr.io/harish2k01/helm-charts/tor-proxy --version 0.1.2
+helm install tor-proxy oci://ghcr.io/harish2k01/helm-charts/tor-proxy --version 0.1.3
 ```
 
 By default, this chart creates an internal `ClusterIP` Service only.

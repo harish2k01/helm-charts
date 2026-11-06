@@ -1,5 +1,7 @@
 # Ghost Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Ghost](https://ghost.org), a publishing platform for blogs, newsletters, memberships, and content sites, using the official `ghost` container image.
 
 See [CHANGELOG.md](CHANGELOG.md) for app/chart changes and migration notes. The
@@ -23,7 +25,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.4
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.5
 ```
 
 ## Database Configuration

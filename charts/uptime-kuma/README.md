@@ -1,5 +1,7 @@
 # Uptime Kuma Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Uptime Kuma](https://github.com/louislam/uptime-kuma) on Kubernetes with persistent application data, optional MariaDB support, and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install uptime-kuma harish2k01/uptime-kuma
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.3.1
+helm install uptime-kuma oci://ghcr.io/harish2k01/helm-charts/uptime-kuma --version 0.3.2
 ```
 
 By default, Uptime Kuma stores data in SQLite under `/app/data` with a persistent volume.

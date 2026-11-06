@@ -1,5 +1,7 @@
 # Cloudflared Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys the official Cloudflare `cloudflared` container as one or more Kubernetes Tunnel connector pods.
 
 It runs `cloudflared tunnel --no-autoupdate --loglevel info --metrics 0.0.0.0:2000 run` by default and reads the tunnel token from a Kubernetes Secret. The chart can reference a Secret managed outside Helm, create a normal Secret from private values, or create a Bitnami SealedSecret.
@@ -26,7 +28,7 @@ helm install cloudflared harish2k01/cloudflared --namespace cloudflare
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.2.1
+helm install cloudflared oci://ghcr.io/harish2k01/helm-charts/cloudflared --version 0.2.2
 ```
 
 ## Sealed Secret

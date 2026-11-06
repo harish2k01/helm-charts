@@ -1,5 +1,7 @@
 # Tailscale Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys the official [Tailscale](https://tailscale.com) container as Kubernetes subnet router and exit node pods. It is intended for homelab clusters where you want the same behavior as a normal host/LXC install without using the Tailscale Kubernetes operator.
 
 The chart follows the standard Tailscale container environment variables documented by Tailscale, including `TS_AUTHKEY`, `TS_STATE_DIR`, `TS_USERSPACE`, `TS_ROUTES`, `TS_EXTRA_ARGS`, and the health/metrics endpoint.
@@ -20,7 +22,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.7
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.8
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:

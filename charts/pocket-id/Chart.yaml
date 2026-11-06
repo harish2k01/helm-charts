@@ -3,7 +3,7 @@ name: pocket-id
 description: Deploys Pocket ID passkey-based OIDC provider on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/pocket-id.png
-version: 0.3.1
+version: 0.3.2
 appVersion: "v2.19.2"
 home: https://pocket-id.org
 sources:

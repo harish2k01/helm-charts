@@ -1,5 +1,7 @@
 # Firefly III Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Firefly III](https://www.firefly-iii.org/) with an internal PostgreSQL database, upload storage, and the Firefly cron endpoint runner.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install firefly-iii harish2k01/firefly-iii
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install firefly-iii oci://ghcr.io/harish2k01/helm-charts/firefly-iii --version 0.2.2
+helm install firefly-iii oci://ghcr.io/harish2k01/helm-charts/firefly-iii --version 0.2.3
 ```
 
 The default inline secrets are placeholders for evaluation only. For persistent or public deployments, provide your own Kubernetes Secret and set `firefly.secrets.existingSecret`.

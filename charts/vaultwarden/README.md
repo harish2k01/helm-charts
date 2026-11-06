@@ -1,5 +1,7 @@
 # Vaultwarden Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Vaultwarden](https://github.com/dani-garcia/vaultwarden), a lightweight Bitwarden-compatible password manager server, with persistent `/data` storage and optional Ingress or Gateway API HTTPRoute access.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install vaultwarden harish2k01/vaultwarden
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install vaultwarden oci://ghcr.io/harish2k01/helm-charts/vaultwarden --version 0.1.0
+helm install vaultwarden oci://ghcr.io/harish2k01/helm-charts/vaultwarden --version 0.2.2
 ```
 
 ## Example Values

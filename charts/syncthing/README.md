@@ -1,5 +1,7 @@
 # Syncthing Helm Chart
 
+Browse the [Helm chart catalog](https://charts.harish2k01.in/) to explore available charts and installation commands.
+
 This chart deploys [Syncthing](https://syncthing.net) using the official `syncthing/syncthing` container image, with persistent state, optional extra synchronized folder mounts, and optional Ingress or Gateway API HTTPRoute access for the Web UI.
 
 > [!NOTE]
@@ -18,7 +20,7 @@ helm install syncthing harish2k01/syncthing
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.3.1
+helm install syncthing oci://ghcr.io/harish2k01/helm-charts/syncthing --version 0.3.2
 ```
 
 ## Web UI Access
