@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable installs and predictable upgrades.",
-          "default": "v1.96.5"
+          "default": "v1.104.4"
         },
         "pullPolicy": {
           "type": "string",
@@ -74,7 +74,7 @@
     "dnsPolicy": {
       "type": "string",
       "description": "Pod DNS policy. Empty uses ClusterFirst, or ClusterFirstWithHostNet when hostNetwork is enabled.",
-      "enum": ["", "ClusterFirst", "ClusterFirstWithHostNet", "Default", "None"],
+      "enum": ["", "ClusterFirst", "ClusterFirstWithHostNet", "Default"],
       "default": ""
     },
     "securityContext": {
@@ -132,7 +132,7 @@
             "tag": {
               "type": "string",
               "description": "Container image tag.",
-              "default": "1.37"
+              "default": "1.38.0"
             },
             "pullPolicy": {
               "type": "string",
@@ -189,6 +189,11 @@
           "type": "string",
           "description": "Plain Tailscale auth key used only when authKey.create is true. Avoid committing real keys.",
           "default": ""
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Inject the auth-key Secret. Disable when using OAuth/workload identity through extraEnv/envFrom.",
+          "default": true
         }
       }
     },
@@ -292,6 +297,11 @@
           "description": "List of envFrom entries.",
           "default": [],
           "items": {}
+        },
+        "bootTimeout": {
+          "type": "string",
+          "description": "Initial control-plane connection timeout as a Go duration, for example 90s or 3m. Empty uses the upstream 60s default.",
+          "default": ""
         }
       }
     },
@@ -336,6 +346,14 @@
           "type": "string",
           "description": "StorageClass name for the generated PVC. Leave empty to use the cluster default.",
           "default": ""
+        },
+        "claimTemplateLabels": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Pinned labels merged into the immutable StatefulSet volume claim template. Preserve existing labels on upgrade; keep version labels fixed if migrating from older charts."
         }
       }
     },

@@ -20,7 +20,7 @@ helm install k8s-debug-pod harish2k01/k8s-debug-pod \
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install k8s-debug-pod oci://ghcr.io/harish2k01/helm-charts/k8s-debug-pod --version 0.1.0 --namespace debug --create-namespace
+helm install k8s-debug-pod oci://ghcr.io/harish2k01/helm-charts/k8s-debug-pod --version 0.1.1 --namespace debug --create-namespace
 ```
 
 ## Connect
@@ -62,7 +62,7 @@ That repository publishes images from GitHub Releases with semantic version tags
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of debug pod replicas |
 | `image.repository` | string | `ghcr.io/harish2k01/k8s-debug-pod` | Container image repository |
-| `image.tag` | string | `0.1.0` | Container image tag |
+| `image.tag` | string | `0.1.1` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `imagePullSecrets` | list | `[]` | Image pull secrets |
 | `nameOverride` | string | `""` | Override the chart name |
@@ -86,3 +86,7 @@ That repository publishes images from GitHub Releases with semantic version tags
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |
+
+## Upgrade history
+
+See [CHANGELOG.md](CHANGELOG.md) for version changes and compatibility notes.

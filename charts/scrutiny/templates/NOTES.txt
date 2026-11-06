@@ -1,7 +1,13 @@
+{{- $endpoint := printf "http://%s:%v" (include "scrutiny.fullname" .) .Values.service.port -}}
+{{- range .Values.httpRoutes -}}
+{{- if and (or (not (hasKey . "enabled")) .enabled) .hostnames -}}
+{{- $endpoint = printf "https://%s" (first .hostnames) -}}
+{{- end -}}
+{{- end -}}
 Scrutiny web is available through the scrutiny service on port {{ .Values.service.port }}.
 
 Remote collectors should post to the web/API endpoint, for example:
-  scrutiny-collector-metrics run --api-endpoint "https://{{ first .Values.httpRoute.hostnames }}"
+  scrutiny-collector-metrics run --api-endpoint "{{ $endpoint }}"
 
 For the official collector container, set:
-  COLLECTOR_API_ENDPOINT=https://{{ first .Values.httpRoute.hostnames }}
+  COLLECTOR_API_ENDPOINT={{ $endpoint }}

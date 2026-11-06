@@ -55,6 +55,10 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.redis.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.redis.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -105,8 +109,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "owncloud.labels" . | nindent 10 }}
-          app.kubernetes.io/component: redis
+          {{- include "owncloud.claimTemplateLabels" (dict "root" . "labels" .Values.redis.persistence.claimTemplateLabels "component" "redis") | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.redis.persistence.accessModes | nindent 10 }}

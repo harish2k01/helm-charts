@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: lscr.io/linuxserver/bazarr
-  tag: "1.5.6"
+  tag: "1.6.2"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -18,12 +18,51 @@ securityContext: {}
 
 # LinuxServer.io images use PUID/PGID to choose the user that owns app files.
 # Match these to the permissions on your config and media volumes.
+# Optional 1.6 setting: directory containing config.yaml/config.ini.
+# Keep it on writable persistent storage; default is /config/config.
+# BAZARR_CONFIG_BASE_FILE_PATH: "/config/config"
 env:
   PUID: "3000"
   PGID: "3000"
   TZ: Asia/Kolkata
 
 # Main HTTP service for the Bazarr web UI/API.
+# Existing Secret/ConfigMap sources; explicit env entries take precedence.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+  # Directory containing config.yaml/config.ini; other DB paths stay under /config Upstream default: /config/config.
+  # BAZARR_CONFIG_BASE_FILE_PATH: "/config/config"
+  # Use external PostgreSQL instead of SQLite Upstream default: config: postgresql.enabled=false.
+  # POSTGRES_ENABLED: "true"
+  # External database hostname Upstream default: config: localhost.
+  # POSTGRES_HOST: "postgresql.database.svc"
+  # External PostgreSQL port Upstream default: config: 5432.
+  # POSTGRES_PORT: "5432"
+  # External database name Upstream default: config: empty.
+  # POSTGRES_DATABASE: "bazarr"
+  # External database username from Secret Upstream default: config: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # POSTGRES_USERNAME: ""
+  # External database password from Secret Upstream default: config: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # POSTGRES_PASSWORD: ""
+  # PostgreSQL URL; individual fields override URL components Upstream default: config: empty.
+  # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
+  # POSTGRES_URL: ""
+  # Internal argument-parser updater toggle; image must manage updates Upstream default: false (wrapper passes --no-update).
+  # NO_UPDATE: "true"
+  # Disables CLI parsing; leave unset with the LinuxServer startup command Upstream default: false.
+  # NO_CLI: "false"
+
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
+envFrom: []
+
 service:
   type: ClusterIP
   port: 6767
@@ -73,18 +112,73 @@ ingress:
   tls: []
 
 # Optional Gateway API HTTPRoute for exposing the web UI/API.
-httpRoute:
-  enabled: false
-  annotations: {}
-  parentRefs: []
-  hostnames: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
+# Gateway API routing. Requires Gateway API CRDs and a compatible controller.
+# Map keys (main, internal, external, etc.) are names you choose, not access policies.
+# Every enabled entry creates one HTTPRoute named <app-fullname>-<key>.
+httpRoutes:
+  main:
+    # Keep disabled until you provide Gateway references and application hostnames.
+    # Additional entries default to enabled when their enabled field is omitted.
+    enabled: false
+    # Per-route metadata, for example controller-specific annotations.
+    annotations: {}
+    # Attach this route to one or more Gateways/listeners. The Gateway must allow
+    # routes from this app's namespace. Omit namespace for a same-namespace Gateway;
+    # omit sectionName to target compatible listeners on that Gateway.
+    parentRefs: []
+    #  - name: internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    #  - name: second-internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    # Requests can match ANY hostname below, on ANY compatible parent above.
+    # These lists do not pair hostnames with individual Gateways by position.
+    hostnames: []
+    #  - app.internal.example.com
+    #  - app-alias.internal.example.com
+    # Match request paths/headers/methods and optionally apply Gateway API filters.
+    # Rules default to PathPrefix / when omitted. Backend references are generated
+    # from this chart's application Service and HTTP port, not supplied here.
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       set:
+        #         - name: X-Route
+        #           value: internal
+  # Use a separate entry when public hostnames should attach to another Gateway.
+  # external:
+  #   enabled: true
+  #   annotations: {}
+  #   parentRefs:
+  #     - name: external-gateway
+  #       namespace: ingress
+  #       sectionName: https
+  #   hostnames:
+  #     - app.example.com
+  #     - app-alias.example.com
+  #   rules:
+  #     - matches:
+  #         - path:
+  #             type: PathPrefix
+  #             value: /
 
 resources: {}
+
+# Allow database migrations/scans to finish before liveness starts restarting pods.
+# Increase failureThreshold for large libraries or slow persistent storage.
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 90
 
 livenessProbe:
   httpGet:

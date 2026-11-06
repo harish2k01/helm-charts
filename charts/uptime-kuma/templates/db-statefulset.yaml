@@ -102,7 +102,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "uptime-kuma.labels" . | nindent 10 }}
+          {{- include "uptime-kuma.claimTemplateLabels" (dict "root" . "labels" .Values.database.mariadb.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.database.mariadb.persistence.accessModes | nindent 10 }}

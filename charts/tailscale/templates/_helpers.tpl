@@ -72,3 +72,26 @@ Build TS_EXTRA_ARGS from structured exit-node values and raw extras.
 {{- end }}
 {{- join " " $args -}}
 {{- end }}
+
+{{/* Stable labels for immutable StatefulSet claim templates; overrides are pinned at install time. */}}
+{{- define "tailscale.claimTemplateLabels" -}}
+{{- $labels := include "tailscale.selectorLabels" .root | fromYaml -}}
+{{- $_ := set $labels "app.kubernetes.io/managed-by" .root.Release.Service -}}
+{{- if .component -}}
+{{- $_ := set $labels "app.kubernetes.io/component" .component -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite $labels (default dict .labels)) -}}
+{{- end }}
+
+{{/* Preserve user scheduling constraints while requiring one host-network router per node. */}}
+{{- define "tailscale.affinity" -}}
+{{- $affinity := deepCopy .Values.affinity -}}
+{{- if .Values.hostNetwork -}}
+{{- $antiAffinity := get $affinity "podAntiAffinity" | default dict -}}
+{{- $required := get $antiAffinity "requiredDuringSchedulingIgnoredDuringExecution" | default list -}}
+{{- $term := dict "topologyKey" "kubernetes.io/hostname" "namespaceSelector" (dict) "labelSelector" (dict "matchLabels" (dict "tailscale.harish2k01.in/host-network" "true")) -}}
+{{- $_ := set $antiAffinity "requiredDuringSchedulingIgnoredDuringExecution" (append $required $term) -}}
+{{- $_ := set $affinity "podAntiAffinity" $antiAffinity -}}
+{{- end -}}
+{{- toYaml $affinity -}}
+{{- end }}

@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "v1.13.1"
+          "default": "v2.7.0"
         },
         "pullPolicy": {
           "type": "string",
@@ -131,7 +131,82 @@
       "type": "object",
       "description": "Additional non-secret environment variables.",
       "additionalProperties": true,
-      "properties": {}
+      "properties": {
+        "MY_POD_IP": false,
+        "HOMEPAGE_ALLOWED_HOSTS": false,
+        "HOMEPAGE_AUTH_ENABLED": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_OIDC_AUTO_LOGIN": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_MCP_ENABLED": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_MCP_ALLOW_WRITE": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "enum": [
+            "true",
+            "false",
+            true,
+            false
+          ],
+          "description": "Optional exact upstream boolean flag; leave unset to inherit its default."
+        },
+        "HOMEPAGE_EXTERNAL_URL": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_ISSUER": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_CLIENT_ID": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_NAME": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        },
+        "HOMEPAGE_OIDC_SCOPE": {
+          "type": "string",
+          "description": "Optional upstream authentication setting. See README and Secret examples."
+        }
+      }
     },
     "envFrom": {
       "type": "array",
@@ -323,42 +398,6 @@
         }
       }
     },
-    "httpRoute": {
-      "type": "object",
-      "description": "Gateway API HTTPRoute configuration.",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Create an HTTPRoute resource.",
-          "default": false
-        },
-        "annotations": {
-          "type": "object",
-          "description": "Additional HTTPRoute annotations.",
-          "additionalProperties": true,
-          "properties": {}
-        },
-        "parentRefs": {
-          "type": "array",
-          "description": "Gateway parentRefs.",
-          "default": [],
-          "items": {}
-        },
-        "hostnames": {
-          "type": "array",
-          "description": "HTTPRoute hostnames.",
-          "default": [],
-          "items": {}
-        },
-        "rules": {
-          "type": "array",
-          "description": "HTTPRoute rules.",
-          "default": [],
-          "items": {}
-        }
-      }
-    },
     "resources": {
       "type": "object",
       "description": "Container CPU and memory requests and limits.",
@@ -394,6 +433,160 @@
       "description": "Pod affinity settings.",
       "additionalProperties": true,
       "properties": {}
+    },
+    "httpRoutes": {
+      "type": "object",
+      "default": {
+        "main": {
+          "enabled": false,
+          "annotations": {},
+          "parentRefs": [],
+          "hostnames": [],
+          "rules": [
+            {
+              "matches": [
+                {
+                  "path": {
+                    "type": "PathPrefix",
+                    "value": "/"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "description": "Named HTTPRoutes with independent Gateway references, hostname lists, annotations and rules.",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+        "maxLength": 40
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Create this named route."
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Annotations for this route."
+          },
+          "parentRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Gateway and optional listener attachments for this route."
+          },
+          "hostnames": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Explicit hostnames served by this route."
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "description": "Gateway API rules and filters; backendRefs are supplied by the chart. Defaults to PathPrefix /."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "enabled": {
+                  "const": false
+                }
+              },
+              "required": [
+                "enabled"
+              ]
+            },
+            "then": {},
+            "else": {
+              "required": [
+                "parentRefs",
+                "hostnames"
+              ],
+              "properties": {
+                "parentRefs": {
+                  "minItems": 1
+                },
+                "hostnames": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "extraEnv": {
+      "type": "array",
+      "default": [],
+      "description": "Individual Kubernetes EnvVar entries, including Secret references. Chart-managed pod IP/allowed hosts cannot be overridden.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "string"
+          },
+          "valueFrom": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "value"
+            ],
+            "not": {
+              "required": [
+                "valueFrom"
+              ]
+            }
+          },
+          {
+            "required": [
+              "valueFrom"
+            ],
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          }
+        ]
+      }
     }
   }
 }

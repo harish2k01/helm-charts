@@ -4,7 +4,7 @@ replicaCount: 1
 # installs are repeatable.
 image:
   repository: lscr.io/linuxserver/qbittorrent
-  tag: "5.2.0"
+  tag: "5.3.0"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
@@ -28,6 +28,19 @@ env:
 # Main HTTP service for the qBittorrent web UI. BitTorrent TCP/UDP ports are
 # not exposed by default; add them to service.extraPorts only if you want
 # inbound peer connectivity through Kubernetes.
+# Existing Secret/ConfigMap sources; explicit env entries take precedence.
+
+  # Optional runtime configuration. Every item below is commented and has no chart
+  # default. Leave unset to retain the app/config-file setting. Values are strings.
+  # Full purpose, upstream defaults, precedence and sources: CONFIGURATION.md.
+  # Mask applied to newly created files Upstream default: 022.
+  # UMASK: "022"
+
+  # Optional LinuxServer image extensions; use trusted mods only (executes code).
+  # DOCKER_MODS: ""
+
+envFrom: []
+
 service:
   type: ClusterIP
   port: 8080
@@ -85,16 +98,61 @@ ingress:
   tls: []
 
 # Optional Gateway API HTTPRoute for exposing the web UI.
-httpRoute:
-  enabled: false
-  annotations: {}
-  parentRefs: []
-  hostnames: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
+# Gateway API routing. Requires Gateway API CRDs and a compatible controller.
+# Map keys (main, internal, external, etc.) are names you choose, not access policies.
+# Every enabled entry creates one HTTPRoute named <app-fullname>-<key>.
+httpRoutes:
+  main:
+    # Keep disabled until you provide Gateway references and application hostnames.
+    # Additional entries default to enabled when their enabled field is omitted.
+    enabled: false
+    # Per-route metadata, for example controller-specific annotations.
+    annotations: {}
+    # Attach this route to one or more Gateways/listeners. The Gateway must allow
+    # routes from this app's namespace. Omit namespace for a same-namespace Gateway;
+    # omit sectionName to target compatible listeners on that Gateway.
+    parentRefs: []
+    #  - name: internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    #  - name: second-internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    # Requests can match ANY hostname below, on ANY compatible parent above.
+    # These lists do not pair hostnames with individual Gateways by position.
+    hostnames: []
+    #  - app.internal.example.com
+    #  - app-alias.internal.example.com
+    # Match request paths/headers/methods and optionally apply Gateway API filters.
+    # Rules default to PathPrefix / when omitted. Backend references are generated
+    # from this chart's application Service and HTTP port, not supplied here.
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       set:
+        #         - name: X-Route
+        #           value: internal
+  # Use a separate entry when public hostnames should attach to another Gateway.
+  # external:
+  #   enabled: true
+  #   annotations: {}
+  #   parentRefs:
+  #     - name: external-gateway
+  #       namespace: ingress
+  #       sectionName: https
+  #   hostnames:
+  #     - app.example.com
+  #     - app-alias.example.com
+  #   rules:
+  #     - matches:
+  #         - path:
+  #             type: PathPrefix
+  #             value: /
 
 resources: {}
 

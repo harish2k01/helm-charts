@@ -86,7 +86,7 @@ spec:
               value: {{ .Values.qbittorrent.features.enableLabelWithTracker | quote }}
             - name: ENABLE_LABEL_WITH_HASH
               value: {{ .Values.qbittorrent.features.enableLabelWithHash | quote }}
-            - name: ENABLE_LABEL_WITH_TAG
+            - name: ENABLE_LABEL_WITH_TAGS
               value: {{ .Values.qbittorrent.features.enableLabelWithTag | quote }}
             {{- with .Values.qbittorrent.exporter.host }}
             - name: EXPORTER_HOST

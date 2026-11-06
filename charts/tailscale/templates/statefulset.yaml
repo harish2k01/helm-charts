@@ -19,8 +19,11 @@ spec:
       {{- end }}
       labels:
         {{- include "tailscale.selectorLabels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
+        {{- with (omit .Values.podLabels "tailscale.harish2k01.in/host-network") }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.hostNetwork }}
+        tailscale.harish2k01.in/host-network: "true"
         {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -81,12 +84,14 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             {{- end }}
+            {{- if .Values.authKey.enabled }}
             - name: TS_AUTHKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "tailscale.authSecretName" . }}
                   key: {{ .Values.authKey.existingSecretKey }}
                   optional: false
+            {{- end }}
             - name: TS_HOSTNAME
               {{- if .Values.tailscale.hostnameFromPodName }}
               value: {{ printf "%s$(POD_NAME)" .Values.tailscale.hostnamePrefix | quote }}
@@ -109,6 +114,10 @@ spec:
               value: {{ .Values.tailscale.enableMetrics | quote }}
             - name: TS_LOCAL_ADDR_PORT
               value: {{ .Values.tailscale.localAddrPort | quote }}
+            {{- with .Values.tailscale.bootTimeout }}
+            - name: TS_BOOT_TIMEOUT
+              value: {{ . | quote }}
+            {{- end }}
             {{- with .Values.tailscale.routes }}
             - name: TS_ROUTES
               value: {{ join "," . | quote }}
@@ -177,7 +186,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with (include "tailscale.affinity" . | fromYaml) }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -194,7 +203,7 @@ spec:
     - metadata:
         name: state
         labels:
-          {{- include "tailscale.labels" . | nindent 10 }}
+          {{- include "tailscale.claimTemplateLabels" (dict "root" . "labels" .Values.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.persistence.accessModes | nindent 10 }}

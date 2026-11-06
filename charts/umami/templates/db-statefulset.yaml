@@ -100,7 +100,7 @@ spec:
     - metadata:
         name: data
         labels:
-          {{- include "umami.labels" . | nindent 10 }}
+          {{- include "umami.claimTemplateLabels" (dict "root" . "labels" .Values.database.postgresql.persistence.claimTemplateLabels) | nindent 10 }}
       spec:
         accessModes:
           {{- toYaml .Values.database.postgresql.persistence.accessModes | nindent 10 }}

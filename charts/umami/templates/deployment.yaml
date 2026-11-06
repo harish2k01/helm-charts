@@ -89,12 +89,19 @@ spec:
                   name: {{ default (printf "%s-db-external" (include "umami.fullname" .)) .Values.database.external.existingSecret }}
                   key: {{ .Values.database.external.databaseUrlKey }}
             {{- end }}
+            {{- with .Values.umami.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- with .Values.umami.envFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.umami.extraVolumeMounts }}
           volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.livenessProbe }}

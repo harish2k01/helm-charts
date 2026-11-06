@@ -24,7 +24,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy. Pin this to a concrete version for repeatable debugging environments.",
-          "default": "0.1.0"
+          "default": "0.1.1"
         },
         "pullPolicy": {
           "type": "string",

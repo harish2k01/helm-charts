@@ -7,6 +7,8 @@ metadata:
     {{- include "scrutiny.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    {{- toYaml .Values.deploymentStrategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "scrutiny.selectorLabels" . | nindent 6 }}
@@ -40,12 +42,29 @@ spec:
         - name: scrutiny-web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if or .Values.env .Values.extraEnv }}
+          env:
+            {{- range $name, $value := .Values.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
           volumeMounts:
             - name: scrutiny-config
               mountPath: /opt/scrutiny/config
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
@@ -68,12 +87,33 @@ spec:
         - name: influxdb
           image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
           imagePullPolicy: {{ .Values.influxdb.image.pullPolicy }}
+          {{- with .Values.influxdb.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.influxdb.env .Values.influxdb.extraEnv }}
+          env:
+            {{- range $name, $value := .Values.influxdb.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- with .Values.influxdb.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.influxdb.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: influxdb
               containerPort: 8086
           volumeMounts:
             - name: influxdb-data
               mountPath: /var/lib/influxdb2
+            {{- with .Values.influxdb.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.influxdb.resources | nindent 12 }}
           securityContext:
@@ -97,3 +137,7 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+
+      {{- with .Values.extraVolumes }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}

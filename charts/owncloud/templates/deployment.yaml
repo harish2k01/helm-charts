@@ -52,7 +52,7 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if or .Values.mariadb.enabled .Values.redis.enabled .Values.extraInitContainers }}
+      {{- if or .Values.mariadb.enabled (and .Values.redis.enabled .Values.redis.internal (not .Values.redis.host)) .Values.extraInitContainers }}
       initContainers:
         {{- if .Values.mariadb.enabled }}
         - name: wait-for-mariadb
@@ -73,7 +73,7 @@ spec:
                   name: {{ include "owncloud.databaseSecretName" . }}
                   key: {{ .Values.database.passwordKey }}
         {{- end }}
-        {{- if .Values.redis.enabled }}
+        {{- if and .Values.redis.enabled .Values.redis.internal (not .Values.redis.host) }}
         - name: wait-for-redis
           image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
@@ -148,6 +148,8 @@ spec:
               value: "true"
             - name: OWNCLOUD_REDIS_HOST
               value: {{ include "owncloud.redisHost" . | quote }}
+            - name: OWNCLOUD_REDIS_PORT
+              value: {{ .Values.redis.service.port | quote }}
             {{- end }}
             {{- range $name, $value := .Values.env }}
             {{- if ne (toString $value) "" }}

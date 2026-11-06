@@ -62,6 +62,8 @@ Build the cloudflared tunnel run command.
 {{- $args := list "cloudflared" "tunnel" -}}
 {{- if .Values.cloudflared.noAutoupdate }}
 {{- $args = append $args "--no-autoupdate" -}}
+{{- else }}
+{{- $args = append $args "--no-autoupdate=false" -}}
 {{- end }}
 {{- $args = append $args "--loglevel" -}}
 {{- $args = append $args .Values.cloudflared.logLevel -}}

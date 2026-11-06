@@ -54,8 +54,12 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 3001
+              containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -68,7 +72,7 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.env $chartManagedDatabase }}
+          {{- if or .Values.env .Values.extraEnv $chartManagedDatabase }}
           env:
             {{- if .Values.env }}
             {{- range $key, $value := .Values.env }}
@@ -114,13 +118,22 @@ spec:
                   name: {{ default (printf "%s-db-external" (include "uptime-kuma.fullname" .)) .Values.database.external.existingSecret }}
                   key: {{ .Values.database.external.passwordKey }}
             {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           volumeMounts:
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
             {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: /app/data
             {{- end }}
       volumes:
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         {{- if .Values.persistence.enabled }}
         - name: data
           persistentVolumeClaim:

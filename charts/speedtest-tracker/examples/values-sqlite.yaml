@@ -21,5 +21,6 @@ speedtestTracker:
 ingress:
   enabled: false
 
-httpRoute:
-  enabled: false
+httpRoutes:
+  main:
+    enabled: false

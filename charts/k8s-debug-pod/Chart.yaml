@@ -3,8 +3,8 @@ name: k8s-debug-pod
 description: Deploys an Ubuntu-based Kubernetes troubleshooting pod
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/ubuntu.png
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.1.1
+appVersion: "0.1.1"
 home: https://github.com/harish2k01/helm-charts
 sources:
   - https://github.com/harish2k01/k8s-debug-pod
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: k8s-debug-pod
-      image: ghcr.io/harish2k01/k8s-debug-pod:0.1.0
+      image: ghcr.io/harish2k01/k8s-debug-pod:0.1.1
 maintainers:
   - name: harish2k01

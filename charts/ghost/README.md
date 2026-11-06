@@ -2,6 +2,11 @@
 
 This chart deploys [Ghost](https://ghost.org), a publishing platform for blogs, newsletters, memberships, and content sites, using the official `ghost` container image.
 
+See [CHANGELOG.md](CHANGELOG.md) for app/chart changes and migration notes. The
+commented `env` examples in [values.yaml](values.yaml) cover optional runtime
+settings; leave them unset to inherit Ghost's defaults. Use Secret references
+for credentials rather than putting them in plain `env` values.
+
 > [!NOTE]
 > This is an unofficial community Helm chart maintained by [harish2k01](https://github.com/harish2k01). It is not affiliated with or endorsed by the upstream project. For chart issues, questions, or improvements, please open an issue in the [harish2k01/helm-charts](https://github.com/harish2k01/helm-charts) repository.
 
@@ -18,7 +23,7 @@ helm install ghost harish2k01/ghost
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.2.3
+helm install ghost oci://ghcr.io/harish2k01/helm-charts/ghost --version 0.3.4
 ```
 
 ## Database Configuration
@@ -105,14 +110,15 @@ Expose Ghost with Gateway API:
 env:
   url: https://blog.example.com
 
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: gateway
-      namespace: gateway-system
-      sectionName: https
-  hostnames:
-    - blog.example.com
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: gateway
+        namespace: gateway-system
+        sectionName: https
+    hostnames:
+      - blog.example.com
 ```
 
 Or with Ingress:
@@ -163,7 +169,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Ghost replicas |
 | `image.repository` | string | `ghost` | Container image repository |
-| `image.tag` | string | `6.39.0-alpine` | Container image tag |
+| `image.tag` | string | `6.75.0-alpine` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for Ghost |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the Ghost pod |
@@ -207,7 +213,7 @@ persistence:
 | `extraVolumes` | list | `[]` | Additional pod volumes |
 | `extraVolumeMounts` | list | `[]` | Additional container volume mounts |
 | `ingress.enabled` | bool | `false` | Create a Kubernetes Ingress |
-| `httpRoute.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
+| `httpRoutes.main.enabled` | bool | `false` | Create a Gateway API HTTPRoute |
 | `podDisruptionBudget.enabled` | bool | `false` | Create a PodDisruptionBudget |
 | `networkPolicy.enabled` | bool | `false` | Create a NetworkPolicy |
 | `resources` | object | `{}` | Container resource requests and limits |
@@ -218,7 +224,7 @@ persistence:
 
 ## Social Web (ActivityPub)
 
-Enable `activityPub.enabled` with `httpRoute.enabled` to route
+Enable `activityPub.enabled` with an enabled `httpRoutes` entry to route
 `/.ghost/activitypub/`, `/.well-known/webfinger`, and `/.well-known/nodeinfo`
 through a small Caddy proxy. The upstream defaults to Ghost's hosted service
 (`https://ap.ghost.org`); `activityPub.target` may point to a separately managed
@@ -226,11 +232,12 @@ ActivityPub service. The public Host header and request paths are retained.
 The proxy does not deploy an ActivityPub database or server.
 
 ```yaml
-httpRoute:
-  enabled: true
-  parentRefs:
-    - name: public-gateway
-  hostnames: [blog.example.com]
+httpRoutes:
+  main:
+    enabled: true
+    parentRefs:
+      - name: public-gateway
+    hostnames: [blog.example.com]
 activityPub:
   enabled: true
 ```
@@ -244,15 +251,83 @@ This option currently supports Gateway API HTTPRoute, not Ingress.
 | --- | --- | --- | --- |
 | `activityPub.enabled` | bool | `false` | Enable the optional Social Web proxy and routes. |
 | `activityPub.target` | string | `https://ap.ghost.org` | ActivityPub upstream URL. |
-| `activityPub.image` | string | `caddy:2.10.2-alpine` | Proxy container image. |
+| `activityPub.image` | string | `caddy:2.11.8-alpine` | Proxy container image. |
 | `activityPub.resources` | object | See values.yaml | Proxy resource requests and limits. |
 
-The official Caddy image marks its executable with `NET_BIND_SERVICE`. The
-proxy drops all capabilities and adds only this capability, which is allowed
-by Kubernetes Restricted Pod Security. Removing it prevents the binary from
-starting, including when it is configured to listen on port 8080.
+The Caddy 2.11.8 image uses a permitted-only executable capability. The proxy
+listens on unprivileged port 8080 with all capabilities dropped and none added,
+UID/GID 1000, no privilege escalation and a read-only root filesystem. Older
+Caddy image overrides can require their previous capability setup; use the
+corresponding older chart when reverting those images.
 
 The proxy strips trailing slashes internally before forwarding requests. This
 prevents redirect loops between cached Ghost slash-adding redirects and the
 ActivityPub upstream's slash-removing redirects. The deployment configuration
 checksum also rolls out this normalization change to existing proxy pods.
+
+## Additional Ghost configuration
+
+`env.server__shutdownTimeout` is in milliseconds and can apply first to HTTP
+draining and then to background-job cleanup. Allow both stages plus a margin
+in the pod's termination grace period. For busy workloads using a 60000 ms
+timeout, consider `deployment.terminationGracePeriodSeconds: 150`; the existing
+chart default of 60 seconds can truncate worst-case cleanup.
+
+The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
+
+### StatefulSet claim labels
+
+Claim templates use stable identity labels so chart/app version changes do not modify immutable storage metadata. Normal workload labels still report the current versions. The following values merge explicitly pinned labels into each claim template:
+
+- `mysql.persistence.claimTemplateLabels`
+
+For an existing StatefulSet created by an older chart, copy the labels from its current `spec.volumeClaimTemplates[].metadata.labels` into the corresponding map **before the first upgrade**. Keep any historical `helm.sh/chart` and `app.kubernetes.io/version` labels fixed there; they describe the original claim template, not the running app. This preserves the immutable template without deleting or replacing the StatefulSet/PVC. Empty defaults suit new installations. Helm lookup is not required, so GitOps/offline rendering remains deterministic. Do not remove pinned labels later without a separately planned migration. Storage size, claim names, access modes and other immutable fields have their own migration constraints.
+
+## Multiple HTTPRoutes
+
+Use `httpRoutes` to define one or more routes, each with its own Gateway
+references, hostnames, annotations, and rules. The default `main` entry is disabled.
+
+```yaml
+httpRoutes:
+  internal:
+    parentRefs:
+      - name: internal-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.internal.example.com]
+  external:
+    parentRefs:
+      - name: external-gateway
+        namespace: ingress
+        sectionName: https
+    hostnames: [app.example.com]
+```
+
+Each map key is a lowercase DNS label of up to 40 characters and becomes the
+resource-name suffix (`<app-fullname>-internal`, for example). Long base names are
+shortened to keep the suffix and stay within 63 characters; collisions fail rendering.
+
+| Key | Default | Description |
+|---|---|---|
+| `httpRoutes` | Disabled `main` entry | Named HTTPRoutes; defaults create no routes. |
+| `httpRoutes.<name>.enabled` | `true` | Set false to omit an entry, including its attachments. |
+| `httpRoutes.<name>.parentRefs` | Required when enabled | Gateway references, with optional namespace and listener section. |
+| `httpRoutes.<name>.hostnames` | Required when enabled | Independent explicit hostname list. |
+| `httpRoutes.<name>.annotations` | `{}` | Per-route annotations. |
+| `httpRoutes.<name>.rules` | Path prefix `/` | Gateway API matches and filters. Backend references are always supplied by the chart using its application Service and HTTP port. |
+
+Each route has independent hostnames, attachments, annotations, and rules.
+Chart-specific backend behavior is retained; Ghost also includes its ActivityPub
+endpoints when enabled. Gateway API CRDs and a compatible controller
+are required; the referenced Gateway must allow attachment from this namespace.
+
+### Migration from the single-route option
+
+`httpRoute` has been removed. Move its settings under `httpRoutes.main` and remove
+the old key entirely, including `httpRoute.enabled: false`. Old values fail
+rendering with a migration message instead of silently dropping traffic. The old
+resource `<app-fullname>` is replaced by `<app-fullname>-main`; coordinate the
+upgrade with your GitOps pruning policy to avoid overlapping or missing routes.
+Multiple hostnames and parent references apply to the whole route; use separate
+entries when each hostname group must attach to a different Gateway.

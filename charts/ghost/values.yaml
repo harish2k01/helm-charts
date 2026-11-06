@@ -3,7 +3,7 @@ replicaCount: 1
 # Official Ghost image. Pin the tag so upgrades are intentional.
 image:
   repository: ghost
-  tag: "6.39.0-alpine"
+  tag: "6.75.0-alpine"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
@@ -61,12 +61,73 @@ topologySpreadConstraints: []
 env:
   url: http://localhost:2368
   NODE_ENV: production
+  # Optional upstream configuration; uncomment only to override app defaults.
+  # server__shutdownTimeout: "60000" # Milliseconds for HTTP drain and job cleanup stages.
+  # Pod termination grace (seconds) must cover both stages plus a margin.
+  # compress: "true" # Upstream HTTP response compression.
+  # preloadHeaders: "false" # Send resource preload links in HTTP headers.
+  # adminFrameProtection: "true" # Keep clickjacking protection for Admin.
+  # security__allowWebhookInternalIPs: "false" # Keep webhook SSRF protection.
+  # security__staffDeviceVerification: "true"
+  # imageOptimization__resize: "true"
+  # imageOptimization__srcsets: "true"
+  # theme__uploadLimits__compressedBytes: "1073741824" # 1 GiB archive limit.
+  # theme__uploadLimits__entryUncompressedBytes: "536870912" # 512 MiB per entry.
+  # theme__uploadLimits__totalUncompressedBytes: "4294967296" # 4 GiB expanded total.
+  # emailAnalytics__enabled: "true"
+  # emailAnalytics__batchProcessing: "false"
+  # members__emailTemplate__showSiteHeader: "true"
+  # members__emailTemplate__showPoweredBy: "true"
+  # enableTipsAndDonations: "true"
+  # admin__sessionMaxAgeMs: "15552000000" # Admin session lifetime in milliseconds.
+  # privacy__useGravatar: "false"
+  # mail__transport: SMTP
+  # mail__options__host: smtp.example.com
+  # mail__options__port: "587"
+  # mail__options__secure: "false"
+  # mail__options__auth__user: user@example.com
+  # mail__from: noreply@example.com
+  # klipy__contentFilter: off # Tenor has been removed upstream.
+  # paths__installedAdaptersPath: /var/lib/ghost/content/adapters
+  # adapters__jobs__active: InMemoryJobsBackend
+  # adapters__jobs__InMemoryJobsBackend__concurrency: "3"
+  # storage__imports__adapter: LocalStorageBase
+  # storage__imports__staticFileURLPrefix: content/imports
+  # externalRequest__maxSockets: "256"
+  # externalRequest__maxFreeSockets: "256"
+  # externalRequest__keepAlive: "true"
+  # externalRequest__keepAliveMsecs: "60000"
+  # logging__level: info
+  # logging__useLocalTime: "false"
+  # logging__rotation__period: 1d # Applies to configured file log transports.
+  # logging__rotation__count: "10"
+  # logging__logClientErrorsAsError: "true"
+  # caching__assets__contentBasedHash__enabled: "true"
+  # caching__llms__maxAge: "3600"
+  # members__metafields__maxDefinitions: "100"
+  # members__importer__inlineThreshold: "500"
+  # bulkEmail__batchSize: "1000"
+  # bulkEmail__batchCreationConcurrency: "2"
+  # adapters__upgrade__active: NoopUpgradeAdapter
+  # optimization__capListingLimit: "false"
+  # optimization__maxLimit: "100" # Used when capListingLimit is enabled.
+  # optimization__allowLimitAll: "false"
+  # apps__trustedOrigins: '["https://app.example.com"]' # Skips app ownership checks; trust exact origins only.
+  # Spam controls include upgrade_api_block, upgrade_block, staff_invite_block,
+  # and support_request_block; see the upstream defaults for each block.
+  # verifyRequestIntegrity: "true"
+  # queryParameterFiltering__enabled: "false"
+  # remoteFlags__enabled: "false" # Needs upstream URL/poll configuration.
+  # disableMigrationBackups: "false" # Keep automatic migration backups enabled.
 
 # Additional environment sources such as ConfigMaps or Secrets managed elsewhere.
 envFrom: []
 
 # Extra environment variables with full Kubernetes EnvVar support, including
-# valueFrom references.
+# valueFrom references. The official image also supports mail__options__auth__pass_FILE
+# pointing to a mounted Secret file; do not also set mail__options__auth__pass.
+# Never set database__connection__password_FILE alongside the chart's injected
+# database password when mysql.enabled=true.
 extraEnv: []
 
 # Secret environment variables for mail passwords, Stripe keys, or other
@@ -76,6 +137,9 @@ secretEnv:
   name: ""
   values:
     mail__options__auth__pass: ""
+    # Optional upstream secrets; add only when the integration is configured.
+    # klipy__apiKey: ""
+    # machinePayments__mpp__secretKey: ""
   existingSecret:
     name: ""
     keys: []
@@ -118,6 +182,9 @@ mysql:
     rootPasswordKey: db-root-password
   persistence:
     enabled: true
+    # Immutable claim labels: pin the current template labels for existing installs.
+    # Keep historical version labels fixed; new installs use stable defaults.
+    claimTemplateLabels: {}
     existingClaim: ""
     accessModes:
       - ReadWriteOnce
@@ -209,16 +276,61 @@ ingress:
   tls: []
 
 # Optional Gateway API HTTPRoute for exposing Ghost through a Gateway.
-httpRoute:
-  enabled: false
-  annotations: {}
-  parentRefs: []
-  hostnames: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
+# Gateway API routing. Requires Gateway API CRDs and a compatible controller.
+# Map keys (main, internal, external, etc.) are names you choose, not access policies.
+# Every enabled entry creates one HTTPRoute named <app-fullname>-<key>.
+httpRoutes:
+  main:
+    # Keep disabled until you provide Gateway references and application hostnames.
+    # Additional entries default to enabled when their enabled field is omitted.
+    enabled: false
+    # Per-route metadata, for example controller-specific annotations.
+    annotations: {}
+    # Attach this route to one or more Gateways/listeners. The Gateway must allow
+    # routes from this app's namespace. Omit namespace for a same-namespace Gateway;
+    # omit sectionName to target compatible listeners on that Gateway.
+    parentRefs: []
+    #  - name: internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    #  - name: second-internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    # Requests can match ANY hostname below, on ANY compatible parent above.
+    # These lists do not pair hostnames with individual Gateways by position.
+    hostnames: []
+    #  - app.internal.example.com
+    #  - app-alias.internal.example.com
+    # Match request paths/headers/methods and optionally apply Gateway API filters.
+    # Rules default to PathPrefix / when omitted. Backend references are generated
+    # from this chart's application Service and HTTP port, not supplied here.
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       set:
+        #         - name: X-Route
+        #           value: internal
+  # Use a separate entry when public hostnames should attach to another Gateway.
+  # external:
+  #   enabled: true
+  #   annotations: {}
+  #   parentRefs:
+  #     - name: external-gateway
+  #       namespace: ingress
+  #       sectionName: https
+  #   hostnames:
+  #     - app.example.com
+  #     - app-alias.example.com
+  #   rules:
+  #     - matches:
+  #         - path:
+  #             type: PathPrefix
+  #             value: /
 
 resources: {}
 
@@ -270,12 +382,12 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-# Optional Social Web proxy. Requires httpRoute.enabled; preserves the public
+# Optional Social Web proxy. Requires an enabled httpRoutes entry; preserves the public
 # Host header and routes ActivityPub discovery/API requests to this upstream.
 activityPub:
   enabled: false
   target: https://ap.ghost.org
-  image: caddy:2.10.2-alpine
+  image: caddy:2.11.8-alpine
   resources:
     requests:
       cpu: 25m

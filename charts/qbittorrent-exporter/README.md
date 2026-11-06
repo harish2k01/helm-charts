@@ -16,7 +16,7 @@ helm install qbittorrent-exporter harish2k01/qbittorrent-exporter
 ## Install From OCI
 
 ```bash
-helm install qbittorrent-exporter oci://ghcr.io/harish2k01/helm-charts/qbittorrent-exporter --version 0.1.0
+helm install qbittorrent-exporter oci://ghcr.io/harish2k01/helm-charts/qbittorrent-exporter --version 0.1.1
 ```
 
 ## qBittorrent Authentication
@@ -62,7 +62,7 @@ serviceMonitor:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of exporter pods |
 | `image.repository` | string | `ghcr.io/martabal/qbittorrent-exporter` | Container image repository |
-| `image.tag` | string | `v2.0.1` | Container image tag |
+| `image.tag` | string | `v2.0.4` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `qbittorrent.baseUrl` | string | `http://qbittorrent:8080` | qBittorrent WebUI URL |
 | `qbittorrent.auth.method` | string | `legacy` | Auth mode: `legacy`, `apiKey`, `cookieName`, or `none` |
@@ -82,8 +82,8 @@ serviceMonitor:
 | `service.port` | int | `8090` | Service port |
 | `serviceMonitor.enabled` | bool | `false` | Create a Prometheus Operator ServiceMonitor |
 | `resources` | object | `{}` | Container resource requests and limits |
-| `livenessProbe` | object | HTTP GET `/metrics` | Liveness probe |
-| `readinessProbe` | object | HTTP GET `/metrics` | Readiness probe |
+| `livenessProbe` | object | HTTP GET `/healthz` | Liveness probe |
+| `readinessProbe` | object | HTTP GET `/healthz` | Readiness probe |
 | `nodeSelector` | object | `{}` | Pod node selector |
 | `tolerations` | list | `[]` | Pod tolerations |
 | `affinity` | object | `{}` | Pod affinity |

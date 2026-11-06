@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   repository: lscr.io/linuxserver/speedtest-tracker
   pullPolicy: IfNotPresent
-  tag: "1.14.0"
+  tag: "1.15.1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -26,16 +26,61 @@ ingress:
   hosts: []
   tls: []
 
-httpRoute:
-  enabled: false
-  annotations: {}
-  parentRefs: []
-  hostnames: []
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
+# Gateway API routing. Requires Gateway API CRDs and a compatible controller.
+# Map keys (main, internal, external, etc.) are names you choose, not access policies.
+# Every enabled entry creates one HTTPRoute named <app-fullname>-<key>.
+httpRoutes:
+  main:
+    # Keep disabled until you provide Gateway references and application hostnames.
+    # Additional entries default to enabled when their enabled field is omitted.
+    enabled: false
+    # Per-route metadata, for example controller-specific annotations.
+    annotations: {}
+    # Attach this route to one or more Gateways/listeners. The Gateway must allow
+    # routes from this app's namespace. Omit namespace for a same-namespace Gateway;
+    # omit sectionName to target compatible listeners on that Gateway.
+    parentRefs: []
+    #  - name: internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    #  - name: second-internal-gateway
+    #    namespace: ingress
+    #    sectionName: https
+    # Requests can match ANY hostname below, on ANY compatible parent above.
+    # These lists do not pair hostnames with individual Gateways by position.
+    hostnames: []
+    #  - app.internal.example.com
+    #  - app-alias.internal.example.com
+    # Match request paths/headers/methods and optionally apply Gateway API filters.
+    # Rules default to PathPrefix / when omitted. Backend references are generated
+    # from this chart's application Service and HTTP port, not supplied here.
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        # filters:
+        #   - type: RequestHeaderModifier
+        #     requestHeaderModifier:
+        #       set:
+        #         - name: X-Route
+        #           value: internal
+  # Use a separate entry when public hostnames should attach to another Gateway.
+  # external:
+  #   enabled: true
+  #   annotations: {}
+  #   parentRefs:
+  #     - name: external-gateway
+  #       namespace: ingress
+  #       sectionName: https
+  #   hostnames:
+  #     - app.example.com
+  #     - app-alias.example.com
+  #   rules:
+  #     - matches:
+  #         - path:
+  #             type: PathPrefix
+  #             value: /
 
 # Database configuration.
 # Leave all database sections disabled to use SQLite.
@@ -66,6 +111,9 @@ database:
       accessModes:
         - ReadWriteOnce
       size: 10Gi
+      # Immutable claim labels: pin the current template labels for existing installs.
+      # Keep historical version labels fixed; new installs use stable defaults.
+      claimTemplateLabels: {}
       existingClaim: ""
     resources: {}
     nodeSelector: {}
@@ -101,6 +149,9 @@ database:
       accessModes:
         - ReadWriteOnce
       size: 10Gi
+      # Immutable claim labels: pin the current template labels for existing installs.
+      # Keep historical version labels fixed; new installs use stable defaults.
+      claimTemplateLabels: {}
       existingClaim: ""
     resources: {}
     nodeSelector: {}
@@ -133,6 +184,9 @@ database:
       accessModes:
         - ReadWriteOnce
       size: 10Gi
+      # Immutable claim labels: pin the current template labels for existing installs.
+      # Keep historical version labels fixed; new installs use stable defaults.
+      claimTemplateLabels: {}
       existingClaim: ""
     resources: {}
     nodeSelector: {}
@@ -208,7 +262,7 @@ speedtestTracker:
     APP_NAME: "Speedtest Tracker"
     APP_ENV: "production"  # production, testing, local, development
     APP_DEBUG: "false"  # Enable debug mode for detailed error messages
-    # APP_URL is set by ingress/httpRoute if enabled, otherwise update here
+    # APP_URL is set by ingress/httpRoutes if enabled, otherwise update here
     APP_URL: "http://localhost"
     ASSET_URL: ""
     APP_LOCALE: "en"
@@ -286,6 +340,101 @@ speedtestTracker:
     MAIL_FROM_NAME: "Speedtest Tracker"
     # MAIL_USERNAME is set via secrets
     # MAIL_PASSWORD is set via secrets
+
+    # === OPTIONAL LARAVEL / APPLICATION RUNTIME SETTINGS ===
+    # Examples only: uncomment only settings required for your installation.
+    # Exact defaults and accepted options are in the linked target config files.
+    # config/app.php
+    # FORCE_HTTPS: "false"
+    # APP_FAKER_LOCALE: "en_US"
+    # APP_PREVIOUS_KEYS: ""
+    # APP_MAINTENANCE_DRIVER: "file"
+    # APP_MAINTENANCE_STORE: "database"
+    # config/database.php
+    # DB_DATABASE: ""
+    # DB_FOREIGN_KEYS: "true"
+    # DB_HOST: "127.0.0.1"
+    # DB_PORT: "3306"
+    # DB_USERNAME: "root"
+    # DB_SOCKET: ""
+    # DB_CHARSET: "utf8mb4"
+    # DB_COLLATION: "utf8mb4_unicode_ci"
+    # MYSQL_ATTR_SSL_CA: ""
+    # DB_SEARCH_PATH: "public"
+    # DB_ENCRYPT: "yes"
+    # DB_TRUST_SERVER_CERTIFICATE: "false"
+    # REDIS_CLIENT: "phpredis"
+    # REDIS_CLUSTER: "redis"
+    # REDIS_PREFIX: ""
+    # REDIS_PERSISTENT: "false"
+    # REDIS_HOST: "127.0.0.1"
+    # REDIS_USERNAME: ""
+    # REDIS_PORT: "6379"
+    # REDIS_DB: "0"
+    # REDIS_CACHE_DB: "1"
+    # config/filament.php
+    # VITE_PUSHER_APP_CLUSTER: ""
+    # VITE_PUSHER_HOST: ""
+    # VITE_PUSHER_PORT: ""
+    # FILESYSTEM_DISK: "local"
+    # config/logging.php
+    # LOG_CHANNEL: "stderr"
+    # LOG_DEPRECATIONS_CHANNEL: "null"
+    # LOG_DEPRECATIONS_TRACE: "false"
+    # LOG_STACK: "single"
+    # LOG_LEVEL: "debug"
+    # LOG_DAILY_DAYS: "14"
+    # LOG_SLACK_WEBHOOK_URL: ""
+    # LOG_SLACK_USERNAME: "Laravel Log"
+    # LOG_SLACK_EMOJI: ":boom:"
+    # LOG_PAPERTRAIL_HANDLER: ""
+    # PAPERTRAIL_URL: ""
+    # PAPERTRAIL_PORT: ""
+    # LOG_STDERR_FORMATTER: ""
+    # LOG_SYSLOG_FACILITY: ""
+    # config/mail.php
+    # MAIL_URL: ""
+    # MAIL_EHLO_DOMAIN: ""
+    # MAIL_VERIFY_SSL: "true"
+    # config/sanctum.php
+    # SANCTUM_STATEFUL_DOMAINS: ""
+    # config/session.php
+    # SESSION_DRIVER: "database"
+    # SESSION_LIFETIME: "10800"
+    # SESSION_EXPIRE_ON_CLOSE: "false"
+    # SESSION_ENCRYPT: "false"
+    # SESSION_CONNECTION: ""
+    # SESSION_TABLE: "sessions"
+    # SESSION_STORE: ""
+    # SESSION_COOKIE: ""
+    # SESSION_PATH: "/"
+    # SESSION_DOMAIN: ""
+    # SESSION_SECURE_COOKIE: ""
+    # SESSION_HTTP_ONLY: "true"
+    # SESSION_SAME_SITE: "lax"
+    # SESSION_PARTITIONED_COOKIE: "false"
+    # config/settings.php
+    # SETTINGS_CACHE_ENABLED: "false"
+    # CACHE_STORE: "database"
+    # config/speedtest.php
+    # SPEEDTEST_CHECKINTERNET_URL: ""
+    # config/webhook-server.php
+    # WEBHOOK_TIMEOUT_IN_SECONDS: "3"
+    # WEBHOOK_TRIES: "3"
+    # WEBHOOK_VERIFY_SSL: "true"
+    # WEBHOOK_THROW_EXCEPTION_ON_FAILURE: "false"
+    # Credentials from config files belong in secrets.inline or existingSecret,
+    # not in the env map: APP_KEY, ADMIN_PASSWORD, DB_URL, DB_PASSWORD, REDIS_URL, REDIS_PASSWORD, VITE_PUSHER_APP_KEY, MAIL_USERNAME, MAIL_PASSWORD, SANCTUM_TOKEN_PREFIX, TELEGRAM_BOT_TOKEN.
+    # LinuxServer wrapper FILE__KEY=/run/secrets/file reads a mounted secret.
+    # Additional optional wrapper knobs: UMASK, DOCKER_MODS and S6_VERBOSITY.
+
+startupProbe:
+  httpGet:
+    path: /
+    port: http
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 120
 
 livenessProbe:
   httpGet:
