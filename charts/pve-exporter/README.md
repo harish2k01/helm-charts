@@ -84,6 +84,7 @@ serviceMonitor:
 | `serviceMonitor.path` | string | `/pve` | Exporter scrape path |
 | `serviceMonitor.params` | object | default module, cluster, node params | ServiceMonitor scrape params |
 | `collectors.qdevice` | bool | `true` | Collect QDevice state during cluster scrapes; disable if not applicable |
+| `logLevel` | string | `""` | Exporter `--log.level` (`debug`, `info`, `warning`, `error`, `critical`); empty keeps upstream `info` |
 | `extraArgs` | list | `[]` | Additional exporter CLI flags |
 | `resources` | object | `{}` | Container resource requests and limits |
 | `livenessProbe` | object | HTTP GET `/` | Liveness probe |

@@ -22,7 +22,7 @@ helm install tailscale harish2k01/tailscale
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.8
+helm install tailscale oci://ghcr.io/harish2k01/helm-charts/tailscale --version 0.1.9
 ```
 
 Create an auth key Secret before installing, or set `authKey.create=true` only for private values files:
@@ -118,7 +118,7 @@ Persistent state is enabled by default at `/var/lib/tailscale` so each pod keeps
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of independent Tailscale router pods |
 | `image.repository` | string | `tailscale/tailscale` | Container image repository |
-| `image.tag` | string | `v1.104.4` | Versioned container image tag, suitable for Renovate updates |
+| `image.tag` | string | `v1.104.7` | Versioned container image tag, suitable for Renovate updates |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `hostNetwork` | bool | `false` | Run the pod in the node's network namespace so the node itself joins the tailnet |
 | `dnsPolicy` | string | `""` | Pod DNS policy; empty uses `ClusterFirst`, or `ClusterFirstWithHostNet` with `hostNetwork` |

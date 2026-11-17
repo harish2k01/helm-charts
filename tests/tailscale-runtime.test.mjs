@@ -19,3 +19,6 @@ test('OAuth mode omits the auth-key Secret dependency and accepts an extended bo
   assert.equal(c.env.find(e => e.name === 'TS_BOOT_TIMEOUT').value,'90s');
   assert.ok(!docs.some(d => d.kind === 'Secret'));
 });
+test('default image matches the pinned v1.104.7 app version', () => {
+  assert.equal(container(render()).image, 'tailscale/tailscale:v1.104.7');
+});

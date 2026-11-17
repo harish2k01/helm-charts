@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.0
+
+### Application changes
+
+Radarr 6.4.4 → 7.0.3 is a major upgrade. Back up `/config` (or take a Radarr backup) before upgrading.
+
+- The application now runs on .NET 10 ([v7.0.0.10815](https://github.com/Radarr/Radarr/releases/tag/v7.0.0.10815)). Update only by changing the image; do not use the in-app updater.
+- Database migration 243 rewrites stored media info for every movie file to support multiple audio and subtitle streams, and resets movie metadata refresh times so the next refresh re-reads metadata ([migration source](https://github.com/Radarr/Radarr/blob/v7.0.3.10918/src/NzbDrone.Core/Datastore/Migration/243_mediainfo_multiple_streams.cs), [v7.0.1.10859](https://github.com/Radarr/Radarr/releases/tag/v7.0.1.10859)). The migration is one-way: rolling back to 6.x requires restoring the pre-upgrade `/config` backup or volume snapshot. First startup can take longer on large libraries.
+- External PostgreSQL databases must be version 15 or newer ([MigrationController](https://github.com/Radarr/Radarr/blob/v7.0.3.10918/src/NzbDrone.Core/Datastore/Migration/Framework/MigrationController.cs)). SQLite installs are unaffected.
+- New authentication options: OIDC login (`Auth.Method=Oidc` with `OidcAuthority`, `OidcClientId`, `OidcClientSecret`, `OidcUserIdentifier`, `OidcScopes`) and `Auth.Required=DisabledForLocalhost`. Forms login redirects were fixed.
+- PEM certificates are supported for app-native HTTPS through the new `Server.SslKeyPath` setting.
+- The API stays at v3. Media info responses gain `audioStreams` and `subtitleStreams`; existing fields remain. Kometa metadata support was removed ([v7.0.2.10888](https://github.com/Radarr/Radarr/releases/tag/v7.0.2.10888)).
+- Other notable changes: Trakt Smart List import list, full Transmission label support, Ntfy custom headers, Happy Eyeballs HTTP connections, and import fixes ([v7.0.3.10918](https://github.com/Radarr/Radarr/releases/tag/v7.0.3.10918)).
+
+The LinuxServer container wrapper is unchanged apart from bundled package versions ([docker-radarr comparison](https://github.com/linuxserver/docker-radarr/compare/6.4.4.10685-ls327...7.0.3.10918-ls328)); `/config`, port 7878, PUID/PGID handling and the amd64/arm64 image platforms are unchanged.
+
+### Chart changes
+
+- Default image is `lscr.io/linuxserver/radarr:7.0.3`.
+- Document opt-in OIDC (`RADARR__AUTH__OIDC*`), `RADARR__AUTH__REQUIRED=DisabledForLocalhost` and `RADARR__SERVER__SSLKEYPATH` settings in `values.yaml` and `CONFIGURATION.md`. All are commented out; put `RADARR__AUTH__OIDCCLIENTSECRET` in an existing Secret referenced through `envFrom`.
+- The Deployment keeps the `Recreate` strategy so the old and new versions never open the same `/config` database together.
+
 ## 0.3.2
 
 ### Chart changes

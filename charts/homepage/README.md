@@ -18,7 +18,7 @@ helm install homepage harish2k01/homepage
 ## Install From OCI
 
 ```bash
-helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.3.1
+helm install homepage oci://ghcr.io/harish2k01/helm-charts/homepage --version 0.4.0
 ```
 
 ## Web UI Access
@@ -123,7 +123,8 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Homepage replicas |
 | `image.repository` | string | `ghcr.io/gethomepage/homepage` | Container image repository |
-| `image.tag` | string | `v2.7.0` | Container image tag |
+| `strategy` | object | `{}` | Deployment strategy; empty selects Recreate when `persistence.config.enabled` |
+| `image.tag` | string | `v2.8.0` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount |
 | `serviceAccount.automount` | bool | `true` | Automount the ServiceAccount token |

@@ -7,7 +7,7 @@ image:
   repository: ghcr.io/umami-software/umami
   pullPolicy: IfNotPresent
   # Pin this to a concrete version for repeatable installs and safer upgrades.
-  tag: "3.4.1"
+  tag: "3.5.0"
 
 # Set when pulling images from a private registry or mirror.
 imagePullSecrets: []
@@ -164,13 +164,15 @@ umami:
     # DISABLE_UPDATES: "1" # Hide upstream update checks.
     # DISABLE_BOT_CHECK: "1" # Include detected bots in collected events.
     # CLIENT_IP_HEADER: "X-Forwarded-For" # Trust only headers set by your proxy.
+    # TRUSTED_PROXIES: "private" # IPs/CIDRs or loopback,linklocal,private presets skipped when reading proxy chains.
     # IGNORE_IP: "127.0.0.1" # Comma-separated addresses excluded from tracking.
     # REMOVE_TRAILING_SLASH: "1"
     # CORS_MAX_AGE: "86400"
     # ALLOWED_FRAME_URLS: "https://dashboard.example.com"
     # PRIVATE_MODE: "1" # Hide telemetry and related public UI metadata.
     # SKIP_LOCATION_HEADERS: "1" # Disable hosting-provider location headers.
-    # SALT_ROTATION: "month"
+    # SALT_ROTATION: "month" # day, week, month (default) or any other string for a fixed salt.
+    # ENABLE_CLIENT_SALT: "1" # Accept tracker-provided session salts (they only split sessions further).
     # USE_UUIDV7: "1"
     # LOG_QUERY: "1" # SQL logging may expose analytics data.
     # GEOLITE_DB_PATH: "/geo/GeoLite2-City.mmdb" # Mount with extraVolumes.

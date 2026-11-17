@@ -20,7 +20,7 @@ helm install radarr harish2k01/radarr
 This chart is also published as an OCI chart in GHCR. Use the same values and namespace flags with the OCI reference:
 
 ```bash
-helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.3.2
+helm install radarr oci://ghcr.io/harish2k01/helm-charts/radarr --version 0.4.0
 ```
 
 Deploy another Radarr instance by using a different release name and values file:
@@ -75,7 +75,7 @@ Configure Radarr paths inside the application to stay under that shared mount.
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Radarr replicas |
 | `image.repository` | string | `lscr.io/linuxserver/radarr` | Container image repository |
-| `image.tag` | string | `6.4.4` | Container image tag |
+| `image.tag` | string | `7.0.3` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.PUID` | string | `3000` | LinuxServer user ID |
 | `env.PGID` | string | `3000` | LinuxServer group ID |
