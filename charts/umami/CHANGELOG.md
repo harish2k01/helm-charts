@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0
+
+### Application changes
+
+3.4.1 → 3.5.0 ([release notes](https://github.com/umami-software/umami/releases/tag/v3.5.0), [source comparison](https://github.com/umami-software/umami/compare/v3.4.1...v3.5.0)) adds browser error tracking, replay navigation, tracker/recorder configuration through `window.umamiConfig`, `TRUSTED_PROXIES` client-IP handling behind proxy chains, `ENABLE_CLIENT_SALT` for client-provided session salts and expanded `SALT_ROTATION` values (day/week/month or any other string for a fixed salt). Security changes force a password change for the seeded admin account, enforce required 2FA server-side, revalidate share tokens and tighten team/API-key permissions. The public `/api/config` endpoint is removed; `/api/heartbeat` (used by the chart probes) is unchanged.
+
+`APP_SECRET` must now be set explicitly (no fallback to `DATABASE_URL`); the chart already always injects it from a Secret. The Docker start script now forces `HOSTNAME=0.0.0.0` before `exec node server.js`; port 3000 and the check-db/migrate startup flow are unchanged.
+
+Migration `27_add_error_tracking` creates the additive `error_issue`, `error_event` and `error_rate_limit` tables on first start. Back up PostgreSQL before rollout; rolling back to 3.4.x requires restoring that backup (or leaving the unused tables in place, which upstream does not document as supported). The [target README](https://github.com/umami-software/umami/blob/v3.5.0/README.md) still requires PostgreSQL 12.14+, so the bundled `postgres:17-alpine` image is retained unchanged.
+
+### Chart changes
+
+Add commented `TRUSTED_PROXIES` and `ENABLE_CLIENT_SALT` examples and document the extended `SALT_ROTATION` values. No template, persistence or rollout behaviour changes. Added a test that `APP_SECRET` stays Secret-backed even if set in `umami.env`.
+
 ## 0.3.2
 
 ### Chart changes

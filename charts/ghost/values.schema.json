@@ -23,7 +23,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "6.75.0-alpine"
+          "default": "6.77.0-alpine"
         },
         "pullPolicy": {
           "type": "string",
@@ -726,7 +726,7 @@
         "image": {
           "type": "string",
           "minLength": 1,
-          "default": "caddy:2.11.8-alpine"
+          "default": "caddy:2.11.9-alpine"
         },
         "resources": {
           "type": "object",
