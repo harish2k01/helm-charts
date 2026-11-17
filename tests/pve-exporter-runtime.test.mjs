@@ -21,3 +21,8 @@ test('environment mode needs only its credential Secret and can disable QDevice'
   assert.equal(container.volumeMounts, undefined);
   assert.ok(!docs.some(d => d.kind === 'Secret'));
 });
+test('logLevel passes --log.level only when set and rejects unknown levels', () => {
+  assert.ok(!pod(render()).containers[0].args.some(a => a.startsWith('--log.level')));
+  assert.ok(pod(render('--set', 'logLevel=debug')).containers[0].args.includes('--log.level=debug'));
+  assert.throws(() => execFileSync('helm', ['template', 'review', 'charts/pve-exporter', '--set', 'logLevel=verbose'], { stdio: 'pipe' }));
+});
