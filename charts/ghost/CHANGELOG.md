@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.7
+
+### Application changes
+
+The optional ActivityPub proxy upgrades Caddy 2.11.8-alpine → 2.11.9-alpine ([release](https://github.com/caddyserver/caddy/releases/tag/v2.11.9), [full comparison](https://github.com/caddyserver/caddy/compare/v2.11.8...v2.11.9)). It fixes the 2.11.8 PHP directory-index regression, placeholder path-matcher case handling and several FastCGI security issues (GHSA-q34h-28rj-5hjm, GHSA-9cr8-wmhh-39pm), rejects conflicting Caddyfile `client_auth`, and updates go-jose (GHSA-mgcc-cww5-fp2q). The breaking changes affect FastCGI and mTLS policy merging only; this chart's generated reverse-proxy Caddyfile uses neither, so no configuration change is needed.
+
+The [official image](https://github.com/caddyserver/caddy-docker/commit/d322e668) only changes the Caddy version and binary checksums; Alpine base, file capability, `/data` and `/config` are unchanged.
+
+### Chart changes
+
+Update proxy image metadata, schema default, README and catalog. The proxy keeps port 8080, all capabilities dropped, UID/GID 1000 and a read-only root filesystem. Rollback: set `activityPub.image` back to `caddy:2.11.8-alpine`; the proxy is stateless.
+
 ## 0.3.6
 
 ### Application changes

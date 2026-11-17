@@ -253,10 +253,10 @@ This option currently supports Gateway API HTTPRoute, not Ingress.
 | --- | --- | --- | --- |
 | `activityPub.enabled` | bool | `false` | Enable the optional Social Web proxy and routes. |
 | `activityPub.target` | string | `https://ap.ghost.org` | ActivityPub upstream URL. |
-| `activityPub.image` | string | `caddy:2.11.8-alpine` | Proxy container image. |
+| `activityPub.image` | string | `caddy:2.11.9-alpine` | Proxy container image. |
 | `activityPub.resources` | object | See values.yaml | Proxy resource requests and limits. |
 
-The Caddy 2.11.8 image uses a permitted-only executable capability. The proxy
+Caddy 2.11.8 and later images use a permitted-only executable capability. The proxy
 listens on unprivileged port 8080 with all capabilities dropped and none added,
 UID/GID 1000, no privilege escalation and a read-only root filesystem. Older
 Caddy image overrides can require their previous capability setup; use the
@@ -275,7 +275,7 @@ in the pod's termination grace period. For busy workloads using a 60000 ms
 timeout, consider `deployment.terminationGracePeriodSeconds: 150`; the existing
 chart default of 60 seconds can truncate worst-case cleanup.
 
-The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
+The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.77.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
 
 ### StatefulSet claim labels
 
