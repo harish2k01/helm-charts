@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.3
+
+### Application changes
+
+2026.10.7 → 2026.11.1 ([2026.11.0](https://github.com/cloudflare/cloudflared/releases/tag/2026.11.0), [2026.11.1](https://github.com/cloudflare/cloudflared/releases/tag/2026.11.1), [RELEASE_NOTES](https://github.com/cloudflare/cloudflared/blob/2026.11.1/RELEASE_NOTES), [source diff](https://github.com/cloudflare/cloudflared/compare/2026.10.7...2026.11.1)):
+
+- 2026.11.0, VULN-170057: when ingress has Access-protected rules and path normalization is enabled, rule matching strips matrix (`;param`) segments and also checks an alternate decode order, so a crafted path cannot match an earlier unprotected rule and bypass Access. Only rule matching changes; the request sent to the origin is not modified. Go 1.27.4.
+- 2026.11.1, TUN-11062: when the edge signals an account region change, the connector restarts its whole HA connection group instead of treating it as a failure. Quick tunnels may fall back to HTTP/2. OpenTelemetry 1.47.0 (VULN-187395). Distroless base image refreshed (still `nonroot`).
+
+No new or renamed runtime flags/environment variables, ports, metrics/readiness endpoints, container user or entrypoint changes. Rolling back to 2026.10.7 needs no migration, but you lose the security fixes.
+
+### Chart changes
+
+Align image, appVersion, Artifact Hub metadata, schema/README defaults and catalog. Workload configuration is unchanged.
+
+
 ## 0.2.2
 
 ### Chart changes

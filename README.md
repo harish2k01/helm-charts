@@ -70,7 +70,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`adguard-home`](charts/adguard-home) | `0.2.2` | `v0.107.80` | Network | Deploys AdGuard Home DNS filtering with persistent configuration and DNS service ports. |
 | [`bazarr`](charts/bazarr) | `0.3.1` | `1.6.2` | Media | Deploys Bazarr subtitle automation on Kubernetes. |
 | [`bentopdf`](charts/bentopdf) | `0.3.2` | `2.8.11` | Documents | Deploys BentoPDF document conversion on Kubernetes. |
-| [`cloudflared`](charts/cloudflared) | `0.2.2` | `2026.10.7` | Network | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes. |
+| [`cloudflared`](charts/cloudflared) | `0.2.3` | `2026.11.1` | Network | Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes. |
 | [`feishin`](charts/feishin) | `0.2.1` | `1.17.0` | Media | Deploys Feishin music streaming client on Kubernetes. |
 | [`firefly-iii`](charts/firefly-iii) | `0.2.3` | `version-6.6.6` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.2.1` | `v3.5.2` | Media | Deploys FlareSolverr request solving for automation stacks. |

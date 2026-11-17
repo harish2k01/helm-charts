@@ -31,8 +31,8 @@
       "name": "Cloudflared",
       "slug": "cloudflared",
       "category": "Network",
-      "version": "0.2.2",
-      "appVersion": "2026.10.7",
+      "version": "0.2.3",
+      "appVersion": "2026.11.1",
       "description": "Deploys Cloudflare Tunnel cloudflared connectors on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/cloudflare.png"
     },

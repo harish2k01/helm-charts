@@ -18,3 +18,6 @@ test('cloudflared false overrides the image auto-update default',()=>{
   const docs=render('cloudflared',['cloudflared.noAutoupdate=false']);
   assert.ok(container(docs,'cloudflared').command.includes('--no-autoupdate=false'));
 });
+test('Cloudflared default image matches the pinned 2026.11.1 app version',()=>{
+  assert.equal(container(render('cloudflared'),'cloudflared').image,'cloudflare/cloudflared:2026.11.1');
+});
