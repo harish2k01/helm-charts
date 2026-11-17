@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0
+
+### Application changes
+
+3.11.0 → 3.12.0 adds a `--log.level` flag (`debug`, `info`, `warning`, `error`, `critical`; default `info`). Scrape exceptions are now logged as a one-line error, with the full traceback only at `debug`. It also updates the `wrapt` dependency. Config file format, environment variables, port 9221, endpoints and collectors are unchanged.
+
+Source: [upstream release](https://github.com/prometheus-pve/prometheus-pve-exporter/releases/tag/v3.12.0), [changelog](https://github.com/prometheus-pve/prometheus-pve-exporter/blob/v3.12.0/CHANGELOG.rst).
+
+### Chart changes
+
+Add `logLevel` (empty by default, so no flag is passed and upstream `info` applies). Existing values work unchanged. Rollback to chart 0.2.2 / app 3.11.0 is safe: the exporter is stateless; remove `logLevel` before rolling back, since 3.11.0 rejects `--log.level`.
+
 ## 0.2.2
 
 ### Chart changes

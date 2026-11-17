@@ -80,15 +80,15 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.2` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.3.1` | `0.64.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
 | [`owncloud`](charts/owncloud) | `0.4.1` | `11.1.0` | Storage | Deploys ownCloud Server with persistent file storage, MariaDB, and Redis. |
-| [`pocket-id`](charts/pocket-id) | `0.3.2` | `v2.19.2` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
+| [`pocket-id`](charts/pocket-id) | `0.3.3` | `v2.19.3` | Security | Deploys Pocket ID passkey-based OIDC provider on Kubernetes. |
 | [`profilarr`](charts/profilarr) | `0.2.2` | `2.3.1` | Media | Deploys Profilarr profile management with optional release parsing for Radarr and Sonarr. |
 | [`prowlarr`](charts/prowlarr) | `0.3.3` | `2.7.0` | Media | Deploys Prowlarr indexer management for media automation. |
-| [`pve-exporter`](charts/pve-exporter) | `0.2.2` | `3.11.0` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
+| [`pve-exporter`](charts/pve-exporter) | `0.3.0` | `3.12.0` | Monitoring | Deploys the prometheus-pve-exporter for Proxmox VE metrics. |
 | [`qbittorrent`](charts/qbittorrent) | `0.3.2` | `5.3.0` | Media | Deploys qBittorrent with persistent configuration and media mounts. |
 | [`qbittorrent-exporter`](charts/qbittorrent-exporter) | `0.1.2` | `v2.0.4` | Monitoring | Deploys the martabal qBittorrent Prometheus exporter. |
 | [`radarr`](charts/radarr) | `0.3.2` | `6.4.4` | Media | Deploys Radarr movie automation with reusable release values. |
 | [`scrutiny`](charts/scrutiny) | `0.3.2` | `v0.10.0-web` | Monitoring | Deploys Scrutiny web and API components for S.M.A.R.T. collectors. |
-| [`seerr`](charts/seerr) | `0.3.2` | `v3.5.1` | Media | Deploys Seerr media request management for shared libraries. |
+| [`seerr`](charts/seerr) | `0.3.3` | `v3.5.2` | Media | Deploys Seerr media request management for shared libraries. |
 | [`sonarr`](charts/sonarr) | `0.3.2` | `4.0.20` | Media | Deploys Sonarr TV automation with PVC and ingress options. |
 | [`speedtest-tracker`](charts/speedtest-tracker) | `0.3.2` | `1.15.1` | Monitoring | Deploys Speedtest Tracker for scheduled network performance checks. |
 | [`syncthing`](charts/syncthing) | `0.3.2` | `2.1.7` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
