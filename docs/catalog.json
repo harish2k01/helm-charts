@@ -121,8 +121,8 @@
       "name": "Pocket ID",
       "slug": "pocket-id",
       "category": "Security",
-      "version": "0.3.2",
-      "appVersion": "v2.19.2",
+      "version": "0.3.3",
+      "appVersion": "v2.19.3",
       "description": "Deploys Pocket ID passkey-based OIDC provider on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/pocket-id.png"
     },
