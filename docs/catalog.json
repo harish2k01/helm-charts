@@ -175,8 +175,8 @@
       "name": "Radarr",
       "slug": "radarr",
       "category": "Media",
-      "version": "0.3.2",
-      "appVersion": "6.4.4",
+      "version": "0.4.0",
+      "appVersion": "7.0.3",
       "description": "Deploys Radarr movie automation on Kubernetes",
       "icon": "https://raw.githubusercontent.com/selfhst/icons/main/png/radarr.png"
     },
