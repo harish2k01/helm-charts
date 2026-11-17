@@ -118,7 +118,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Pocket ID replicas |
 | `image.repository` | string | `ghcr.io/pocket-id/pocket-id` | Container image repository |
-| `image.tag` | string | `v2.19.2` | Container image tag |
+| `image.tag` | string | `v2.19.3` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `env.APP_URL` | string | `http://localhost:1411` | Public URL where users access Pocket ID |
 | `env.TRUST_PROXY` | string | `false` | Trust reverse proxy forwarding headers |

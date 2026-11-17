@@ -2,7 +2,7 @@
 
 ## 0.4.0 — Homepage 2.8.0
 
-Upgrade from 2.7.0. Reviewed the only intervening release, [v2.8.0](https://github.com/gethomepage/homepage/releases/tag/v2.8.0), and the [source comparison](https://github.com/gethomepage/homepage/compare/v2.7.0...v2.8.0).
+Homepage 2.7.0 → 2.8.0 ([release notes](https://github.com/gethomepage/homepage/releases/tag/v2.8.0), [source comparison](https://github.com/gethomepage/homepage/compare/v2.7.0...v2.8.0)).
 
 ### Application changes
 
@@ -16,9 +16,9 @@ Upgrade from 2.7.0. Reviewed the only intervening release, [v2.8.0](https://gith
 - Added `strategy`. When empty (default) and `persistence.config.enabled` is true, the Deployment now uses `Recreate`, so a ReadWriteOnce config volume cannot deadlock a rolling update on a Multi-Attach error. Without persistence the Kubernetes default is unchanged. Set an explicit strategy only for ReadWriteMany storage.
 - Image, appVersion, schema default, README and catalog updated to v2.8.0.
 
-### Rollback and validation
+### Rollback
 
-Rollback to chart 0.3.1 / v2.7.0 is a plain image downgrade; there are no migrations. Persistent installs briefly stop the old pod before the new one starts. Validated with helm lint, default and persistence renders, homelab-ops values render, catalog checks and the full Node test suite. Docker was unavailable, so no runtime container check was performed.
+Rollback to chart 0.3.1 / v2.7.0 is a plain image downgrade; there are no migrations. Persistent installs briefly stop the old pod before the new one starts.
 
 ## 0.3.1
 

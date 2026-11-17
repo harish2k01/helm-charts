@@ -283,6 +283,12 @@
         }
       }
     },
+    "logLevel": {
+      "type": "string",
+      "description": "Exporter --log.level. Empty keeps the upstream default (info); debug also logs scrape exception tracebacks.",
+      "enum": ["", "debug", "info", "warning", "error", "critical"],
+      "default": ""
+    },
     "extraArgs": {
       "type": "array",
       "description": "Additional exporter CLI arguments.",
