@@ -87,6 +87,11 @@ extraContainerPorts: []
 collectors:
   qdevice: true
 
+# Exporter log level (--log.level). Empty keeps the upstream default (info).
+# Scrape exception tracebacks are logged only at debug; use it when diagnosing
+# failed scrapes, then return to the default.
+logLevel: ""
+
 # Additional exporter CLI flags, for example --no-collector.replication.
 extraArgs: []
 # Optional CLI flags (all commented, upstream defaults shown):
@@ -105,7 +110,7 @@ extraArgs: []
 #   - --web.listen-address=[::]:9221 # Default listener; align Service/probes if changed.
 #   - --server.certfile=/etc/tls/tls.crt # Default no TLS; mount certificate.
 #   - --server.keyfile=/etc/tls/tls.key # Default no TLS; mount key from Secret.
-# Set collectors.qdevice instead of duplicating its flag in extraArgs.
+# Set collectors.qdevice and logLevel instead of duplicating their flags in extraArgs.
 extraEnv: {}
 # Optional alternative environment configuration; defaults are unset except
 # PVE_MODULE=default and upstream TLS verification enabled. Defining PVE_USER
