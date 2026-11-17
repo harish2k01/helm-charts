@@ -39,3 +39,11 @@ test('Homepage rejects conflicting managed environment and invalid optional flag
   rejects('homepage',['env.HOMEPAGE_MCP_ENABLED=enabled'],/HOMEPAGE_MCP_ENABLED/);
   rejects('homepage',['extraEnv[0].name=HOMEPAGE_AUTH_SECRET'],/extraEnv/);
 });
+
+test('Homepage uses Recreate with persistent config and honours explicit strategies',()=>{
+  assert.equal(workload(render('homepage'),'homepage').spec.strategy,undefined);
+  assert.deepEqual(workload(render('homepage',['persistence.config.enabled=true']),'homepage').spec.strategy,{type:'Recreate'});
+  assert.deepEqual(workload(render('homepage',['persistence.config.enabled=true','persistence.config.existingClaim=data']),'homepage').spec.strategy,{type:'Recreate'});
+  assert.equal(workload(render('homepage',['persistence.config.enabled=true','strategy.type=RollingUpdate']),'homepage').spec.strategy.type,'RollingUpdate');
+  rejects('homepage',['strategy=fast'],/strategy/);
+});
