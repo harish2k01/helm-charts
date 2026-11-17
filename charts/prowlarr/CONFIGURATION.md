@@ -2,7 +2,7 @@
 
 This chart passes the existing/new supported runtime options through the extensible `env` map; 45 documented names are listed below. Optional examples in `values.yaml` are commented so they cannot enable a feature or override an existing application setting. All environment values must be quoted strings. Upstream defaults are distinct from chart defaults. Environment overrides take precedence over persisted app configuration.
 
-Sources: [target-version configuration](https://github.com/Prowlarr/Prowlarr/tree/v2.6.5.5623/src/NzbDrone.Common/Options), [full application comparison](https://github.com/Prowlarr/Prowlarr/compare/v2.3.5.5327...v2.6.5.5623).
+Sources: [target-version configuration](https://github.com/Prowlarr/Prowlarr/tree/v3.0.2.5780/src/NzbDrone.Common/Options), [full application comparison](https://github.com/Prowlarr/Prowlarr/compare/v2.7.0.5723...v3.0.2.5780).
 
 | Environment variable | Upstream default when unset | Purpose |
 | --- | --- | --- |
@@ -84,6 +84,6 @@ The default database is image-bundled SQLite in `/config`; this chart embeds no 
 
 ## Verified container build
 
-The 2.6.5 amd64 image manifest identifies [wrapper source fd19558fc530](https://github.com/linuxserver/docker-prowlarr/tree/fd19558fc5301624dc589603fb2e9439f2faac9b) and build `Linuxserver.io version:- 2.6.5.5623-ls164 Build-date:- 2026-10-18T23:10:20+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.
+The 3.0.2 image tag (`3.0.2.5780-ls169`) is built from [wrapper source 374c05084565](https://github.com/linuxserver/docker-prowlarr/tree/374c050845658948dee01cf9cecbbd35638426b9) and is published for amd64 and arm64.
 
-The [official prowlarr PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/prowlarr/postgres-setup.md) explicitly lists PostgreSQL 14–18 as supported and identifies PostgreSQL 13 as end-of-life. This is the application's published guidance, not an inference from the driver. Its SQLite-to-PostgreSQL loader steps were written against PostgreSQL 14 and may require changes on newer majors; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server or certify your existing dataset.
+Prowlarr 3 requires PostgreSQL 15 or newer ([v3.0.0.5737](https://github.com/Prowlarr/Prowlarr/releases/tag/v3.0.0.5737)). See the [official PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/prowlarr/postgres-setup.md) for loader steps; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server.

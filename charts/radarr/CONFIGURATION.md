@@ -1,8 +1,8 @@
 # radarr runtime configuration
 
-This chart passes the existing/new supported runtime options through the extensible `env` map; 45 documented names are listed below. Optional examples in `values.yaml` are commented so they cannot enable a feature or override an existing application setting. All environment values must be quoted strings. Upstream defaults are distinct from chart defaults. Environment overrides take precedence over persisted app configuration.
+This chart passes the existing/new supported runtime options through the extensible `env` map; 51 documented names are listed below. Optional examples in `values.yaml` are commented so they cannot enable a feature or override an existing application setting. All environment values must be quoted strings. Upstream defaults are distinct from chart defaults. Environment overrides take precedence over persisted app configuration.
 
-Sources: [target-version configuration](https://github.com/Radarr/Radarr/tree/v6.4.4.10685/src/NzbDrone.Common/Options), [full application comparison](https://github.com/Radarr/Radarr/compare/v6.1.1.10360...v6.4.4.10685).
+Sources: [target-version configuration](https://github.com/Radarr/Radarr/tree/v7.0.3.10918/src/NzbDrone.Common/Options), [full application comparison](https://github.com/Radarr/Radarr/compare/v6.4.4.10685...v7.0.3.10918).
 
 | Environment variable | Upstream default when unset | Purpose |
 | --- | --- | --- |
@@ -15,8 +15,13 @@ Sources: [target-version configuration](https://github.com/Radarr/Radarr/tree/v6
 | `RADARR__APP__LAUNCHBROWSER` | true | App identity and UI: LaunchBrowser |
 | `RADARR__AUTH__APIKEY` | generated/persisted | Authentication: ApiKey Secret/sensitive: use an existing Secret. |
 | `RADARR__AUTH__ENABLED` | false | Authentication: Enabled |
-| `RADARR__AUTH__METHOD` | None (first-run setup required) | Authentication: Method |
-| `RADARR__AUTH__REQUIRED` | Enabled | Authentication: Required |
+| `RADARR__AUTH__METHOD` | None (first-run setup required) | Authentication: Method (`None`, `Forms`, `External`, `Oidc`) |
+| `RADARR__AUTH__REQUIRED` | Enabled | Authentication: Required (`Enabled`, `DisabledForLocalAddresses`, `DisabledForLocalhost`) |
+| `RADARR__AUTH__OIDCAUTHORITY` | empty | Authentication: OIDC issuer URL |
+| `RADARR__AUTH__OIDCCLIENTID` | empty | Authentication: OIDC client ID |
+| `RADARR__AUTH__OIDCCLIENTSECRET` | empty | Authentication: OIDC client secret Secret/sensitive: use an existing Secret. |
+| `RADARR__AUTH__OIDCUSERIDENTIFIER` | empty | Authentication: OIDC user identifier claim |
+| `RADARR__AUTH__OIDCSCOPES` | openid profile email | Authentication: OIDC scopes |
 | `RADARR__AUTH__TRUSTCGNATIPADDRESSES` | false | Authentication: TrustCgnatIpAddresses |
 | `RADARR__LOG__LEVEL` | debug | Logging: Level |
 | `RADARR__LOG__FILTERSENTRYEVENTS` | true | Logging: FilterSentryEvents |
@@ -45,6 +50,7 @@ Sources: [target-version configuration](https://github.com/Radarr/Radarr/tree/v6
 | `RADARR__SERVER__ENABLESSL` | false | Listener/proxy/TLS: EnableSsl |
 | `RADARR__SERVER__SSLPORT` | 9898 | Listener/proxy/TLS: SslPort |
 | `RADARR__SERVER__SSLCERTPATH` | empty | Listener/proxy/TLS: SslCertPath |
+| `RADARR__SERVER__SSLKEYPATH` | empty | Listener/proxy/TLS: SslKeyPath (PEM private key) |
 | `RADARR__SERVER__SSLCERTPASSWORD` | empty | Listener/proxy/TLS: SslCertPassword Secret/sensitive: use an existing Secret. |
 | `RADARR__SERVER__TRUSTEDNETWORKS` | empty (loopback only) | Listener/proxy/TLS: TrustedNetworks |
 | `RADARR__UPDATE__MECHANISM` | BuiltIn | Binary updater (keep image-managed): Mechanism |
@@ -84,8 +90,8 @@ The default database is image-bundled SQLite in `/config`; this chart embeds no 
 
 ## Verified container build
 
-The 6.4.4 amd64 image manifest identifies [wrapper source 8a9a0640b16e](https://github.com/linuxserver/docker-radarr/tree/8a9a0640b16e8db5895f51cd95260702888593c4) and build `Linuxserver.io version:- 6.4.4.10685-ls322 Build-date:- 2026-10-19T02:20:12+00:00`. The public tag also provides arm64. These are registry metadata checks, not a live application/database migration test.
+The 7.0.3 image tag (`7.0.3.10918-ls328`) is built from [wrapper source b3d80a93c2e8](https://github.com/linuxserver/docker-radarr/tree/b3d80a93c2e8d8163e1527c42097399283f1475e) and is published for amd64 and arm64.
 
-The [official radarr PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/radarr/postgres-setup.md) explicitly lists PostgreSQL 14–18 as supported and identifies PostgreSQL 13 as end-of-life. This is the application's published guidance, not an inference from the driver. Its SQLite-to-PostgreSQL loader steps were written against PostgreSQL 14 and may require changes on newer majors; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server or certify your existing dataset.
+Radarr 7 requires PostgreSQL 15 or newer: its migration runner targets the PostgreSQL 15 generator ([MigrationController](https://github.com/Radarr/Radarr/blob/v7.0.3.10918/src/NzbDrone.Core/Datastore/Migration/Framework/MigrationController.cs)). See the [official PostgreSQL setup guide](https://github.com/Servarr/Wiki/blob/master/radarr/postgres-setup.md) for loader steps; upstream advises a fresh database for PostgreSQL 18+. This chart does not migrate an external server.
 
 When enabling app-native HTTPS, set RADARR__SERVER__SSLPORT explicitly: the target startup bootstrap falls back to 8787 before config is loaded, while ConfigFileProvider uses 9898. Keeping the port explicit avoids this upstream fallback discrepancy; the normal HTTP Service is unaffected.

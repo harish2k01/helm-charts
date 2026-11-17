@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0
+
+### Application changes
+
+Prowlarr 2.7.0 → 3.0.2 is a major upgrade. Back up `/config` before upgrading.
+
+- The application now runs on .NET 10 ([v3.0.0.5737](https://github.com/Prowlarr/Prowlarr/releases/tag/v3.0.0.5737)). Update only by changing the image; do not use the in-app updater.
+- External PostgreSQL databases must be version 15 or newer. SQLite installs are unaffected.
+- No new database schema migrations or runtime configuration options were added in this range, and application sync to Sonarr/Radarr/Lidarr/Readarr is unchanged ([comparison](https://github.com/Prowlarr/Prowlarr/compare/v2.7.0.5723...v3.0.2.5780)).
+- Fixes include the Forms login redirect, API keys in JSON-escaped query strings being cleansed from logs ([v3.0.1.5752](https://github.com/Prowlarr/Prowlarr/releases/tag/v3.0.1.5752)), and rejected grabs being reported when qBittorrent already has the release; Anthelion is added as a Torznab preset ([v3.0.2.5780](https://github.com/Prowlarr/Prowlarr/releases/tag/v3.0.2.5780)).
+
+Rollback: because no schema migration was added, the 2.7.0 image can read the 3.0.2 `/config` database; keep the pre-upgrade backup anyway.
+
+The LinuxServer container wrapper is unchanged apart from bundled package versions ([docker-prowlarr comparison](https://github.com/linuxserver/docker-prowlarr/compare/2.7.0.5723-ls168...3.0.2.5780-ls169)); `/config`, port 9696, PUID/PGID handling and the amd64/arm64 image platforms are unchanged.
+
+### Chart changes
+
+- Default image is `lscr.io/linuxserver/prowlarr:3.0.2`. Values, templates and persistence are unchanged; the Deployment keeps the `Recreate` strategy.
+
 ## 0.3.3
 
 ### Chart changes

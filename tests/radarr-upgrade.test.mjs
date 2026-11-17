@@ -22,3 +22,20 @@ test('radarr probes use the unauthenticated endpoint and remain configurable', (
     assert.equal(custom[key].httpGet.path, key === 'livenessProbe' ? '/custom/ping' : '/custom/ready');
   }
 });
+
+test('radarr 7 OIDC and PEM settings stay opt-in and render only when set', () => {
+  const defaults = render();
+  const names = (defaults.env ?? []).map((e) => e.name);
+  for (const key of ['RADARR__AUTH__OIDCAUTHORITY', 'RADARR__AUTH__OIDCCLIENTSECRET', 'RADARR__SERVER__SSLKEYPATH']) assert(!names.includes(key), key + ' must not be set by default');
+  const pod = render(['--set', 'env.RADARR__AUTH__METHOD=Oidc', '--set', 'env.RADARR__AUTH__OIDCAUTHORITY=https://id.example.com', '--set', 'env.RADARR__SERVER__SSLKEYPATH=/certs/tls.key', '--set', 'envFrom[0].secretRef.name=radarr-oidc']);
+  const env = Object.fromEntries(pod.env.map((e) => [e.name, e.value]));
+  assert.equal(env.RADARR__AUTH__METHOD, 'Oidc');
+  assert.equal(env.RADARR__AUTH__OIDCAUTHORITY, 'https://id.example.com');
+  assert.equal(env.RADARR__SERVER__SSLKEYPATH, '/certs/tls.key');
+  assert.deepEqual(pod.envFrom, [{ secretRef: { name: 'radarr-oidc' } }]);
+});
+
+test('radarr keeps a non-overlapping rollout for the single-writer config database', () => {
+  const deploy = YAML.parseAllDocuments(execFileSync('helm', ['template', 'upgrade', chart, '--namespace', 'upgrade'], { encoding: 'utf8' })).map((d) => d.toJSON()).find((d) => d?.kind === 'Deployment');
+  assert.equal(deploy.spec.strategy.type, 'Recreate');
+});

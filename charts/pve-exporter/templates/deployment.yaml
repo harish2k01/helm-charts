@@ -43,6 +43,9 @@ spec:
             {{- else }}
             - --no-collector.qdevice
             {{- end }}
+            {{- with .Values.logLevel }}
+            - --log.level={{ . }}
+            {{- end }}
             {{- with .Values.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
