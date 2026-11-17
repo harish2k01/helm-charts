@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.9
+
+### Application changes
+
+v1.104.4 → v1.104.7 is a patch series ([changelog](https://tailscale.com/changelog), [v1.104.5](https://github.com/tailscale/tailscale/releases/tag/v1.104.5), [v1.104.6](https://github.com/tailscale/tailscale/releases/tag/v1.104.6), [v1.104.7](https://github.com/tailscale/tailscale/releases/tag/v1.104.7), [source diff](https://github.com/tailscale/tailscale/compare/v1.104.4...v1.104.7)):
+
+- v1.104.5: Tailscale SSH session lifecycle fixes, randomized DNS query IDs, magicsock UDP read fixes. Userspace netstack TCP now disables RACK loss detection by default; `TS_NETSTACK_ENABLE_RACK=true` re-enables it (only relevant with `tailscale.userspace=true`).
+- v1.104.6: wireguard-go duplicate handshake fix, magicsock retries UDP reads on `EADDRNOTAVAIL`.
+- v1.104.7: Go 1.27.4; Kubernetes operator API proxy WhoIs fix (operator only).
+
+No `cmd/containerboot` changes: `TS_*` container variables, ports, health/metrics endpoints, state path and entrypoint are unchanged. Rollback to v1.104.4 keeps the same state format.
+
+### Chart changes
+
+Align image, appVersion, Artifact Hub metadata and catalog; document the `TS_NETSTACK_ENABLE_RACK` opt-in as a commented `extraEnv` example. BusyBox init image is unchanged.
+
+
 ## 0.1.8
 
 ### Chart changes

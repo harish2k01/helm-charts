@@ -112,6 +112,7 @@ tailscale:
   #   TS_EXPERIMENTAL_ENABLE_FORWARDING_OPTIMIZATIONS: "false" # Default false.
   #   TS_EXPERIMENTAL_SERVICE_AUTO_ADVERTISEMENT: "true" # Default true outside Kubernetes.
   #   TS_DEBUG_ADDR_PORT: 127.0.0.1:9001 # Default disabled; diagnostic endpoint.
+  #   TS_NETSTACK_ENABLE_RACK: "true" # Userspace only; default off since v1.104.5.
   # Alternative OAuth/workload-identity authentication requires authKey.enabled=false.
   # OAuth client ID alone supports token auto-discovery only on supported platforms:
   #   TS_CLIENT_ID: client-id # Default unset; client identifier.
