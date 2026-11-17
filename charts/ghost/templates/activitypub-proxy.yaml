@@ -65,7 +65,7 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
-              # Caddy 2.11.8's permitted-only file capability allows this
+              # Caddy 2.11.8+ images' permitted-only file capability allows this
               # unprivileged 8080 listener to run without added capabilities.
               drop: [ALL]
           ports:
