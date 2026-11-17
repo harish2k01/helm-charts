@@ -45,10 +45,20 @@ env:
   # RADARR__AUTH__APIKEY: ""
   # Authentication: Enabled Upstream default: false.
   # RADARR__AUTH__ENABLED: "false"
-  # Authentication: Method Upstream default: None (first-run setup required).
+  # Authentication: Method (None, Forms, External, Oidc) Upstream default: None (first-run setup required).
   # RADARR__AUTH__METHOD: "Forms"
-  # Authentication: Required Upstream default: Enabled.
+  # Authentication: Required (Enabled, DisabledForLocalAddresses, DisabledForLocalhost) Upstream default: Enabled.
   # RADARR__AUTH__REQUIRED: "Enabled"
+  # OIDC login (Auth.Method=Oidc): issuer URL of your identity provider.
+  # RADARR__AUTH__OIDCAUTHORITY: "https://id.example.com"
+  # OIDC client ID registered for Radarr.
+  # RADARR__AUTH__OIDCCLIENTID: ""
+  # OIDC client secret. Secret value: supply using envFrom, not plaintext values.
+  # RADARR__AUTH__OIDCCLIENTSECRET: ""
+  # OIDC claim used to identify the user Upstream default: empty.
+  # RADARR__AUTH__OIDCUSERIDENTIFIER: ""
+  # OIDC scopes Upstream default: openid profile email.
+  # RADARR__AUTH__OIDCSCOPES: "openid profile email"
   # Authentication: TrustCgnatIpAddresses Upstream default: false.
   # RADARR__AUTH__TRUSTCGNATIPADDRESSES: "false"
   # Logging: Level Upstream default: debug.
@@ -108,6 +118,8 @@ env:
   # RADARR__SERVER__SSLPORT: "9898"
   # Listener/proxy/TLS: SslCertPath Upstream default: empty.
   # RADARR__SERVER__SSLCERTPATH: ""
+  # Listener/proxy/TLS: SslKeyPath (private key for a PEM certificate) Upstream default: empty.
+  # RADARR__SERVER__SSLKEYPATH: ""
   # Listener/proxy/TLS: SslCertPassword Upstream default: empty.
   # Secret value: supply using envFrom or a mounted Secret, not plaintext values.
   # RADARR__SERVER__SSLCERTPASSWORD: ""
