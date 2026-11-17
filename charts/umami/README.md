@@ -18,7 +18,7 @@ helm install umami harish2k01/umami
 ## Install From OCI
 
 ```bash
-helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.3.2
+helm install umami oci://ghcr.io/harish2k01/helm-charts/umami --version 0.4.0
 ```
 
 ## Database Configuration
@@ -113,7 +113,7 @@ httpRoutes:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Umami replicas. |
 | `image.repository` | string | `ghcr.io/umami-software/umami` | Umami container image repository. |
-| `image.tag` | string | `3.4.1` | Umami container image tag. |
+| `image.tag` | string | `3.5.0` | Umami container image tag. |
 | `image.pullPolicy` | string | `IfNotPresent` | Container image pull policy. |
 | `service.type` | string | `ClusterIP` | Kubernetes Service type. |
 | `service.port` | int | `3000` | Service port. |

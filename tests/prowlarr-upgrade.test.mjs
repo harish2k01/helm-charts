@@ -22,3 +22,8 @@ test('prowlarr probes use the unauthenticated endpoint and remain configurable',
     assert.equal(custom[key].httpGet.path, key === 'livenessProbe' ? '/custom/ping' : '/custom/ready');
   }
 });
+
+test('prowlarr keeps a non-overlapping rollout for the single-writer config database', () => {
+  const deploy = YAML.parseAllDocuments(execFileSync('helm', ['template', 'upgrade', chart, '--namespace', 'upgrade'], { encoding: 'utf8' })).map((d) => d.toJSON()).find((d) => d?.kind === 'Deployment');
+  assert.equal(deploy.spec.strategy.type, 'Recreate');
+});
