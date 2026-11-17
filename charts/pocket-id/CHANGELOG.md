@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.3
+
+### Application changes
+
+v2.19.2 → v2.19.3 is a patch release. Approving a device authorization now requires a JSON request body, vulnerable dependencies are updated, and the image is built with Go 1.27.4. There are no new environment variables, schema migrations, port, path or UID changes. Rollback to v2.19.2 is safe.
+
+Source: [upstream release](https://github.com/pocket-id/pocket-id/releases/tag/v2.19.3), [changes](https://github.com/pocket-id/pocket-id/compare/v2.19.2...v2.19.3).
+
+### Chart changes
+
+Align the image tag, chart metadata, values schema and catalog. Add a test that the single-replica Deployment keeps the Recreate strategy. Persistence and workload configuration are unchanged.
+
 ## 0.3.2
 
 ### Chart changes
