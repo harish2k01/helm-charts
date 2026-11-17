@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.3
+
+### Application changes
+
+v3.5.1 → v3.5.2 ([release notes](https://github.com/seerr-team/seerr/releases/tag/v3.5.2), [source comparison](https://github.com/seerr-team/seerr/compare/v3.5.1...v3.5.2)) patches three security advisories: [GHSA-g9pp-m4jq-g5jr](https://github.com/seerr-team/seerr/security/advisories/GHSA-g9pp-m4jq-g5jr) (MANAGE_USERS could strip ADMIN), [GHSA-849x-56wc-5rrv](https://github.com/seerr-team/seerr/security/advisories/GHSA-849x-56wc-5rrv) (unauthenticated image-proxy path alias could fill the config volume) and [GHSA-5jqc-qgm4-c26c](https://github.com/seerr-team/seerr/security/advisories/GHSA-5jqc-qgm4-c26c) (self-service password change skipped currentPassword). It also stops background cache refresh from logging credentials, enforces the advanced-request permission on the API and fixes Jellyfin/Plex/Radarr scanner and request issues. The image base moves to Node 22.23.5 and drops build-only modules; user, workdir and port are unchanged.
+
+No new environment variables. No new migrations: three historical SQLite table-copy migrations were corrected to use literals, which only affects databases that have not yet run them. Back up the config volume before upgrading; downgrading to v3.5.1 needs no schema rollback.
+
+### Chart changes
+
+Align image metadata, schema default, README and catalog. The single-replica Recreate rollout and persistence are unchanged.
+
 ## 0.3.2
 
 ### Chart changes
