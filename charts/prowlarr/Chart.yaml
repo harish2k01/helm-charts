@@ -3,8 +3,8 @@ name: prowlarr
 description: Deploys Prowlarr indexer manager on Kubernetes
 type: application
 icon: https://raw.githubusercontent.com/selfhst/icons/main/png/prowlarr.png
-version: 0.3.3
-appVersion: "2.7.0"
+version: 0.4.0
+appVersion: "3.0.2"
 home: https://prowlarr.com
 sources:
   - https://github.com/Prowlarr/Prowlarr
@@ -17,6 +17,6 @@ annotations:
   artifacthub.io/license: MIT
   artifacthub.io/images: |
     - name: prowlarr
-      image: lscr.io/linuxserver/prowlarr:2.7.0
+      image: lscr.io/linuxserver/prowlarr:3.0.2
 maintainers:
   - name: harish2k01
