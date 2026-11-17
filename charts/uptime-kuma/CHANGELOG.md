@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.3
+
+### Application changes
+
+2.5.9-slim → 2.5.12-slim (slim variant preserved). Reviewed [2.5.10](https://github.com/louislam/uptime-kuma/releases/tag/2.5.10), [2.5.11](https://github.com/louislam/uptime-kuma/releases/tag/2.5.11), [2.5.12](https://github.com/louislam/uptime-kuma/releases/tag/2.5.12) and the [source comparison](https://github.com/louislam/uptime-kuma/compare/2.5.9...2.5.12).
+
+- 2.5.10: Docker image Node.js updated to 22.23.5 for upstream high-severity fixes; password reset fixed for embedded MariaDB ([#8138](https://github.com/louislam/uptime-kuma/pull/8138)). The slim image does not ship embedded MariaDB, so the latter does not apply to this chart's default.
+- 2.5.11: dependency updates ([#8094](https://github.com/louislam/uptime-kuma/pull/8094)) and an admin-only RCE fix ([GHSA-437w-j82f-9vjh](https://github.com/louislam/uptime-kuma/security/advisories/GHSA-437w-j82f-9vjh)).
+- 2.5.12: sandboxes the JSONata library used by JSON Query monitor expressions ([#8187](https://github.com/louislam/uptime-kuma/pull/8187)) and updates dependencies ([#8167](https://github.com/louislam/uptime-kuma/pull/8167)). Check JSON Query monitors after the upgrade: expressions that relied on unsafe behaviour may now fail.
+- No environment variable, port, probe, data path or database migration changes were found. Rollback to 2.5.9-slim is an image downgrade, though it reintroduces the fixed vulnerabilities.
+
+### Chart changes
+
+Align the image, chart metadata, values schema and catalog. The bundled mariadb:11 image is unchanged (no exact-version evidence for a bump). The Deployment already uses Recreate.
+
 ## 0.3.2
 
 ### Chart changes
