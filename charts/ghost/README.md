@@ -171,7 +171,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Ghost replicas |
 | `image.repository` | string | `ghost` | Container image repository |
-| `image.tag` | string | `6.75.0-alpine` | Container image tag |
+| `image.tag` | string | `6.77.0-alpine` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for Ghost |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the Ghost pod |
