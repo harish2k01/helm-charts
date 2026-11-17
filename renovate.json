@@ -332,6 +332,106 @@
       "changelogUrl": "https://github.com/louislam/uptime-kuma/releases"
     },
     {
+      "description": "Link busybox (scrutiny/tailscale init) image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "busybox"
+      ],
+      "sourceUrl": "https://git.busybox.net/busybox",
+      "changelogUrl": "https://busybox.net/news.html"
+    },
+    {
+      "description": "Link ghost ActivityPub proxy (caddy) image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "caddy"
+      ],
+      "sourceUrl": "https://github.com/caddyserver/caddy",
+      "changelogUrl": "https://github.com/caddyserver/caddy/releases"
+    },
+    {
+      "description": "Link firefly-iii helper (curl) image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "curlimages/curl"
+      ],
+      "sourceUrl": "https://github.com/curl/curl",
+      "changelogUrl": "https://github.com/curl/curl/releases"
+    },
+    {
+      "description": "Link firefly-iii image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "fireflyiii/core"
+      ],
+      "sourceUrl": "https://github.com/firefly-iii/firefly-iii",
+      "changelogUrl": "https://github.com/firefly-iii/firefly-iii/releases"
+    },
+    {
+      "description": "Link profilarr image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/dictionarry-hub/profilarr",
+        "ghcr.io/dictionarry-hub/profilarr-parser"
+      ],
+      "sourceUrl": "https://github.com/Dictionarry-Hub/profilarr",
+      "changelogUrl": "https://github.com/Dictionarry-Hub/profilarr/releases"
+    },
+    {
+      "description": "Link qbittorrent-exporter image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/martabal/qbittorrent-exporter"
+      ],
+      "sourceUrl": "https://github.com/martabal/qbittorrent-exporter",
+      "changelogUrl": "https://github.com/martabal/qbittorrent-exporter/releases"
+    },
+    {
+      "description": "Link scrutiny image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/analogj/scrutiny"
+      ],
+      "sourceUrl": "https://github.com/AnalogJ/scrutiny",
+      "changelogUrl": "https://github.com/AnalogJ/scrutiny/releases"
+    },
+    {
+      "description": "Link tor-proxy image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "peterdavehello/tor-socks-proxy"
+      ],
+      "sourceUrl": "https://github.com/PeterDaveHello/tor-socks-proxy",
+      "changelogUrl": "https://github.com/PeterDaveHello/tor-socks-proxy/commits/master"
+    },
+    {
+      "description": "Link vaultwarden image proposals to the application release history.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "vaultwarden/server"
+      ],
+      "sourceUrl": "https://github.com/dani-garcia/vaultwarden",
+      "changelogUrl": "https://github.com/dani-garcia/vaultwarden/releases"
+    },
+    {
       "matchDatasources": [
         "docker"
       ],
