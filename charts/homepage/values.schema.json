@@ -10,6 +10,12 @@
       "description": "Number of Homepage pod replicas to run. Consider sticky sessions when using more than one replica.",
       "default": 1
     },
+    "strategy": {
+      "type": "object",
+      "description": "Deployment strategy. Empty selects Recreate when persistence.config.enabled is true, otherwise the Kubernetes default.",
+      "additionalProperties": true,
+      "default": {}
+    },
     "image": {
       "type": "object",
       "description": "Container image settings for Homepage.",
@@ -23,7 +29,7 @@
         "tag": {
           "type": "string",
           "description": "Container image tag to deploy.",
-          "default": "v2.7.0"
+          "default": "v2.8.0"
         },
         "pullPolicy": {
           "type": "string",

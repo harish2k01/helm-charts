@@ -75,7 +75,7 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`firefly-iii`](charts/firefly-iii) | `0.2.3` | `version-6.6.6` | Finance | Deploys Firefly III with PostgreSQL for personal finance tracking. |
 | [`flaresolverr`](charts/flaresolverr) | `0.2.1` | `v3.5.2` | Media | Deploys FlareSolverr request solving for automation stacks. |
 | [`ghost`](charts/ghost) | `0.3.7` | `6.77.0-alpine` | Publishing | Deploys Ghost publishing platform with persistent content storage and MySQL. |
-| [`homepage`](charts/homepage) | `0.3.1` | `2.7.0` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
+| [`homepage`](charts/homepage) | `0.4.0` | `2.8.0` | Dashboard | Deploys Homepage dashboard with Kubernetes discovery support. |
 | [`jellyfin`](charts/jellyfin) | `0.3.1` | `10.11.11` | Media | Deploys Jellyfin media server with library mount support. |
 | [`k8s-debug-pod`](charts/k8s-debug-pod) | `0.1.2` | `0.1.1` | Operations | Deploys an Ubuntu-based Kubernetes troubleshooting pod. |
 | [`navidrome`](charts/navidrome) | `0.3.1` | `0.64.2` | Media | Deploys Navidrome music streaming with separate app data and music PVCs. |
@@ -94,8 +94,8 @@ The catalog is intentionally focused on deployable self-hosted services. Each ch
 | [`syncthing`](charts/syncthing) | `0.3.2` | `2.1.7` | Storage | Deploys Syncthing continuous file synchronization with persistent state and sync ports. |
 | [`tailscale`](charts/tailscale) | `0.1.8` | `v1.104.4` | Network | Deploys Tailscale as a Kubernetes subnet router and exit node. |
 | [`tor-proxy`](charts/tor-proxy) | `0.1.3` | `latest` | Network | Deploys a Tor SOCKS proxy for workloads that need routed egress. |
-| [`umami`](charts/umami) | `0.3.2` | `3.4.1` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
-| [`uptime-kuma`](charts/uptime-kuma) | `0.3.2` | `2.5.9-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
+| [`umami`](charts/umami) | `0.4.0` | `3.5.0` | Analytics | Deploys Umami privacy-focused web analytics with PostgreSQL. |
+| [`uptime-kuma`](charts/uptime-kuma) | `0.3.3` | `2.5.12-slim` | Monitoring | Deploys Uptime Kuma for self-hosted uptime monitoring. |
 | [`vaultwarden`](charts/vaultwarden) | `0.2.2` | `1.37.5` | Security | Deploys Vaultwarden password management on Kubernetes. |
 
 ## Media Automation Pattern
