@@ -3,7 +3,7 @@ replicaCount: 1
 # Official Ghost image. Pin the tag so upgrades are intentional.
 image:
   repository: ghost
-  tag: "6.75.0-alpine"
+  tag: "6.77.0-alpine"
   pullPolicy: IfNotPresent
 
 # Use imagePullSecrets when pulling from a private registry mirror.
@@ -114,7 +114,9 @@ env:
   # optimization__allowLimitAll: "false"
   # apps__trustedOrigins: '["https://app.example.com"]' # Skips app ownership checks; trust exact origins only.
   # Spam controls include upgrade_api_block, upgrade_block, staff_invite_block,
-  # and support_request_block; see the upstream defaults for each block.
+  # member_email_update and send_verification_code_user (support_request_block
+  # no longer exists as of 6.77); see the upstream defaults for each block.
+  # spam__member_email_update__freeRetries: "4"
   # verifyRequestIntegrity: "true"
   # queryParameterFiltering__enabled: "false"
   # remoteFlags__enabled: "false" # Needs upstream URL/poll configuration.

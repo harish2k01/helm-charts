@@ -11,3 +11,7 @@ test('Pocket ID keeps the encryption key external and reuses existing data',()=>
   assert.equal(docs.some(d=>d.kind==='Secret'),false);
   assert.deepEqual(env(container(docs,'pocket-id'),'ENCRYPTION_KEY').valueFrom.secretKeyRef,{name:'runtime',key:'encryption-key',optional:false});
 });
+test('Pocket ID single-replica RWO data uses Recreate so rollouts cannot deadlock on the volume',()=>{
+  const deploy=render('pocket-id').find(d=>d.kind==='Deployment');
+  assert.equal(deploy.spec.strategy.type,'Recreate');
+});

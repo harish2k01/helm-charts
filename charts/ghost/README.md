@@ -171,7 +171,7 @@ persistence:
 | --- | --- | --- | --- |
 | `replicaCount` | int | `1` | Number of Ghost replicas |
 | `image.repository` | string | `ghost` | Container image repository |
-| `image.tag` | string | `6.75.0-alpine` | Container image tag |
+| `image.tag` | string | `6.77.0-alpine` | Container image tag |
 | `image.pullPolicy` | string | `IfNotPresent` | Container pull policy |
 | `serviceAccount.create` | bool | `true` | Create a ServiceAccount for Ghost |
 | `serviceAccount.automountServiceAccountToken` | bool | `false` | Mount Kubernetes API token into the Ghost pod |
@@ -275,7 +275,7 @@ in the pod's termination grace period. For busy workloads using a 60000 ms
 timeout, consider `deployment.terminationGracePeriodSeconds: 150`; the existing
 chart default of 60 seconds can truncate worst-case cleanup.
 
-The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.75.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
+The generic `env` map supports Ghost nested configuration using `__`, with commented deployment examples in `values.yaml`. Put credentials in `secretEnv` or `extraEnv` with `valueFrom.secretKeyRef`, and mount custom configuration/adapters with `extraVolumes`/`extraVolumeMounts`. For the full supported configuration surface see the [exact target defaults](https://github.com/TryGhost/Ghost/blob/v6.77.0/ghost/core/shared/config/defaults.json). See [CHANGELOG.md](CHANGELOG.md) for upgrade and compatibility details.
 
 ### StatefulSet claim labels
 

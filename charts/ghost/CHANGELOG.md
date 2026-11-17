@@ -6,16 +6,30 @@
 
 The optional ActivityPub proxy upgrades Caddy 2.11.8-alpine → 2.11.9-alpine ([release](https://github.com/caddyserver/caddy/releases/tag/v2.11.9), [full comparison](https://github.com/caddyserver/caddy/compare/v2.11.8...v2.11.9)). It fixes the 2.11.8 PHP directory-index regression, placeholder path-matcher case handling and several FastCGI security issues (GHSA-q34h-28rj-5hjm, GHSA-9cr8-wmhh-39pm), rejects conflicting Caddyfile `client_auth`, and updates go-jose (GHSA-mgcc-cww5-fp2q). The breaking changes affect FastCGI and mTLS policy merging only; this chart's generated reverse-proxy Caddyfile uses neither, so no configuration change is needed.
 
-The [official image](https://github.com/caddyserver/caddy-docker/commit/d322e668) only changes the Caddy version and binary checksums; Alpine base, file capability, `/data` and `/config` are unchanged. Ghost 6.75.0-alpine and MySQL 8 remain unchanged on this release.
+The [official image](https://github.com/caddyserver/caddy-docker/commit/d322e668) only changes the Caddy version and binary checksums; Alpine base, file capability, `/data` and `/config` are unchanged.
 
 ### Chart changes
 
 Update proxy image metadata, schema default, README and catalog. The proxy keeps port 8080, all capabilities dropped, UID/GID 1000 and a read-only root filesystem. Rollback: set `activityPub.image` back to `caddy:2.11.8-alpine`; the proxy is stateless.
 
-Merge order: this release follows 0.3.6 (Ghost 6.77.0, PR #145). After #145 merges, main is merged into this branch and the catalog regenerated, so the 0.3.7 package also ships Ghost 6.77.0-alpine.
+## 0.3.6
 
-Validation: Helm lint, default and ActivityPub-enabled renders, and repository tests. No disposable runtime proxy test (Docker unavailable locally).
+### Application changes
 
+Ghost 6.75.0-alpine → 6.77.0-alpine.
+
+- [6.76.0](https://github.com/TryGhost/Ghost/releases/tag/v6.76.0): custom member fields, large Google Discover images, inline-code typing shortcut, fixes for deadlocks when saving tiers and under concurrent post edits, offer context lost during sign-in, and Admin UI fixes. Minimum Node.js raised to the October security releases.
+- [6.77.0](https://github.com/TryGhost/Ghost/releases/tag/v6.77.0): file support in welcome/automation emails, member creation source in activity feeds, fixes for "Unknown setting" after theme upload and for importing Ghost(Pro) self-serve export zips. Minimum Node.js raised to `^22.23.5 || ^24.22.3`.
+
+Database migrations run automatically on first start ([full comparison](https://github.com/TryGhost/Ghost/compare/v6.75.0...v6.77.0)): 6.76 de-duplicates `products_benefits` and adds a unique `(product_id, benefit_id)` index, and adds a `rate_limits` table; 6.77 adds tier-requirement tables, drops unused Stripe checkout config columns/tables and replaces the `email_recipients` member index with a `(member_id, opened_at, email_id)` index. The index rebuild can take a while on sites with large email histories. These are standard MySQL 8 DDL; Ghost's supported database remains MySQL 8 and the bundled/external `mysql:8` image is unchanged. Ghost does not support downgrading after migrations: take a database and content backup first and restore it to roll back.
+
+Runtime config: [defaults.json](https://github.com/TryGhost/Ghost/blob/v6.77.0/ghost/core/shared/config/defaults.json) adds `member_email_update`, `user_verification_challenge` and `send_verification_code_user` spam limiters and an internal `auth.engine` (`legacy`), and removes the `support_request_block` limiter. Config is now parsed through a [zod schema](https://github.com/TryGhost/Ghost/tree/v6.77.0/ghost/core/shared/config/schema); in production an invalid value only logs and the raw value is used. `database__connection__port` given as a quoted string is still accepted. An all-digit `database__connection__password` from a plain env var is read as a number — use `database__connection__password_FILE` for such passwords.
+
+The [official image](https://github.com/docker-library/ghost/commit/a235302a) only changes `GHOST_VERSION`: `node:22-alpine3.23`, Ghost CLI 1.34.1, entrypoint, port 2368, UID 1000 and `/var/lib/ghost/content` are unchanged. amd64 and arm64 are published.
+
+### Chart changes
+
+Synchronize app image metadata, schema default, README and catalog. Update the spam-limiter comment in `values.yaml` (remove `support_request_block`, list the new limiters). Recreate rollout and content PVC are unchanged; no new chart options.
 
 ## 0.3.5
 
@@ -38,7 +52,6 @@ Sources: [release notes](https://github.com/TryGhost/Ghost/releases/tag/v6.75.0)
 Synchronize app image metadata/schema/docs and catalog. Add commented examples for previously supported shutdown, HTTP compression/preload, Admin/device/webhook protections, image resizing/srcsets, theme archive expansion limits, file-log rotation, bulk email sizing, analytics/email branding, listing limits, exact trusted app origins and tips/donations options. Document the supported mounted-secret _FILE mechanism and its conflict with simultaneously supplied inline/chart-owned credentials. All remain opt-in overrides through existing env/Secret/volume hooks; persisted app configuration and optional integrations are not activated. Trusted app origins bypass ownership checks and must be selected carefully; development-only aliases and settings overridden by Ghost's mandatory overrides are not advertised as production options. This chart includes the independently reviewed Caddy 2.11.8 proxy changes from 0.3.3; merge PR #136 before PR #139.
 
 Validation: Helm lint/default and optional routing/Secret renders and repository regression tests. Runtime Caddy proxy checks are recorded in 0.3.3. Ghost admin/editor, email delivery, theme/custom-app behavior and production data were not exercised.
-
 
 ## 0.3.3
 
