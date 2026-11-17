@@ -1,5 +1,11 @@
 replicaCount: 1
 
+# Deployment rollout strategy. Empty uses Recreate when persistence.config is
+# enabled (a ReadWriteOnce volume cannot attach to old and new pods at once)
+# and the Kubernetes default otherwise. Override, e.g. {type: RollingUpdate},
+# only for ReadWriteMany storage or no persistence.
+strategy: {}
+
 # Container image. Pin this tag for repeatable installs and predictable
 # upgrades instead of following latest.
 image:

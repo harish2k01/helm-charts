@@ -1,5 +1,25 @@
 # Upgrade notes
 
+## 0.4.0 — Homepage 2.8.0
+
+Upgrade from 2.7.0. Reviewed the only intervening release, [v2.8.0](https://github.com/gethomepage/homepage/releases/tag/v2.8.0), and the [source comparison](https://github.com/gethomepage/homepage/compare/v2.7.0...v2.8.0).
+
+### Application changes
+
+- New: settings.yaml `quicklaunch.disabled` to turn Quick Launch off ([#7288](https://github.com/gethomepage/homepage/pull/7288)), Glances chart min/max ([#7287](https://github.com/gethomepage/homepage/pull/7287)), BookOrbit API-key auth ([#7339](https://github.com/gethomepage/homepage/pull/7339)), extra Beszel fields, localized sign-in page and HTML `lang` attribute.
+- Fixes for iCal timezone/recurring overrides, customapi label collisions, QNAP volume matching, Synology credential encoding/error handling and Pi-hole session re-login.
+- The [Kubernetes discovery documentation](https://github.com/gethomepage/homepage/blob/v2.8.0/docs/configs/kubernetes.md) now warns that anyone able to edit annotated Ingress/HTTPRoute resources can configure Homepage, including widget request destinations and HOMEPAGE_VAR_/HOMEPAGE_FILE_ substitution. Restrict who can annotate discovered resources accordingly.
+- No changes to the Dockerfile, entrypoint, port 3000, /app/config, health endpoint or environment variables. New options are YAML settings already supported through the chart's generated config files. No datastore is involved.
+
+### Chart changes
+
+- Added `strategy`. When empty (default) and `persistence.config.enabled` is true, the Deployment now uses `Recreate`, so a ReadWriteOnce config volume cannot deadlock a rolling update on a Multi-Attach error. Without persistence the Kubernetes default is unchanged. Set an explicit strategy only for ReadWriteMany storage.
+- Image, appVersion, schema default, README and catalog updated to v2.8.0.
+
+### Rollback and validation
+
+Rollback to chart 0.3.1 / v2.7.0 is a plain image downgrade; there are no migrations. Persistent installs briefly stop the old pod before the new one starts. Validated with helm lint, default and persistence renders, homelab-ops values render, catalog checks and the full Node test suite. Docker was unavailable, so no runtime container check was performed.
+
 ## 0.3.1
 
 ### Chart changes
